@@ -1,11 +1,15 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # casbin-website-v3
 =======
 # casbin-website-v3
 =======
 # casbin-website-v2
 >>>>>>> 80c9506 (Migrate all docs from Docusaurus to Fumadocs v3)
+=======
+# casbin-website-v3
+>>>>>>> afa4ddb (Initial commit from Create Fumadocs App)
 
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
@@ -50,4 +54,7 @@ resources:
   features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 - [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+<<<<<<< HEAD
+>>>>>>> afa4ddb (Initial commit from Create Fumadocs App)
+=======
 >>>>>>> afa4ddb (Initial commit from Create Fumadocs App)
