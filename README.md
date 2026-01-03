@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # casbin-website-v3
 =======
 # casbin-website-v3
+=======
+# casbin-website-v2
+>>>>>>> 80c9506 (Migrate all docs from Docusaurus to Fumadocs v3)
 
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).

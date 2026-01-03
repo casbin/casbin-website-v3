@@ -1,0 +1,37 @@
+---
+id: mac-overview
+title: MAC Overview
+description: Mandatory Access Control (MAC) Overview
+keywords: [MAC, mandatory access control, overview, security model]
+authors: [hsluoyz]
+---
+
+## Overview
+
+Mandatory Access Control (MAC) is an access control framework where the operating system or security kernel enforces restrictions on resource access that individual users cannot override. In MAC systems, security policies are centrally managed and applied uniformly across the system.
+
+## MAC Models in Casbin
+
+Casbin implements several established MAC security models:
+
+- **BLP (Bell-LaPadula)**: A state transition model that enforces confidentiality properties
+- **Biba**: An integrity-focused model designed to prevent unauthorized data modifications
+- **LBAC (Lattice-Based Access Control)**: A formal framework that can enforce both confidentiality and integrity controls
+
+## Core Characteristics
+
+MAC models share these fundamental properties:
+
+- **Centralized Policy Management**: Security policies are defined and enforced system-wide
+- **Security Labels**: Both subjects and objects are assigned security clearances or classification levels
+- **Formal Security Properties**: Each model implements specific security guarantees (such as "no read up" or "no write down")
+
+## Common Use Cases
+
+MAC models are particularly applicable in:
+
+- Government and military systems that require strict information confidentiality
+- Applications requiring strong data integrity protections
+- Multi-level security deployments
+
+See the related subsections for detailed information on implementing each MAC model in Casbin.

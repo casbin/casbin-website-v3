@@ -1,0 +1,3319 @@
+---
+id: management-api
+title: Management API
+description: The primitive API that provides full support for Casbin policy management
+keywords: [management, Filtered API]
+authors: [nodece]
+---
+
+The Management API provides comprehensive support for Casbin policy management operations.
+
+## Filtered API
+
+Filtered API methods share a common parameter signature: `(fieldIndex int, fieldValues ...string)`. The `fieldIndex` parameter specifies the starting index for matching, while `fieldValues` contains the expected values. Empty strings in `fieldValues` act as wildcards, matching any value.
+
+Example:
+
+```csv
+p, alice, book, read
+p, bob, book, read
+p, bob, book, write
+p, alice, pen, get
+p, bob, pen ,get
+```go
+e.GetFilteredPolicy(1, "book") // returns: [["alice", "book", "read"], ["bob", "book", "read"], ["bob", "book", "write"]]
+
+e.GetFilteredPolicy(1, "book", "read") // returns: [["alice", "book", "read"], ["bob", "book", "read"]]
+
+e.GetFilteredPolicy(0, "alice", "", "read") // returns: [[alice book read]]
+
+e.GetFilteredPolicy(0, "alice") // returns: [["alice", "book", "read"], ["alice", "pen", "get"]]
+```
+
+## API Reference
+
+Throughout this reference, the variable `e` represents an Enforcer instance.
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+e, err := NewEnforcer("examples/rbac_model.conf", "examples/rbac_policy.csv")
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const e = await newEnforcer('examples/rbac_model.conf', 'examples/rbac_policy.csv')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$e = new Enforcer('examples/rbac_model.conf', 'examples/rbac_policy.csv');
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+e = casbin.Enforcer("examples/rbac_model.conf", "examples/rbac_policy.csv")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var e = new Enforcer("path/to/model.conf", "path/to/policy.csv");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let mut e = Enforce::new("examples/rbac_model.conf", "examples/rbac_policy.csv").await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+Enforcer e = new Enforcer("examples/rbac_model.conf", "examples/rbac_policy.csv");
+```
+
+</Tab>
+</Tabs>
+
+### `Enforce()`
+
+Enforce decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (sub, obj, act).
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Java']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.Enforce(request)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const ok = await e.enforce(request);
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$ok = $e->enforcer($request);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+ok = e.enforcer(request)
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var ok = e.Enforce(request);
+// or async
+var ok = await e.EnforceAsync(request);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean ok = e.enforce(request);
+```
+
+</Tab>
+</Tabs>
+
+### `EnforceWithMatcher()`
+
+EnforceWithMatcher use a custom matcher to decides whether a "subject" can access a "object" with the operation "action", input parameters are usually: (matcher, sub, obj, act), use model matcher by default when matcher is "".
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'PHP', 'Python', '.NET', 'Java']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.EnforceWithMatcher(matcher, request)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$ok = $e->enforceWithMatcher($matcher, $request);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+ok = e.enforce_with_matcher(matcher, request)
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var ok = e.EnforceWithMatcher(matcher, request);
+// or async
+var ok = await e.EnforceWithMatcherAsync(matcher, request);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean ok = e.enforceWithMatcher(matcher, request);
+```
+
+</Tab>
+</Tabs>
+
+### `EnforceEx()`
+
+EnforceEx explain enforcement by informing matched rules.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', '.NET', 'Python']} persist>
+<Tab value="Go">
+
+```go
+ok, reason, err := e.EnforceEx(request)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const ok = await e.enforceEx(request);
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+list($ok, $reason) = $e->enforceEx($request);
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var (ok, explain) = e.EnforceEx(request);
+// or async
+var (ok, explain) = await e.EnforceExAsync(request);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+ok, reason = e.enforce_ex(request)
+```
+
+</Tab>
+</Tabs>
+
+### `EnforceExWithMatcher()`
+
+EnforceExWithMatcher use a custom matcher and explain enforcement by informing matched rules.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', '.NET']} persist>
+<Tab value="Go">
+
+```go
+ok, reason, err := e.EnforceExWithMatcher(matcher, request)
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var (ok, explain) = e.EnforceExWithMatcher(matcher, request);
+// or async
+var (ok, explain) = await e.EnforceExWithMatcherAsync(matcher, request);
+```
+
+</Tab>
+</Tabs>
+
+### `BatchEnforce()`
+
+BatchEnforce enforces each request and returns result in a bool array
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', '.NET', 'Java']} persist>
+<Tab value="Go">
+
+```go
+boolArray, err := e.BatchEnforce(requests)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const boolArray = await e.batchEnforce(requests);
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var boolArray = e.BatchEnforce(requests);
+// or async
+var boolArray = await e.BatchEnforceAsync(requests);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<Boolean> boolArray = e.batchEnforce(requests);
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllSubjects()`
+
+GetAllSubjects gets the list of subjects that show up in the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allSubjects := e.GetAllSubjects()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allSubjects = await e.getAllSubjects()
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allSubjects = $e->getAllSubjects();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_subjects = e.get_all_subjects()
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allSubjects = e.GetAllSubjects();
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_subjects = e.get_all_subjects();
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allSubjects = e.getAllSubjects();
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllNamedSubjects()`
+
+GetAllNamedSubjects gets the list of subjects that show up in the current named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allNamedSubjects := e.GetAllNamedSubjects("p")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allNamedSubjects = await e.getAllNamedSubjects('p')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allNamedSubjects = $e->getAllNamedSubjects("p");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_named_subjects = e.get_all_named_subjects("p")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allNamedSubjects = e.GetAllNamedSubjects("p");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_named_subjects = e.get_all_named_subjects("p");
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allNamedSubjects = e.getAllNamedSubjects("p");
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllObjects()`
+
+GetAllObjects gets the list of objects that show up in the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allObjects := e.GetAllObjects()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allObjects = await e.getAllObjects()
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allObjects = $e->getAllObjects();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_objects = e.get_all_objects()
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allObjects = e.GetAllObjects();
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_objects = e.get_all_objects();
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allObjects = e.getAllObjects();
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllNamedObjects()`
+
+GetAllNamedObjects gets the list of objects that show up in the current named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allNamedObjects := e.GetAllNamedObjects("p")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allNamedObjects = await e.getAllNamedObjects('p')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allNamedObjects = $e->getAllNamedObjects("p");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_named_objects = e.get_all_named_objects("p")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allNamedObjects = e.GetAllNamedObjects("p");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_named_objects = e.get_all_named_objects("p");
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allNamedObjects = e.getAllNamedObjects("p");
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllActions()`
+
+GetAllActions gets the list of actions that show up in the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allActions := e.GetAllActions()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allActions = await e.getAllActions()
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allActions = $e->getAllActions();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_actions = e.get_all_actions()
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allActions = e.GetAllActions();
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_actions = e.get_all_actions();
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allActions = e.getAllActions();
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllNamedActions()`
+
+GetAllNamedActions gets the list of actions that show up in the current named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allNamedActions := e.GetAllNamedActions("p")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allNamedActions = await e.getAllNamedActions('p')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allNamedActions = $e->getAllNamedActions("p");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_named_actions = e.get_all_named_actions("p")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allNamedActions = e.GetAllNamedActions("p");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_named_actions = e.get_all_named_actions("p");
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allNamedActions = e.getAllNamedActions("p");
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllRoles()`
+
+GetAllRoles gets the list of roles that show up in the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allRoles = e.GetAllRoles()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allRoles = await e.getAllRoles()
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allRoles = $e->getAllRoles();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_roles = e.get_all_roles()
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allRoles = e.GetAllRoles();
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_roles = e.get_all_roles();
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allRoles = e.getAllRoles();
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllNamedRoles()`
+
+GetAllNamedRoles gets the list of roles that show up in the current named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+allNamedRoles := e.GetAllNamedRoles("g")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const allNamedRoles = await e.getAllNamedRoles('g')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$allNamedRoles = $e->getAllNamedRoles('g');
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+all_named_roles = e.get_all_named_roles("g")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var allNamedRoles = e.GetAllNamedRoles("g");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let all_named_roles = e.get_all_named_roles("g");
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> allNamedRoles = e.getAllNamedRoles("g");
+```
+
+</Tab>
+</Tabs>
+
+### `GetPolicy()`
+
+GetPolicy gets all the authorization rules in the policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+policy = e.GetPolicy()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const policy = await e.getPolicy()
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$policy = $e->getPolicy();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+policy = e.get_policy()
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var policy = e.GetPolicy();
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let policy = e.get_policy();
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> policy = e.getPolicy();
+```
+
+</Tab>
+</Tabs>
+
+### `GetFilteredPolicy()`
+
+GetFilteredPolicy gets all the authorization rules in the policy, field filters can be specified.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+filteredPolicy := e.GetFilteredPolicy(0, "alice")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const filteredPolicy = await e.getFilteredPolicy(0, 'alice')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$filteredPolicy = $e->getFilteredPolicy(0, "alice");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+filtered_policy = e.get_filtered_policy(0, "alice")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var filteredPolicy = e.GetFilteredPolicy(0, "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let filtered_policy = e.get_filtered_policy(0, vec!["alice".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> filteredPolicy = e.getFilteredPolicy(0, "alice");
+```
+
+</Tab>
+</Tabs>
+
+### `GetNamedPolicy()`
+
+GetNamedPolicy gets all the authorization rules in the named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+namedPolicy := e.GetNamedPolicy("p")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const namedPolicy = await e.getNamedPolicy('p')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$namedPolicy = $e->getNamedPolicy("p");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+named_policy = e.get_named_policy("p")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var namedPolicy = e.GetNamedPolicy("p");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let named_policy = e.get_named_policy("p");
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> namedPolicy = e.getNamedPolicy("p");
+```
+
+</Tab>
+</Tabs>
+
+### `GetFilteredNamedPolicy()`
+
+GetFilteredNamedPolicy gets all the authorization rules in the named policy, field filters can be specified.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+filteredNamedPolicy = e.GetFilteredNamedPolicy("p", 0, "bob")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const filteredNamedPolicy = await e.getFilteredNamedPolicy('p', 0, 'bob')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$filteredNamedPolicy = $e->getFilteredNamedPolicy("p", 0, "bob");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+filtered_named_policy = e.get_filtered_named_policy("p", 0, "alice")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var filteredNamedPolicy = e.GetFilteredNamedPolicy("p", 0, "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let filtered_named_policy = e.get_filtered_named_policy("p", 0, vec!["bob".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> filteredNamedPolicy = e.getFilteredNamedPolicy("p", 0, "bob");
+```
+
+</Tab>
+</Tabs>
+
+### `GetGroupingPolicy()`
+
+GetGroupingPolicy gets all the role inheritance rules in the policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+groupingPolicy := e.GetGroupingPolicy()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const groupingPolicy = await e.getGroupingPolicy()
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$groupingPolicy = $e->getGroupingPolicy();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+grouping_policy = e.get_grouping_policy()
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var groupingPolicy = e.GetGroupingPolicy();
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let grouping_policy = e.get_grouping_policy();
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> groupingPolicy = e.getGroupingPolicy();
+```
+
+</Tab>
+</Tabs>
+
+### `GetFilteredGroupingPolicy()`
+
+GetFilteredGroupingPolicy gets all the role inheritance rules in the policy, field filters can be specified.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+filteredGroupingPolicy := e.GetFilteredGroupingPolicy(0, "alice")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const filteredGroupingPolicy = await e.getFilteredGroupingPolicy(0, 'alice')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$filteredGroupingPolicy = $e->getFilteredGroupingPolicy(0, "alice");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+filtered_grouping_policy = e.get_filtered_grouping_policy(0, "alice")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var filteredGroupingPolicy = e.GetFilteredGroupingPolicy(0, "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let filtered_grouping_policy = e.get_filtered_grouping_policy(0, vec!["alice".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> filteredGroupingPolicy = e.getFilteredGroupingPolicy(0, "alice");
+```
+
+</Tab>
+</Tabs>
+
+### `GetNamedGroupingPolicy()`
+
+GetNamedGroupingPolicy gets all the role inheritance rules in the policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+namedGroupingPolicy := e.GetNamedGroupingPolicy("g")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const namedGroupingPolicy = await e.getNamedGroupingPolicy('g')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$namedGroupingPolicy = $e->getNamedGroupingPolicy("g");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+named_grouping_policy = e.get_named_grouping_policy("g")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var namedGroupingPolicy = e.GetNamedGroupingPolicy("g");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let named_grouping_policy = e.get_named_grouping_policy("g");
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> namedGroupingPolicy = e.getNamedGroupingPolicy("g");
+```
+
+</Tab>
+</Tabs>
+
+### `GetFilteredNamedGroupingPolicy()`
+
+GetFilteredNamedGroupingPolicy gets all the role inheritance rules in the policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+namedGroupingPolicy := e.GetFilteredNamedGroupingPolicy("g", 0, "alice")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const namedGroupingPolicy = await e.getFilteredNamedGroupingPolicy('g', 0, 'alice')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$namedGroupingPolicy = $e->getFilteredNamedGroupingPolicy("g", 0, "alice");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+named_grouping_policy = e.get_filtered_named_grouping_policy("g", 0, "alice")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var namedGroupingPolicy = e.GetFilteredNamedGroupingPolicy("g", 0, "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let named_grouping_policy = e.get_filtered_named_groupingPolicy("g", 0, vec!["alice".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> filteredNamedGroupingPolicy = e.getFilteredNamedGroupingPolicy("g", 0, "alice");
+```
+
+</Tab>
+</Tabs>
+
+### `HasPolicy()`
+
+HasPolicy determines whether an authorization rule exists.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+hasPolicy := e.HasPolicy("data2_admin", "data2", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const hasPolicy = await e.hasPolicy('data2_admin', 'data2', 'read')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$hasPolicy = $e->hasPolicy('data2_admin', 'data2', 'read');
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+has_policy = e.has_policy("data2_admin", "data2", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var hasPolicy = e.HasPolicy("data2_admin", "data2", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let has_policy = e.has_policy(vec!["data2_admin".to_owned(), "data2".to_owned(), "read".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean hasPolicy = e.hasPolicy("data2_admin", "data2", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `HasNamedPolicy()`
+
+HasNamedPolicy determines whether a named authorization rule exists.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+hasNamedPolicy := e.HasNamedPolicy("p", "data2_admin", "data2", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const hasNamedPolicy = await e.hasNamedPolicy('p', 'data2_admin', 'data2', 'read')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$hasNamedPolicy = $e->hasNamedPolicy("p", "data2_admin", "data2", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+has_named_policy = e.has_named_policy("p", "data2_admin", "data2", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var hasNamedPolicy = e.HasNamedPolicy("p", "data2_admin", "data2", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let has_named_policy = e.has_named_policy("p", vec!["data2_admin".to_owned(), "data2".to_owned(), "read".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean hasNamedPolicy = e.hasNamedPolicy("p", "data2_admin", "data2", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `AddPolicy()`
+
+AddPolicy adds an authorization rule to the current policy.
+If the rule already exists, the function returns false and the rule will not be added.
+Otherwise the function returns true by adding the new rule.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+added := e.AddPolicy('eve', 'data3', 'read')
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const p = ['eve', 'data3', 'read']
+const added = await e.addPolicy(...p)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$added = $e->addPolicy('eve', 'data3', 'read');
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+added = e.add_policy("eve", "data3", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var added = e.AddPolicy("eve", "data3", "read");
+or
+var added = await e.AddPolicyAsync("eve", "data3", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let added = e.add_policy(vec!["eve".to_owned(), "data3".to_owned(), "read".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean added = e.addPolicy("eve", "data3", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `AddPolicies()`
+
+AddPolicies adds authorization rules to the current policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is added to the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is added to the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"jack", "data4", "read"},
+    []string {"katy", "data4", "write"},
+    []string {"leyo", "data4", "read"},
+    []string {"ham", "data4", "write"},
+}
+
+areRulesAdded := e.AddPolicies(rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const rules = [
+    ['jack', 'data4', 'read'],
+    ['katy', 'data4', 'write'],
+    ['leyo', 'data4', 'read'],
+    ['ham', 'data4', 'write']
+];
+
+const areRulesAdded = await e.addPolicies(rules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["jack", "data4", "read"],
+    ["katy", "data4", "write"],
+    ["leyo", "data4", "read"],
+    ["ham", "data4", "write"]
+]
+are_rules_added = e.add_policies(rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["jack".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["katy".to_owned(), "data4".to_owned(), "write".to_owned()],
+    vec!["leyo".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["ham".to_owned(), "data4".to_owned(), "write".to_owned()],
+];
+
+let are_rules_added = e.add_policies(rules).await?
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+String[][] rules = {
+    {"jack", "data4", "read"},
+    {"katy", "data4", "write"},
+    {"leyo", "data4", "read"},
+    {"ham", "data4", "write"},
+};
+
+boolean areRulesAdded = e.addPolicies(rules);
+```
+
+</Tab>
+</Tabs>
+
+### `AddPoliciesEx()`
+
+AddPoliciesEx adds authorization rules to the current policy.
+If the rule already exists, the rule will not be added.
+But unlike AddPolicies, other non-existent rules are added instead of returning false directly
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.AddPoliciesEx([][]string{{"user1", "data1", "read"}, {"user2", "data2", "read"}})
+```
+
+</Tab>
+</Tabs>
+
+### `AddNamedPolicy()`
+
+AddNamedPolicy adds an authorization rule to the current named policy.
+If the rule already exists, the function returns false and the rule will not be added.
+Otherwise the function returns true by adding the new rule.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+added := e.AddNamedPolicy("p", "eve", "data3", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const p = ['eve', 'data3', 'read']
+const added = await e.addNamedPolicy('p', ...p)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$added = $e->addNamedPolicy("p", "eve", "data3", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+added = e.add_named_policy("p", "eve", "data3", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var added = e.AddNamedPolicy("p", "eve", "data3", "read");
+or
+var added = await e.AddNamedPolicyAsync("p", "eve", "data3", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let added = e.add_named_policy("p", vec!["eve".to_owned(), "data3".to_owned(), "read".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean added = e.addNamedPolicy("p", "eve", "data3", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `AddNamedPolicies()`
+
+AddNamedPolicies adds authorization rules to the current named policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is added to the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is added to the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"jack", "data4", "read"},
+    []string {"katy", "data4", "write"},
+    []string {"leyo", "data4", "read"},
+    []string {"ham", "data4", "write"},
+}
+
+areRulesAdded := e.AddNamedPolicies("p", rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const rules = [
+    ['jack', 'data4', 'read'],
+    ['katy', 'data4', 'write'],
+    ['leyo', 'data4', 'read'],
+    ['ham', 'data4', 'write']
+];
+
+const areRulesAdded = await e.addNamedPolicies('p', rules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["jack", "data4", "read"],
+    ["katy", "data4", "write"],
+    ["leyo", "data4", "read"],
+    ["ham", "data4", "write"]
+]
+are_rules_added = e.add_named_policies("p", rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["jack".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["katy".to_owned(), "data4".to_owned(), "write".to_owned()],
+    vec!["leyo".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["ham".to_owned(), "data4".to_owned(), "write".to_owned()],
+];
+
+let are_rules_added := e.add_named_policies("p", rules).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> rules = Arrays.asList(
+    Arrays.asList("jack", "data4", "read"),
+    Arrays.asList("katy", "data4", "write"),
+    Arrays.asList("leyo", "data4", "read"),
+    Arrays.asList("ham", "data4", "write")
+);
+boolean areRulesAdded = e.addNamedPolicies("p", rules);
+```
+
+</Tab>
+</Tabs>
+
+### `AddNamedPoliciesEx()`
+
+AddNamedPoliciesEx adds authorization rules to the current named policy.
+If the rule already exists, the rule will not be added.
+But unlike AddNamedPolicies, other non-existent rules are added instead of returning false directly
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.AddNamedPoliciesEx("p", [][]string{{"user1", "data1", "read"}, {"user2", "data2", "read"}})
+```
+
+</Tab>
+</Tabs>
+
+### `SelfAddPoliciesEx()`
+
+SelfAddPoliciesEx adds authorization rules to the current named policy with autoNotifyWatcher disabled.
+If the rule already exists, the rule will not be added.
+But unlike SelfAddPolicies, other non-existent rules are added instead of returning false directly
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.SelfAddPoliciesEx("p", "p", [][]string{{"user1", "data1", "read"}, {"user2", "data2", "read"}})
+```
+
+</Tab>
+</Tabs>
+
+### `RemovePolicy()`
+
+RemovePolicy removes an authorization rule from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemovePolicy("alice", "data1", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const p = ['alice', 'data1', 'read']
+const removed = await e.removePolicy(...p)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removePolicy("alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_policy("alice", "data1", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemovePolicy("alice", "data1", "read");
+or
+var removed = await e.RemovePolicyAsync("alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_policy(vec!["alice".to_owned(), "data1".to_owned(), "read".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removePolicy("alice", "data1", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `RemovePolicies()`
+
+RemovePolicies removes authorization rules from the current policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is removed from the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is removed from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"jack", "data4", "read"},
+    []string {"katy", "data4", "write"},
+    []string {"leyo", "data4", "read"},
+    []string {"ham", "data4", "write"},
+}
+
+areRulesRemoved := e.RemovePolicies(rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const rules = [
+    ['jack', 'data4', 'read'],
+    ['katy', 'data4', 'write'],
+    ['leyo', 'data4', 'read'],
+    ['ham', 'data4', 'write']
+];
+
+const areRulesRemoved = await e.removePolicies(rules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["jack", "data4", "read"],
+    ["katy", "data4", "write"],
+    ["leyo", "data4", "read"],
+    ["ham", "data4", "write"]
+]
+are_rules_removed = e.remove_policies(rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["jack".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["katy".to_owned(), "data4".to_owned(), "write".to_owned()],
+    vec!["leyo".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["ham".to_owned(), "data4".to_owned(), "write".to_owned()],
+];
+
+let are_rules_removed = e.remove_policies(rules).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+String[][] rules = {
+    {"jack", "data4", "read"},
+    {"katy", "data4", "write"},
+    {"leyo", "data4", "read"},
+    {"ham", "data4", "write"},
+};
+boolean areRulesRemoved = e.removePolicies(rules);
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveFilteredPolicy()`
+
+RemoveFilteredPolicy removes an authorization rule from the current policy, field filters can be specified.
+RemovePolicy removes an authorization rule from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveFilteredPolicy(0, "alice", "data1", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const p = ['alice', 'data1', 'read']
+const removed = await e.removeFilteredPolicy(0, ...p)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeFilteredPolicy(0, "alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_filtered_policy(0, "alice", "data1", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveFilteredPolicy("alice", "data1", "read");
+or
+var removed = await e.RemoveFilteredPolicyAsync("alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_filtered_policy(0, vec!["alice".to_owned(), "data1".to_owned(), "read".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeFilteredPolicy(0, "alice", "data1", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveNamedPolicy()`
+
+RemoveNamedPolicy removes an authorization rule from the current named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveNamedPolicy("p", "alice", "data1", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const p = ['alice', 'data1', 'read']
+const removed = await e.removeNamedPolicy('p', ...p)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeNamedPolicy("p", "alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_named_policy("p", "alice", "data1", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveNamedPolicy("p", "alice", "data1", "read");
+or
+var removed = await e.RemoveNamedPolicyAsync("p", "alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_named_policy("p", vec!["alice".to_owned(), "data1".to_owned(), "read".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeNamedPolicy("p", "alice", "data1", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveNamedPolicies()`
+
+RemoveNamedPolicies removes authorization rules from the current named policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is removed from the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is removed from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"jack", "data4", "read"},
+    []string {"katy", "data4", "write"},
+    []string {"leyo", "data4", "read"},
+    []string {"ham", "data4", "write"},
+}
+
+areRulesRemoved := e.RemoveNamedPolicies("p", rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const rules = [
+    ['jack', 'data4', 'read'],
+    ['katy', 'data4', 'write'],
+    ['leyo', 'data4', 'read'],
+    ['ham', 'data4', 'write']
+];
+
+const areRulesRemoved = await e.removeNamedPolicies('p', rules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["jack", "data4", "read"],
+    ["katy", "data4", "write"],
+    ["leyo", "data4", "read"],
+    ["ham", "data4", "write"]
+]
+are_rules_removed = e.remove_named_policies("p", rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["jack".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["katy".to_owned(), "data4".to_owned(), "write".to_owned()],
+    vec!["leyo".to_owned(), "data4".to_owned(), "read".to_owned()],
+    vec!["ham".to_owned(), "data4".to_owned(), "write".to_owned()],
+];
+
+let areRulesRemoved = e.remove_named_policies("p", rules).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> rules = Arrays.asList(
+    Arrays.asList("jack", "data4", "read"),
+    Arrays.asList("katy", "data4", "write"),
+    Arrays.asList("leyo", "data4", "read"),
+    Arrays.asList("ham", "data4", "write")
+);
+boolean areRulesRemoved = e.removeNamedPolicies("p", rules);
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveFilteredNamedPolicy()`
+
+RemoveFilteredNamedPolicy removes an authorization rule from the current named policy, field filters can be specified.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveFilteredNamedPolicy("p", 0, "alice", "data1", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const p = ['alice', 'data1', 'read']
+const removed = await e.removeFilteredNamedPolicy('p', 0, ...p)
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeFilteredNamedPolicy("p", 0, "alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_filtered_named_policy("p", 0, "alice", "data1", "read")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveFilteredNamedPolicy("p", 0, "alice", "data1", "read");
+or
+var removed = e.RemoveFilteredNamedPolicyAync("p", 0, "alice", "data1", "read");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_filtered_named_policy("p", 0, vec!["alice".to_owned(), "data1".to_owned(), "read".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeFilteredNamedPolicy("p", 0, "alice", "data1", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `HasGroupingPolicy()`
+
+HasGroupingPolicy determines whether a role inheritance rule exists.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+has := e.HasGroupingPolicy("alice", "data2_admin")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const has = await e.hasGroupingPolicy('alice', 'data2_admin')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$has = $e->hasGroupingPolicy("alice", "data2_admin");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+has = e.has_grouping_policy("alice", "data2_admin")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var has = e.HasGroupingPolicy("alice", "data2_admin");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let has = e.has_grouping_policy(vec!["alice".to_owned(), "data2_admin".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean has = e.hasGroupingPolicy("alice", "data2_admin");
+```
+
+</Tab>
+</Tabs>
+
+### `HasNamedGroupingPolicy()`
+
+HasNamedGroupingPolicy determines whether a named role inheritance rule exists.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+has := e.HasNamedGroupingPolicy("g", "alice", "data2_admin")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const has = await e.hasNamedGroupingPolicy('g', 'alice', 'data2_admin')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$has = $e->hasNamedGroupingPolicy("g", "alice", "data2_admin");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+has = e.has_named_grouping_policy("g", "alice", "data2_admin")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var has = e.HasNamedGroupingPolicy("g", "alice", "data2_admin");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let has = e.has_named_grouping_policy("g", vec!["alice".to_owned(), "data2_admin".to_owned()]);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean has = e.hasNamedGroupingPolicy("g", "alice", "data2_admin");
+```
+
+</Tab>
+</Tabs>
+
+### `AddGroupingPolicy()`
+
+AddGroupingPolicy adds a role inheritance rule to the current policy.
+If the rule already exists, the function returns false and the rule will not be added.
+Otherwise the function returns true by adding the new rule.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+added := e.AddGroupingPolicy("group1", "data2_admin")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const added = await e.addGroupingPolicy('group1', 'data2_admin')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$added = $e->addGroupingPolicy("group1", "data2_admin");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+added = e.add_grouping_policy("group1", "data2_admin")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var added = e.AddGroupingPolicy("group1", "data2_admin");
+or
+var added = await e.AddGroupingPolicyAsync("group1", "data2_admin");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let added = e.add_grouping_policy(vec!["group1".to_owned(), "data2_admin".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean added = e.addGroupingPolicy("group1", "data2_admin");
+```
+
+</Tab>
+</Tabs>
+
+### `AddGroupingPolicies()`
+
+AddGroupingPolicies adds role inheritance rules to the current policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is added to the current policy.
+If all authorization the rules are consistent with the policy rules, the function returns true and each policy rule is added to the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"ham", "data4_admin"},
+    []string {"jack", "data5_admin"},
+}
+
+areRulesAdded := e.AddGroupingPolicies(rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const groupingRules = [
+    ['ham', 'data4_admin'],
+    ['jack', 'data5_admin']
+  ];
+
+const areRulesAdded = await e.addGroupingPolicies(groupingRules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["ham", "data4_admin"],
+    ["jack", "data5_admin"]
+]
+
+are_rules_added = e.add_grouping_policies(rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["ham".to_owned(), "data4_admin".to_owned()],
+    vec!["jack".to_owned(), "data5_admin".to_owned()],
+];
+
+let areRulesAdded = e.add_grouping_policies(rules).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+String[][] groupingRules = {
+    {"ham", "data4_admin"},
+    {"jack", "data5_admin"}
+};
+boolean areRulesAdded = e.addGroupingPolicies(groupingRules);
+```
+
+</Tab>
+</Tabs>
+
+### `AddGroupingPoliciesEx()`
+
+AddGroupingPoliciesEx adds role inheritance rules to the current policy.
+If the rule already exists, the rule will not be added.
+But unlike AddGroupingPolicies, other non-existent rules are added instead of returning false directly
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.AddGroupingPoliciesEx([][]string{{"user1", "member"}, {"user2", "member"}})
+```
+
+</Tab>
+</Tabs>
+
+### `AddNamedGroupingPolicy()`
+
+AddNamedGroupingPolicy adds a named role inheritance rule to the current policy.
+If the rule already exists, the function returns false and the rule will not be added.
+Otherwise the function returns true by adding the new rule.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+added := e.AddNamedGroupingPolicy("g", "group1", "data2_admin")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const added = await e.addNamedGroupingPolicy('g', 'group1', 'data2_admin')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$added = $e->addNamedGroupingPolicy("g", "group1", "data2_admin");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+added = e.add_named_grouping_policy("g", "group1", "data2_admin")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var added = e.AddNamedGroupingPolicy("g", "group1", "data2_admin");
+or
+var added = await e.AddNamedGroupingPolicyAsync("g", "group1", "data2_admin");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let added = e.add_named_grouping_policy("g", vec!["group1".to_owned(), "data2_admin".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean added = e.addNamedGroupingPolicy("g", "group1", "data2_admin");
+```
+
+</Tab>
+</Tabs>
+
+### `AddNamedGroupingPolicies()`
+
+AddNamedGroupingPolicies adds named role inheritance rules to the current policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is added to the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is added to the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"ham", "data4_admin"},
+    []string {"jack", "data5_admin"},
+}
+
+areRulesAdded := e.AddNamedGroupingPolicies("g", rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const groupingRules = [
+    ['ham', 'data4_admin'],
+    ['jack', 'data5_admin']
+  ];
+
+const areRulesAdded = await e.addNamedGroupingPolicies('g', groupingRules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["ham", "data4_admin"],
+    ["jack", "data5_admin"]
+]
+
+are_rules_added = e.add_named_grouping_policies("g", rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["ham".to_owned(), "data4_admin".to_owned()],
+    vec!["jack".to_owned(), "data5_admin".to_owned()],
+];
+
+let are_rules_added = e.add_named_grouping_policies("g", rules).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+String[][] groupingRules = {
+    {"ham", "data4_admin"},
+    {"jack", "data5_admin"}
+};
+boolean areRulesAdded = e.addNamedGroupingPolicies("g", groupingRules);
+```
+
+</Tab>
+</Tabs>
+
+### `AddNamedGroupingPoliciesEx()`
+
+AddNamedGroupingPoliciesEx adds named role inheritance rules to the current policy.
+If the rule already exists, the rule will not be added.
+But unlike AddNamedGroupingPolicies, other non-existent rules are added instead of returning false directly
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.AddNamedGroupingPoliciesEx("g", [][]string{{"user1", "member"}, {"user2", "member"}})
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveGroupingPolicy()`
+
+RemoveGroupingPolicy removes a role inheritance rule from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveGroupingPolicy("alice", "data2_admin")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const removed = await e.removeGroupingPolicy('alice', 'data2_admin')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeGroupingPolicy("alice", "data2_admin");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_grouping_policy("alice", "data2_admin")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveGroupingPolicy("alice", "data2_admin");
+or
+var removed = await e.RemoveGroupingPolicyAsync("alice", "data2_admin");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_grouping_policy(vec!["alice".to_owned(), "data2_admin".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeGroupingPolicy("alice", "data2_admin");
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveGroupingPolicies()`
+
+RemoveGroupingPolicies removes role inheritance rules from the current policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is removed from the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is removed from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Rust', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+                []string {"ham", "data4_admin"},
+                []string {"jack", "data5_admin"},
+        }
+
+areRulesRemoved := e.RemoveGroupingPolicies(rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const groupingRules = [
+    ['ham', 'data4_admin'],
+    ['jack', 'data5_admin']
+  ];
+
+const areRulesRemoved = await e.removeGroupingPolicies(groupingRules);
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["ham".to_owned(), "data4_admin".to_owned()],
+    vec!["jack".to_owned(), "data5_admin".to_owned()],
+];
+
+let are_rules_removed = e.remove_grouping_policies(rules).await?;
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["ham", "data4_admin"],
+    ["jack", "data5_admin"]
+]
+
+are_rules_removed = e.remove_grouping_policies(rules)
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+String[][] groupingRules = {
+    {"ham", "data4_admin"},
+    {"jack", "data5_admin"}
+};
+boolean areRulesRemoved = e.removeGroupingPolicies(groupingRules);
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveFilteredGroupingPolicy()`
+
+RemoveFilteredGroupingPolicy removes a role inheritance rule from the current policy, field filters can be specified.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveFilteredGroupingPolicy(0, "alice")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const removed = await e.removeFilteredGroupingPolicy(0, 'alice')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeFilteredGroupingPolicy(0, "alice");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_filtered_grouping_policy(0, "alice")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveFilteredGroupingPolicy(0, "alice");
+or
+var removed = await e.RemoveFilteredGroupingPolicyAsync(0, "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_filtered_grouping_policy(0, vec!["alice".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeFilteredGroupingPolicy(0, "alice");
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveNamedGroupingPolicy()`
+
+RemoveNamedGroupingPolicy removes a role inheritance rule from the current named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveNamedGroupingPolicy("g", "alice")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const removed = await e.removeNamedGroupingPolicy('g', 'alice')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeNamedGroupingPolicy("g", "alice");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_named_grouping_policy("g", "alice", "data2_admin")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveNamedGroupingPolicy("g", "alice");
+or 
+var removed = await e.RemoveNamedGroupingPolicyAsync("g", "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_named_grouping_policy("g", vec!["alice".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeNamedGroupingPolicy("g", "alice");
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveNamedGroupingPolicies()`
+
+RemoveNamedGroupingPolicies removes named role inheritance rules from the current policy.
+The operation is atomic in nature.
+Hence, if authorization rules consists of rules which are not consistent with the current policy, the function returns false and no policy rule is removed from the current policy.
+If all the authorization rules are consistent with the policy rules, the function returns true and each policy rule is removed from the current policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+rules := [][] string {
+    []string {"ham", "data4_admin"},
+    []string {"jack", "data5_admin"},
+}
+
+areRulesRemoved := e.RemoveNamedGroupingPolicies("g", rules)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const groupingRules = [
+    ['ham', 'data4_admin'],
+    ['jack', 'data5_admin']
+  ];
+
+const areRulesRemoved = await e.removeNamedGroupingPolicies('g', groupingRules);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+rules = [
+    ["ham", "data4_admin"],
+    ["jack", "data5_admin"]
+]
+are_rules_removed = e.remove_named_grouping_policies("g", rules)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let rules = vec![
+    vec!["ham".to_owned(), "data4_admin".to_owned()],
+    vec!["jack".to_owned(), "data5_admin".to_owned()],
+];
+
+let are_rules_removed = e.remove_named_grouping_policies("g", rules).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+String[][] groupingRules = {
+    {"ham", "data4_admin"},
+    {"jack", "data5_admin"}
+};
+boolean areRulesRemoved = e.removeNamedGroupingPolicies("g", groupingRules);
+```
+
+</Tab>
+</Tabs>
+
+### `RemoveFilteredNamedGroupingPolicy()`
+
+RemoveFilteredNamedGroupingPolicy removes a role inheritance rule from the current named policy, field filters can be specified.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+removed := e.RemoveFilteredNamedGroupingPolicy("g", 0, "alice")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const removed = await e.removeFilteredNamedGroupingPolicy('g', 0, 'alice')
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$removed = $e->removeFilteredNamedGroupingPolicy("g", 0, "alice");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+removed = e.remove_filtered_named_grouping_policy("g", 0, "alice")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var removed = e.RemoveFilteredNamedGroupingPolicy("g", 0, "alice");
+or
+var removed = await e.RemoveFilteredNamedGroupingPolicyAsync("g", 0, "alice");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let removed = e.remove_filtered_named_groupingPolicy("g", 0, vec!["alice".to_owned()]).await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean removed = e.removeFilteredNamedGroupingPolicy("g", 0, "alice");
+```
+
+</Tab>
+</Tabs>
+
+### `UpdatePolicy()`
+
+UpdatePolicy update a old policy to new policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+updated, err := e.UpdatePolicy([]string{"eve", "data3", "read"}, []string{"eve", "data3", "write"})
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const update = await e.updatePolicy(["eve", "data3", "read"], ["eve", "data3", "write"]);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+updated = e.update_policy(["eve", "data3", "read"], ["eve", "data3", "write"])
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean updated = e.updatePolicy(Arrays.asList("eve", "data3", "read"), Arrays.asList("eve", "data3", "write"));
+```
+
+</Tab>
+</Tabs>
+
+### `UpdatePolicies()`
+
+UpdatePolicies updates all old policies to new policies.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Python']} persist>
+<Tab value="Go">
+
+```go
+updated, err := e.UpdatePolicies([][]string{{"eve", "data3", "read"}, {"jack", "data3", "read"}}, [][]string{{"eve", "data3", "write"}, {"jack", "data3", "write"}})
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+old_rules = [["eve", "data3", "read"], ["jack", "data3", "read"]]
+new_rules = [["eve", "data3", "write"], ["jack", "data3", "write"]]
+
+updated = e.update_policies(old_rules, new_rules)
+```
+
+</Tab>
+</Tabs>
+
+### `UpdateNamedPolicy()`
+
+UpdateNamedPolicy update a old policy to new policy in the named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+updated, err := e.UpdateNamedPolicy("p", []string{"eve", "data3", "read"}, []string{"eve", "data3", "write"})
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const update = await e.updateNamedPolicy('p', ["eve", "data3", "read"], ["eve", "data3", "write"]);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+updated = e.update_named_policy("p", ["eve", "data3", "read"], ["eve", "data3", "write"])
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean updated = e.updateNamedPolicy("p", Arrays.asList("eve", "data3", "read"), Arrays.asList("eve", "data3", "write"));
+```
+
+</Tab>
+</Tabs>
+
+### `UpdateNamedPolicies()`
+
+UpdateNamedPolicies updates all old policies to new policies in the named policy.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Python']} persist>
+<Tab value="Go">
+
+```go
+updated, err := e.UpdateNamedPolicies("p", [][]string{{"eve", "data3", "read"}, {"jack", "data3", "read"}}, [][]string{{"eve", "data3", "write"}, {"jack", "data3", "write"}})
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+old_rules = [["eve", "data3", "read"], ["jack", "data3", "read"]]
+new_rules = [["eve", "data3", "write"], ["jack", "data3", "write"]]
+
+updated = e.update_named_policies("p", old_rules, new_rules)
+```
+
+</Tab>
+</Tabs>
+
+### `UpdateFilteredPolicies()`
+
+UpdateFilteredPolicies updates all old policies that match the filter to new policies.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+updated, err := e.UpdateFilteredPolicies([][]string{{"eve", "data3", "write"}}, 0, "eve", "data3", "read")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const updated = await e.updateFilteredPolicies([["eve", "data3", "write"]], 0, "eve", "data3", "read");
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+new_rules = [["eve", "data3", "write"]]
+updated = e.update_filtered_policies(new_rules, 0, "eve", "data3", "read")
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean updated = e.updateFilteredPolicies(Arrays.asList(Arrays.asList("eve", "data3", "write")), 0, "eve", "data3", "read");
+```
+
+</Tab>
+</Tabs>
+
+### `AddFunction()`
+
+AddFunction adds a customized function.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+func CustomFunction(key1 string, key2 string) bool {
+    if key1 == "/alice_data2/myid/using/res_id" && key2 == "/alice_data/:resource" {
+        return true
+    } else if key1 == "/alice_data2/myid/using/res_id" && key2 == "/alice_data2/:id/using/:resId" {
+        return true
+    } else {
+        return false
+    }
+}
+
+func CustomFunctionWrapper(args ...interface{}) (interface{}, error) {
+    key1 := args[0].(string)
+    key2 := args[1].(string)
+
+    return bool(CustomFunction(key1, key2)), nil
+}
+
+e.AddFunction("keyMatchCustom", CustomFunctionWrapper)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+function customFunction(key1, key2){
+    if(key1 == "/alice_data2/myid/using/res_id" && key2 == "/alice_data/:resource") {
+        return true
+    } else if(key1 == "/alice_data2/myid/using/res_id" && key2 == "/alice_data2/:id/using/:resId") {
+        return true
+    } else {
+        return false
+    }
+}
+
+e.addFunction("keyMatchCustom", customFunction);
+```
+
+</Tab>
+<Tab value="PHP">
+
+```php
+func customFunction($key1, $key2) {
+    if ($key1 == "/alice_data2/myid/using/res_id" && $key2 == "/alice_data/:resource") {
+        return true;
+    } elseif ($key1 == "/alice_data2/myid/using/res_id" && $key2 == "/alice_data2/:id/using/:resId") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+func customFunctionWrapper(...$args){
+    $key1 := $args[0];
+    $key2 := $args[1];
+
+    return customFunction($key1, $key2);
+}
+
+$e->addFunction("keyMatchCustom", customFunctionWrapper);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+def custom_function(key1, key2):
+    return ((key1 == "/alice_data2/myid/using/res_id" and key2 == "/alice_data/:resource") or (key1 == "/alice_data2/myid/using/res_id" and key2 == "/alice_data2/:id/using/:resId"))
+
+
+e.add_function("keyMatchCustom", custom_function)
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+fn custom_function(key1: STring, key2: String) {
+    key1 == "/alice_data2/myid/using/res_id" && key2 == "/alice_data/:resource" || key1 == "/alice_data2/myid/using/res_id" && key2 == "/alice_data2/:id/using/:resId"
+}
+
+
+e.add_function("keyMatchCustom", custom_function);
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+public static class CustomFunc extends CustomFunction {
+    @Override
+    public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
+        String key1 = FunctionUtils.getStringValue(arg1, env);
+        String key2 = FunctionUtils.getStringValue(arg2, env);
+        if (key1.equals("/alice_data2/myid/using/res_id") && key2.equals("/alice_data/:resource")) {
+            return AviatorBoolean.valueOf(true);
+        } else if (key1.equals("/alice_data2/myid/using/res_id") && key2.equals("/alice_data2/:id/using/:resId")) {
+            return AviatorBoolean.valueOf(true);
+        } else {
+            return AviatorBoolean.valueOf(false);
+        }
+    }
+
+    @Override
+    public String getName() {
+        return "keyMatchCustom";
+    }
+}
+
+FunctionTest.CustomFunc customFunc = new FunctionTest.CustomFunc();
+e.addFunction(customFunc.getName(), customFunc);
+```
+
+</Tab>
+</Tabs>
+
+### `LoadFilteredPolicy()`
+
+LoadFilteredPolicy loads filtered policies from file/database.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+err := e.LoadFilteredPolicy()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const ok = await e.loadFilteredPolicy();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+class Filter:
+    P = []
+    G = []
+
+adapter = casbin.persist.adapters.FilteredAdapter("rbac_with_domains_policy.csv")
+e = casbin.Enforcer("rbac_with_domains_model.conf", adapter)
+filter = Filter()
+filter.P = ["", "domain1"]
+filter.G = ["", "", "domain1"]
+e.load_filtered_policy(filter)
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+e.loadFilteredPolicy(new String[] { "", "domain1" });
+```
+
+</Tab>
+</Tabs>
+
+### `LoadIncrementalFilteredPolicy()`
+
+LoadIncrementalFilteredPolicy append a filtered policy from file/database.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+err := e.LoadIncrementalFilteredPolicy()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+const ok = await e.loadIncrementalFilteredPolicy();
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+adapter = casbin.persist.adapters.FilteredAdapter("rbac_with_domains_policy.csv")
+e = casbin.Enforcer("rbac_with_domains_model.conf", adapter)
+filter = Filter()
+filter.P = ["", "domain1"]
+filter.G = ["", "", "domain1"]
+e.load_increment_filtered_policy(filter)
+```
+
+</Tab>
+</Tabs>
+
+### `UpdateGroupingPolicy()`
+
+UpdateGroupingPolicy updates oldRule to newRulein `g` section
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Java']} persist>
+<Tab value="Go">
+
+```go
+succeed, err : = e.UpdateGroupingPolicy([]string{"data3_admin", "data4_admin"}, []string{"admin", "data4_admin"})
+```
+
+</Tab>
+<Tab value="Java">
+
+Java
+boolean succeed = e.updateGroupingPolicy(Arrays.asList("data3_admin", "data4_admin"), Arrays.asList("admin", "data4_admin"));
+
+</Tab>
+</Tabs>
+
+### `UpdateNamedGroupingPolicy()`
+
+UpdateNamedGroupingPolicy updates oldRule named `ptype` to newRulein `g` section
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Java']} persist>
+<Tab value="Go">
+
+```go
+succeed, err : = e.UpdateGroupingPolicy("g1",[]string{"data3_admin", "data4_admin"}, []string{"admin", "data4_admin"})
+```
+
+</Tab>
+<Tab value="Java">
+
+Java
+boolean succeed = e.updateNamedGroupingPolicy("g1", Arrays.asList("data3_admin", "data4_admin"), Arrays.asList("admin", "data4_admin"));
+
+</Tab>
+</Tabs>
+
+### `SetFieldIndex()`
+
+SetFieldIndex suport customization of conventional name and position of `sub`, `obj`, `domain` and `priority`.
+
+```ini
+[policy_definition]
+p = customized_priority, obj, act, eft, subject
+```
+
+For example:
+
+<Tabs>
+<TabItem value="Go" label="Go" default>
+```go
+e.SetFieldIndex("p", constant.PriorityIndex, 0)
+e.SetFieldIndex("p", constant.SubjectIndex, 4)
+```
+
+</TabItem>
+</Tabs>

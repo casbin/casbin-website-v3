@@ -1,0 +1,59 @@
+---
+id: rebac
+title: ReBAC
+description: ReBAC based on Casbin
+keywords: [ReBAC, ReBAC model]
+authors: [D0000M]
+---
+## What is the ReBAC Model?
+
+ReBAC (Relationship-Based Access Control) is a contemporary access control model that manages permissions based on relationships between entities. Unlike traditional models such as RBAC (Role-Based Access Control) or ABAC (Attribute-Based Access Control), ReBAC excels in systems with intricate relationship networks, including social networks, collaborative platforms, and multi-tenant environments.
+
+In ReBAC, authorization decisions depend on the relationships between entities, for example:
+
+- Is the user the "owner" of the resource?
+- Is the user a "friend" of the resource's "creator"?
+- Does the user belong to an organization associated with the resource?
+- Is the user an "admin" of a specific "project"?
+
+These relationships are typically represented as graph structures or paths.
+
+## ReBAC Support in Casbin
+
+Casbin supports ReBAC through the following mechanisms:
+
+- User-Resource-Role Relationships
+- Resource-Type Relationships
+
+A single policy rule can apply to multiple users and multiple resources of the same type, enabling flexible and scalable permission control through relationship combinations.
+
+Casbin uses `.conf` files to define access control models. Here is an official ReBAC model example:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = role, obj_type, act
+
+[role_definition]
+g = _, _, _
+g2 = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, r.obj, p.role) && g2(r.obj, p.obj_type) && r.act == p.act
+```csv
+# Permission definition: The "collaborator" role can read files of type "doc"
+p, collaborator, doc, read
+
+# User-Resource-Role Relationship: alice is a collaborator of doc1
+g, alice, doc1, collaborator
+
+# Resource-Type Relationship: doc1 is of type "doc"
+g2, doc1, doc
+```
+
+Permissions are automatically derived by verifying that a user has a specific role for a resource and that the resource belongs to the specified type, combining **role relationships + type relationships + permission definitions**.

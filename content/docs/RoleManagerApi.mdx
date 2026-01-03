@@ -1,0 +1,428 @@
+---
+id: rolemanager-api
+title: RoleManager API
+description: The RoleManager API provides an interface for defining operations to manage roles. The addition of a matching function to the RoleManager allows the use of wildcards in role names and domains.
+keywords: [rolemanager, API]
+authors: [closetool, kiloson-c]
+---
+
+## RoleManager
+
+The RoleManager provides an interface for managing role operations. Adding a matching function to the RoleManager enables the use of wildcards in role names and domains.
+
+### `AddNamedMatchingFunc()`
+
+`AddNamedMatchingFunc` registers a `MatchingFunc` for a specific policy type in the RoleManager. The `MatchingFunc` is applied during role matching.
+
+<Tabs groupId="langs" items={['Go', 'Node.js']} persist>
+<Tab value="Go">
+
+```go
+    e.AddNamedMatchingFunc("g", "", util.KeyMatch)
+    _, _ = e.AddGroupingPolicies([][]string{{"*", "admin", "domain1"}})
+    _, _ = e.GetRoleManager().HasLink("bob", "admin", "domain1") // -> true, nil
+```
+
+</Tab>
+<Tab value="Node.js">
+
+```typescript
+    await e.addNamedMatchingFunc('g', Util.keyMatchFunc);
+    await e.addGroupingPolicies([['*', 'admin', 'domain1']]);
+    await e.getRoleManager().hasLink('bob', 'admin', 'domain1');
+```
+
+</Tab>
+</Tabs>
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js']} persist>
+<Tab value="Go">
+
+```go
+    e, _ := casbin.NewEnforcer("path/to/model", "path/to/policy")
+    e.AddNamedMatchingFunc("g", "", util.MatchKey)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    const e = await newEnforcer('path/to/model', 'path/to/policy');
+    await e.addNamedMatchingFunc('g', Util.keyMatchFunc);
+
+</Tab>
+</Tabs>
+
+### `AddNamedDomainMatchingFunc()`
+
+`AddNamedDomainMatchingFunc` registers a `MatchingFunc` for a specific policy type in the RoleManager. The `DomainMatchingFunc` works similarly to `MatchingFunc`.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js']} persist>
+<Tab value="Go">
+
+```go
+    e, _ := casbin.NewEnforcer("path/to/model", "path/to/policy")
+    e.AddNamedDomainMatchingFunc("g", "", util.MatchKey)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    const e = await newEnforcer('path/to/model', 'path/to/policy');
+    await e.addNamedDomainMatchingFunc('g', Util.keyMatchFunc);
+
+</Tab>
+</Tabs>
+
+### `GetRoleManager()`
+
+`GetRoleManager` retrieves the current role manager for `g`.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm := e.GetRoleManager()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    const rm = await e.getRoleManager();
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm = e.get_role_manager()
+```
+
+</Tab>
+</Tabs>
+
+### `GetNamedRoleManager()`
+
+`GetNamedRoleManager` retrieves the role manager by named policy type.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm := e.GetNamedRoleManager("g2")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    const rm = await e.getNamedRoleManager("g2");
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm = e.get_named_role_manager("g2")
+```
+
+</Tab>
+</Tabs>
+
+### `SetRoleManager()`
+
+`SetRoleManager` assigns the current role manager for `g`.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    e.SetRoleManager(rm)
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    e.setRoleManager(rm);
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm = e.set_role_manager(rm)
+```
+
+</Tab>
+</Tabs>
+
+### `SetNamedRoleManager()`
+
+`SetNamedRoleManager` assigns the role manager by named policy type.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm := e.SetNamedRoleManager("g2", rm)
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm = e.set_role_manager("g2", rm)
+```
+
+</Tab>
+</Tabs>
+
+### `Clear()`
+
+`Clear` removes all stored data and resets the role manager to its initial state.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.Clear()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.clear();
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.clear()
+```
+
+</Tab>
+</Tabs>
+
+### `AddLink()`
+
+`AddLink` creates an inheritance link between two roles: `name1` and `name2`. The domain parameter serves as a prefix to the roles (can also be used for other purposes).
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.AddLink("u1", "g1", "domain1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.addLink('u1', 'g1', 'domain1');
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.add_link("u1", "g1", "domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `DeleteLink()`
+
+`DeleteLink` removes the inheritance link between two roles: `name1` and `name2`. The domain parameter serves as a prefix to the roles (can also be used for other purposes).
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.DeleteLink("u1", "g1", "domain1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.deleteLink('u1', 'g1', 'domain1');
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.delete_link("u1", "g1", "domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `HasLink()`
+
+`HasLink` checks whether a link exists between two roles, where `name1` inherits from `name2`. The domain parameter serves as a prefix to the roles (can also be used for other purposes).
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.HasLink("u1", "g1", "domain1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.hasLink('u1', 'g1', 'domain1');
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.has_link("u1", "g1", "domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `GetRoles()`
+
+`GetRoles` retrieves the roles that a user inherits. The domain parameter serves as a prefix to the roles (can also be used for other purposes).
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.GetRoles("u1", "domain1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.getRoles('u1', 'domain1');
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.get_roles("u1", "domain")
+```
+
+</Tab>
+</Tabs>
+
+### `GetUsers()`
+
+`GetUsers` retrieves the users that inherit a role. The domain parameter serves as a prefix to the users (can also be used for other purposes).
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.GetUsers("g1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.getUsers('g1');
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.get_users("g1")
+```
+
+</Tab>
+</Tabs>
+
+### `PrintRoles()`
+
+`PrintRoles` outputs all roles to the log.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+    rm.PrintRoles()
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+    await rm.printRoles();
+
+</Tab>
+<Tab value="Python">
+
+```python
+    rm.print_roles()
+```
+
+</Tab>
+</Tabs>
+
+### `SetLogger()`
+
+`SetLogger` assigns a logger to the role manager.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+    logger := log.DefaultLogger{}
+    logger.EnableLog(true)
+    rm.SetLogger(&logger)
+    _ = rm.PrintRoles()
+```
+
+</Tab>
+</Tabs>
+
+### `GetDomains()`
+
+`GetDomains` retrieves the domains that a user belongs to.
+
+Example usage:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+    result, err := rm.GetDomains(name)
+```
+
+</Tab>
+</Tabs>

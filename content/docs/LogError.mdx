@@ -1,0 +1,213 @@
+---
+id: log-error
+title: Log & Error Handling
+description: Logging and error handling in Casbin
+keywords: [log, error, error handling]
+authors: [hsluoyz]
+---
+
+## Logging
+
+By default, Casbin uses the built-in `log` package to print messages to the console:
+
+```log
+2017/07/15 19:43:56 [Request: alice, data1, read ---> true]
+```
+
+Logging is disabled by default. Enable it using `Enforcer.EnableLog()` or the last parameter of `NewEnforcer()`.
+
+<Callout>
+**For Golang:** Casbin supports logging models, enforcement requests, roles, and policies. You can implement custom loggers for Casbin.
+</Callout>
+
+<Callout>
+**For Python:** PyCasbin uses Python's standard logging mechanism. PyCasbin calls `logging.getLogger()` to configure its logger. No special configuration is needed beyond initializing logging in your application. If you don't initialize logging, PyCasbin will produce no log output. When enabling logs in PyCasbin, you can specify configuration through the `logging_config` parameter. Without explicit configuration, PyCasbin uses the [default log configuration](https://github.com/casbin/pycasbin/blob/c33cabfa0ac65cd09cf812a65e71794d64cb5132/casbin/util/log.py#L6C1-L6C1). Django users should consult the [Django logging documentation](https://docs.djangoproject.com/en/4.2/topics/logging/). Other Python users should refer to the [Python logging documentation](https://docs.python.org/3/library/logging.config.html).
+</Callout>
+
+### Configure Separate Loggers for Different Enforcers
+
+Each enforcer can have its own logger, and loggers can be changed at runtime.
+
+You can specify a logger using the last parameter of `NewEnforcer()`. When using this method, the logger's enabled field takes precedence over the enforcer's enabled parameter.
+
+```go
+// Set a default logger as enforcer e1's logger.
+// This operation can also be seen as changing the logger of e1 at runtime.
+e1.SetLogger(&Log.DefaultLogger{})
+
+// Set another logger as enforcer e2's logger.
+e2.SetLogger(&YouOwnLogger)
+
+// Set your logger when initializing enforcer e3.
+e3, _ := casbin.NewEnforcer("examples/rbac_model.conf", a, logger)
+```
+
+#### Supported Loggers
+
+Casbin provides several logger implementations:
+
+<Tabs groupId="langs" items={['Go', 'PHP']} persist>
+<Tab value="Go">
+
+| Logger                                                                                              | Author | Description                                                                                                                    |
+|-----------------------------------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| [Default logger (built-in)](https://github.com/casbin/casbin/blob/master/log/default_logger.go)    | Casbin | The default logger using Go's standard log package.                                                                            |
+| [Zap logger](https://github.com/casbin/zap-logger)                                                    | Casbin | Uses [zap](https://github.com/uber-go/zap) for JSON-encoded logs with additional customization options via zap-logger.        |
+
+</Tab>
+<Tab value="PHP">
+
+| Logger                                                          | Author | Description                                                              |
+|-----------------------------------------------------------------|--------|--------------------------------------------------------------------------|
+| [psr3-bridge logger](https://github.com/php-casbin/psr3-bridge) | Casbin | Provides a [PSR-3](https://www.php-fig.org/psr/psr-3/) compliant bridge.|
+
+</Tab>
+</Tabs>
+
+#### Implementing Custom Loggers
+
+Custom loggers must implement the [Logger](https://github.com/casbin/casbin/blob/master/log/logger.go#L20) interface.
+
+| Method       | Type      | Description                                      |
+|--------------|-----------|--------------------------------------------------|
+| EnableLog()  | mandatory | Controls whether messages are printed.           |
+| IsEnabled()  | mandatory | Returns the current logger's enabled status.    |
+| LogModel()   | mandatory | Logs model-related information.                  |
+| LogEnforce() | mandatory | Logs enforcement-related information.            |
+| LogRole()    | mandatory | Logs role-related information.                   |
+| LogPolicy()  | mandatory | Logs policy-related information.                 |
+
+Pass your custom logger to `Enforcer.SetLogger()`.
+
+Here's a Go example of implementing a custom logger:
+
+```go
+import (
+    "fmt"
+    "log"
+    "strings"
+)
+
+// DefaultLogger is the implementation for a Logger using golang log.
+type DefaultLogger struct {
+    enabled bool
+}
+
+func (l *DefaultLogger) EnableLog(enable bool) {
+    l.enabled = enable
+}
+
+func (l *DefaultLogger) IsEnabled() bool {
+    return l.enabled
+}
+
+func (l *DefaultLogger) LogModel(model [][]string) {
+    if !l.enabled {
+        return
+    }
+    var str strings.Builder
+    str.WriteString("Model: ")
+    for _, v := range model {
+        str.WriteString(fmt.Sprintf("%v\n", v))
+    }
+
+    log.Println(str.String())
+}
+
+func (l *DefaultLogger) LogEnforce(matcher string, request []interface{}, result bool, explains [][]string) {
+    if !l.enabled {
+        return
+    }
+
+    var reqStr strings.Builder
+    reqStr.WriteString("Request: ")
+    for i, rval := range request {
+        if i != len(request)-1 {
+            reqStr.WriteString(fmt.Sprintf("%v, ", rval))
+        } else {
+            reqStr.WriteString(fmt.Sprintf("%v", rval))
+        }
+    }
+    reqStr.WriteString(fmt.Sprintf(" ---> %t\n", result))
+
+    reqStr.WriteString("Hit Policy: ")
+    for i, pval := range explains {
+        if i != len(explains)-1 {
+            reqStr.WriteString(fmt.Sprintf("%v, ", pval))
+        } else {
+            reqStr.WriteString(fmt.Sprintf("%v \n", pval))
+        }
+    }
+
+    log.Println(reqStr.String())
+}
+
+func (l *DefaultLogger) LogPolicy(policy map[string][][]string) {
+    if !l.enabled {
+        return
+    }
+
+    var str strings.Builder
+    str.WriteString("Policy: ")
+    for k, v := range policy {
+        str.WriteString(fmt.Sprintf("%s : %v\n", k, v))
+    }
+
+    log.Println(str.String())
+}
+
+func (l *DefaultLogger) LogRole(roles []string) {
+    if !l.enabled {
+        return
+    }
+
+    log.Println("Roles: ", roles)
+}
+```
+
+## Error Handling
+
+Errors or panics can occur in Casbin for several reasons:
+
+1. Invalid syntax in the model file (.conf)
+2. Invalid syntax in the policy file (.csv)
+3. Custom errors from storage adapters (e.g., MySQL connection failures)
+4. Casbin bugs
+
+Five primary functions may produce errors or panics:
+
+| Function                                                                       | Behavior on Error |
+|--------------------------------------------------------------------------------|-------------------|
+| [NewEnforcer()](https://godoc.org/github.com/casbin/casbin#NewEnforcer)        | Returns an error  |
+| [LoadModel()](https://godoc.org/github.com/casbin/casbin#Enforcer.LoadModel)   | Returns an error  |
+| [LoadPolicy()](https://godoc.org/github.com/casbin/casbin#Enforcer.LoadPolicy) | Returns an error  |
+| [SavePolicy()](https://godoc.org/github.com/casbin/casbin#Enforcer.SavePolicy) | Returns an error  |
+| [Enforce()](https://godoc.org/github.com/casbin/casbin#Enforcer.Enforce)       | Returns an error  |
+
+<Callout>
+`NewEnforcer()` calls both `LoadModel()` and `LoadPolicy()` internally, so you don't need to call them separately when using `NewEnforcer()`.
+</Callout>
+
+## Enabling and Disabling Enforcement
+
+You can disable the enforcer using `Enforcer.EnableEnforce()`. When disabled, `Enforcer.Enforce()` always returns `true`. Other operations like policy management remain unaffected. Example:
+
+```go
+e := casbin.NewEnforcer("examples/basic_model.conf", "examples/basic_policy.csv")
+
+// Will return false.
+// By default, the enforcer is enabled.
+e.Enforce("non-authorized-user", "data1", "read")
+
+// Disable the enforcer at runtime.
+e.EnableEnforce(false)
+
+// Will return true for any request.
+e.Enforce("non-authorized-user", "data1", "read")
+
+// Enable the enforcer again.
+e.EnableEnforce(true)
+
+// Will return false.
+e.Enforce("non-authorized-user", "data1", "read")
+```

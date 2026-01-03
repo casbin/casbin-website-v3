@@ -1,0 +1,105 @@
+---
+id: model-storage
+title: Model Storage
+description: Model storage
+keywords: [model storage]
+authors: [hsluoyz]
+---
+
+Casbin models are designed to be loaded rather than saved. The model defines your access control logic and should remain static at runtime, so Casbin does not provide an API for persisting model changes to storage.
+
+You can load a model using any of these three approaches:
+
+## Load model from .CONF file
+
+Loading from a configuration file is the standard approach. This method makes models easy to understand and share when seeking help from the Casbin community.
+
+Here's an example model file [examples/rbac_model.conf](https://github.com/casbin/casbin/blob/master/examples/rbac_model.conf):
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+Load this model file:
+
+```go
+e := casbin.NewEnforcer("examples/rbac_model.conf", "examples/rbac_policy.csv")
+```
+
+## Load model from code
+
+Build the model programmatically instead of reading from a file. This example constructs an RBAC model:
+
+```go
+import (
+    "github.com/casbin/casbin/v3"
+    "github.com/casbin/casbin/v3/model"
+    "github.com/casbin/casbin/v3/persist/file-adapter"
+)
+
+// Initialize the model from Go code.
+m := model.NewModel()
+m.AddDef("r", "r", "sub, obj, act")
+m.AddDef("p", "p", "sub, obj, act")
+m.AddDef("g", "g", "_, _")
+m.AddDef("e", "e", "some(where (p.eft == allow))")
+m.AddDef("m", "m", "g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act")
+
+// Load the policy rules from the .CSV file adapter.
+// Replace it with your adapter to avoid using files.
+a := fileadapter.NewAdapter("examples/rbac_policy.csv")
+
+// Create the enforcer.
+e := casbin.NewEnforcer(m, a)
+```
+
+## Load model from string
+
+Load the model directly from a multi-line string. This eliminates the need to maintain a separate model file.
+
+```go
+import (
+    "github.com/casbin/casbin/v3"
+    "github.com/casbin/casbin/v3/model"
+)
+
+// Initialize the model from a string.
+text :=
+`
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+`
+m, _ := model.NewModelFromString(text)
+
+// Load the policy rules from the .CSV file adapter.
+// Replace it with your adapter to avoid using files.
+a := fileadapter.NewAdapter("examples/rbac_policy.csv")
+
+// Create the enforcer.
+e := casbin.NewEnforcer(m, a)
+```

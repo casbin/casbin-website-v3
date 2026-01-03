@@ -1,0 +1,11 @@
+---
+id: multi-threading
+title: Multi-threading
+description: Utilizing Casbin in a multi-threading environment
+keywords: [multi-threading]
+authors: [hsluoyz]
+---
+
+For multi-threaded environments, use the synchronized wrapper provided by Casbin: [enforcer_synced.go](https://github.com/casbin/casbin/blob/master/enforcer_synced.go) (GoLang) and [enforcer_synced.cpp](https://github.com/casbin/casbin-cpp/blob/master/casbin/enforcer_synced.cpp) (C++).
+
+The synchronized enforcer also supports automatic policy reloading. This feature monitors the policy source for changes and reloads policies automatically when updates are detected. Call `StartAutoLoadPolicy()` to enable periodic policy reloading, and call `StopAutoLoadPolicy()` to disable it.

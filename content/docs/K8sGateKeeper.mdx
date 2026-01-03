@@ -1,0 +1,413 @@
+---
+id: k8s-gatekeeper
+title: Admission Webhook for K8s
+description: Kubernetes (K8s) RBAC & ABAC Authorization Middleware based on Casbin
+keywords: [k8s-gatekeeper, Kubernetes, K8s]
+authors: [ComradeProgrammer]
+---
+
+## 1. Overview & Documentation for Casbin K8s-Gatekeeper
+
+Casbin K8s-GateKeeper is a Kubernetes admission webhook that integrates Casbin for access control. Using Casbin K8s-GateKeeper, you can define flexible authorization rules for any Kubernetes resource operation through declarative Casbin model and policy configurations—no code required.
+
+Casbin K8s-GateKeeper is developed and maintained by the Casbin community. Repository: [https://github.com/casbin/k8s-gatekeeper](https://github.com/casbin/k8s-gatekeeper)
+
+### 0.1 A Basic Example
+
+Here's an example that blocks deployments using images with specific tags, using only configuration:
+
+Model:
+
+```ini
+[request_definition]
+r =  obj
+
+[policy_definition]
+p =  obj,eft
+
+[policy_effect]
+e = !some(where (p.eft == deny))
+
+[matchers]
+m = r.obj.Request.Namespace == "default" && r.obj.Request.Resource.Resource =="deployments" && \
+contain(split(accessWithWildcard(${OBJECT}.Spec.Template.Spec.Containers , "*", "Image"),":",1) , p.obj)
+```
+
+Policy:
+
+```csv
+p, "1.14.1",deny
+```
+
+This uses standard Casbin ACL language, which should be straightforward if you've read the introductory chapters.
+
+Casbin K8s-Gatekeeper offers several advantages:
+
+- Simple to use—write ACL configurations instead of extensive code
+- Supports live configuration updates without plugin restarts
+- Flexible—apply arbitrary rules to any Kubernetes resource using `kubectl gatekeeper`
+- Simplifies Kubernetes admission webhook implementation—no need to understand webhook internals or write webhook code. Just define constraints and write Casbin ACL.
+- Community-maintained—contact us with questions or issues
+
+### 1.1 How Casbin K8s-Gatekeeper Works
+
+K8s-Gatekeeper is an admission webhook for Kubernetes that uses [Casbin](/docs/overview) to enforce custom access control rules, preventing unwanted operations on Kubernetes resources.
+
+Casbin is an efficient open-source access control library supporting various authorization models. For details, see the [Overview](/docs/overview).
+
+Admission webhooks in Kubernetes are HTTP callbacks that receive and process admission requests. K8s-Gatekeeper is a ValidatingAdmissionWebhook that accepts or rejects admission requests. Admission requests are HTTP requests describing operations on Kubernetes resources (e.g., creating or deleting a deployment). For more information, see the [Kubernetes documentation](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks).
+
+### 1.2 Example Workflow
+
+When someone creates a deployment with an nginx pod (via kubectl or Kubernetes clients), Kubernetes generates an admission request like this (in YAML format):
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.1
+        ports:
+        - containerPort: 80
+```
+
+This request passes through middleware layers, including K8s-Gatekeeper. K8s-Gatekeeper detects all Casbin enforcers stored in Kubernetes etcd (created and maintained by users via `kubectl` or the provided Go client). Each enforcer contains a Casbin model and policy. The admission request is evaluated by each enforcer sequentially, and must pass all enforcers to be accepted.
+
+(If you're unfamiliar with Casbin enforcers, models, or policies, see [Get Started](/docs/get-started)).
+
+For instance, if an administrator wants to block the 'nginx:1.14.1' image while allowing 'nginx:1.3.1', they can create an enforcer with this model and policy (creation and configuration details follow in subsequent sections):
+
+Model:
+
+```ini
+[request_definition]
+r =  obj
+
+[policy_definition]
+p =  obj,eft
+
+[policy_effect]
+e = !some(where (p.eft == deny))
+
+[matchers]
+m = r.obj.Request.Namespace == "default" && r.obj.Request.Resource.Resource =="deployments" && \
+access(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , 0, "Image") == p.obj
+
+```
+
+Policy:
+
+```csv
+p, "nginx:1.13.1",allow
+p, "nginx:1.14.1",deny
+```
+
+Creating an enforcer with this model and policy will reject the admission request, preventing Kubernetes from creating the deployment.
+
+## 2. Installing K8s-gatekeeper
+
+Three installation methods are available: External webhook, Internal webhook, and Helm.
+
+<Callout>
+These installation methods are for evaluation purposes only. For production deployments, review [Chapter 5. Advanced settings](#5-advanced-settings) and apply necessary security modifications before installation.
+</Callout>
+
+### 2.1 Internal Webhook
+
+#### 2.1.1 Step 1: Build the Image
+
+For internal webhook deployment, K8s-gatekeeper runs as a Kubernetes service. Build the image:
+
+```shell
+docker build --target webhook -t k8s-gatekeeper .
+```
+
+This creates a local image named 'k8s-gatekeeper:latest'.
+
+<Callout>
+For minikube users, run `eval $(minikube -p minikube docker-env)` before 'docker build'.
+</Callout>
+
+#### 2.1.2 Step 2: Deploy Services and Resources
+
+Run these commands:
+
+```shell
+kubectl apply -f config/rbac.yaml
+kubectl apply -f config/webhook_deployment.yaml 
+kubectl apply -f config/webhook_internal.yaml 
+```
+
+Verify deployment with `kubectl get pods`.
+
+#### 2.1.3 Step 3: Install CRD Resources
+
+Install custom resource definitions:
+
+```shell
+kubectl apply -f config/auth.casbin.org_casbinmodels.yaml 
+kubectl apply -f config/auth.casbin.org_casbinpolicies.yaml
+```
+
+### 2.2 External Webhook
+
+For external webhook deployment, K8s-gatekeeper runs outside Kubernetes. Kubernetes requires HTTPS for admission webhooks. We provide test certificates and a private key (not production-secure). For custom certificates, see [Chapter 5. Advanced settings](#5-advanced-settings).
+
+The provided certificate is issued for 'webhook.domain.local'. Update your hosts file (e.g., /etc/hosts) to point 'webhook.domain.local' to the IP address where K8s-gatekeeper runs.
+
+Execute:
+
+```shell
+go mod tidy
+go mod vendor
+go run cmd/webhook/main.go
+kubectl apply -f config/auth.casbin.org_casbinmodels.yaml 
+kubectl apply -f config/auth.casbin.org_casbinpolicies.yaml
+kubectl apply -f config/webhook_external.yaml 
+```
+
+### 2.3 Installing via Helm
+
+#### 2.3.1 Step 1: Build the Image
+
+See [Chapter 2.1.1](#211-step-1-build-the-image).
+
+#### 2.3.2 Helm Installation
+
+Run: `helm install k8sgatekeeper ./k8sgatekeeper`
+
+## 3. Using K8s-gatekeeper
+
+### 3.1 Creating Casbin Models and Policies
+
+Create models and policies using either kubectl or the provided Go client.
+
+#### 3.1.1 Create/Update via kubectl
+
+In K8s-gatekeeper, Casbin models are stored as 'CasbinModel' CRD resources. The definition is in `config/auth.casbin.org_casbinmodels.yaml`.
+
+See examples in `example/allowed_repo/model.yaml`. Important fields:
+
+- metadata.name: Model name. Must match the associated CasbinPolicy object name for K8s-gatekeeper to pair them correctly.
+- spec.enable: Set to "false" to disable this model and its associated policy.
+- spec.modelText: String containing the Casbin model definition.
+
+Casbin policies are stored as 'CasbinPolicy' CRD resources, defined in `config/auth.casbin.org_casbinpolicies.yaml`.
+
+See examples in `example/allowed_repo/policy.yaml`. Important fields:
+
+- metadata.name: Policy name. Must match the associated CasbinModel object name.
+- spec.policyItem: String containing the Casbin policy definition.
+
+Apply your CasbinModel and CasbinPolicy files:
+
+```shell
+kubectl apply -f <filename>
+```
+
+K8s-gatekeeper detects new CasbinModel/CasbinPolicy pairs within 5 seconds.
+
+#### 3.1.2 Create/Update via Go Client
+
+For scenarios where direct shell access to cluster nodes is impractical (e.g., when building automated cloud platforms), we provide a Go client for managing CasbinModel and CasbinPolicy resources.
+
+The Go client library is in `pkg/client`.
+
+In `client.go`, use this function to create a client:
+
+```go
+func NewK8sGateKeeperClient(externalClient bool) (*K8sGateKeeperClient, error) 
+```
+
+The `externalClient` parameter indicates whether K8s-gatekeeper runs inside or outside the Kubernetes cluster.
+
+In `model.go`, functions are provided for creating, deleting, and modifying CasbinModel. See `model_test.go` for usage examples.
+
+In `policy.go`, functions are provided for creating, deleting, and modifying CasbinPolicy. See `policy_test.go` for usage examples.
+
+### 3.1.2 Testing K8s-gatekeeper
+
+After creating the model and policy from `example/allowed_repo`, test with:
+
+```shell
+kubectl apply -f example/allowed_repo/testcase/reject_1.yaml
+```
+
+Kubernetes should reject this request, citing the webhook as the rejection reason. However, applying `example/allowed_repo/testcase/approve_2.yaml` should succeed.
+
+## 4. Writing Models and Policies for K8s-gatekeeper
+
+Ensure you understand Casbin model and policy syntax before proceeding. If not, read the [Get Started](/docs/get-started) section first. This chapter assumes familiarity with Casbin models and policies.
+
+### 4.1 Request Definition
+
+When K8s-gatekeeper evaluates a request, the input is always an AdmissionReview Go object. The enforcer is used as follows:
+
+```go
+ok, err := enforcer.Enforce(admission)
+```
+
+where `admission` is an `AdmissionReview` object from Kubernetes' official Go API `"k8s.io/api/admission/v1"`. The struct definition is available at: [https://github.com/kubernetes/api/blob/master/admission/v1/types.go](https://github.com/kubernetes/api/blob/master/admission/v1/types.go). Additional documentation: [https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-request-and-response](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#webhook-request-and-response).
+
+For K8s-gatekeeper models, the `request_definition` should always follow this format:
+
+```ini
+    [request_definition]
+    r =  obj
+```
+
+The name 'obj' can be changed as long as it's used consistently in the `[matchers]` section.
+
+### 4.2 Model Matchers
+
+Use Casbin's ABAC feature to write rules. However, Casbin's expression evaluator doesn't natively support map/array indexing or array expansion. K8s-gatekeeper provides extension functions to address this. If you need additional functionality, please open an issue or submit a pull request.
+
+For background on Casbin functions, see [Function](/docs/function).
+
+Extension functions:
+
+### 4.2.1 Extension Functions
+
+#### 4.2.1.1 access
+
+The `access` function enables map and array indexing. See `example/allowed_repo/model.yaml`:
+
+```ini
+[matchers]
+m = r.obj.Request.Namespace == "default" && r.obj.Request.Resource.Resource =="deployments" && \
+access(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , 0, "Image") == p.obj
+```
+
+Here, `access(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , 0, "Image")` is equivalent to `r.obj.Request.Object.Object.Spec.Template.Spec.Containers[0].Image`, where `r.obj.Request.Object.Object.Spec.Template.Spec.Containers` is a slice.
+
+`access` can also call parameterless functions that return a single value. See `example/container_resource_limit/model.yaml`:
+
+```ini
+[matchers]
+  m = r.obj.Request.Namespace == "default" && r.obj.Request.Resource.Resource =="deployments" && \
+  parseFloat(access(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , 0, "Resources","Limits","cpu","Value")) >= parseFloat(p.cpu) && \
+  parseFloat(access(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , 0, "Resources","Limits","memory","Value")) >= parseFloat(p.memory)
+```
+
+Here, `access(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , 0, "Resources","Limits","cpu","Value")` equals `r.obj.Request.Object.Object.Spec.Template.Spec.Containers[0].Resources.Limits["cpu"].Value()`, where `r.obj.Request.Object.Object.Spec.Template.Spec.Containers[0].Resources.Limits` is a map and `Value()` is a parameterless function returning a single value.
+
+#### 4.2.1.2 accessWithWildcard
+
+To check conditions across all array elements (e.g., "all elements must start with 'aaa'") without `for` loops, use `accessWithWildcard` with map/slice expansion.
+
+If `a.b.c` is the array `[aaa,bbb,ccc,ddd,eee]`, then `accessWithWildcard(a,"b","c","*")` returns the slice `[aaa,bbb,ccc,ddd,eee]`. The wildcard `*` expands the slice.
+
+Multiple wildcards are supported. For example, `accessWithWildcard(a,"b","c","*","*")` returns `[a.b.c[0][0], a.b.c[0][1], ..., a.b.c[1][0], a.b.c[1][1], ...]`.
+
+### 4.2.1.3 Variable-Length Argument Functions
+
+Casbin's expression evaluator automatically expands arrays as variable-length arguments. Leveraging this for array/slice/map expansion, several functions accept arrays/slices:
+
+- contain(): Accepts multiple parameters and returns whether any parameter (except the last) equals the last parameter.
+- split(a,b,c...,sep,index): Returns `[splits(a,sep)[index], splits(b,sep)[index], splits(c,sep)[index], ...]`.
+- len(): Returns the variable-length argument count.
+- matchRegex(a,b,c...,regex): Returns whether all parameters (`a`, `b`, `c`, ...) match the regex.
+
+Example from `example/disallowed_tag/model.yaml`:
+
+```ini
+    [matchers]
+    m = r.obj.Request.Namespace == "default" && r.obj.Request.Resource.Resource =="deployments" && \
+    contain(split(accessWithWildcard(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , "*", "Image"),":",1) , p.obj)
+```
+
+If `accessWithWildcard(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , "*", "Image")` returns `["a:b", "c:d", "e:f", "g:h"]`, the split operation processes each element with variable-length argument support, selecting index 1 from each. Thus, `split(accessWithWildcard(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , "*", "Image"),":",1)` returns `["b","d","f","h"]`. Finally, `contain(split(accessWithWildcard(r.obj.Request.Object.Object.Spec.Template.Spec.Containers , "*", "Image"),":",1) , p.obj)` checks if `p.obj` exists in `["b","d","f","h"]`.
+
+#### 4.2.1.2 Type Conversion Functions
+
+- ParseFloat(): Converts integers to floats (required because comparisons need float type).
+- ToString(): Converts objects to strings. The object must have an underlying string type (e.g., `type XXX string`).
+- IsNil(): Returns whether the parameter is nil.
+
+## 5. Advanced Settings
+
+### 5.1 Certificate Configuration
+
+Kubernetes requires webhooks to use HTTPS. Two options are available:
+
+- Self-signed certificates (used in this repository's examples)
+- Publicly trusted certificates
+
+#### 5.1.1 Self-Signed Certificates
+
+Self-signed certificates use a Certificate Authority (CA) that isn't publicly recognized. You must configure Kubernetes to trust this CA.
+
+The repository examples use a custom CA with private key and certificate stored in `config/certificate/ca.key` and `config/certificate/ca.crt`. The webhook certificate `config/certificate/server.crt` is issued by this CA for domains "webhook.domain.local" (external webhook) and "casbin-webhook-svc.default.svc" (internal webhook).
+
+CA information is passed to Kubernetes via webhook configuration files. Both `config/webhook_external.yaml` and `config/webhook_internal.yaml` contain a "CABundle" field with the base64-encoded CA certificate.
+
+To change the certificate/domain (e.g., moving the webhook to another namespace or changing domains):
+
+1. Generate a new CA:
+
+   - Generate the CA private key:
+
+     ```shell
+     openssl genrsa -des3 -out ca.key 2048
+     ```
+
+   - Remove password protection:
+
+     ```shell
+     openssl rsa -in ca.key -out ca.key
+     ```
+
+2. Generate a webhook server private key:
+
+   ```shell
+   openssl genrsa -des3 -out server.key 2048
+   openssl rsa -in server.key -out server.key
+   ```
+
+3. Sign the webhook certificate with the CA:
+
+   - Copy your system's OpenSSL config file (find it with `openssl version -a`, typically `openssl.cnf`).
+
+   - Modify the config file:
+     - In the `[req]` section, add: `req_extensions = v3_req`
+     - In the `[v3_req]` section, add: `subjectAltName = @alt_names`
+     - Append:
+
+       ```ini
+       [alt_names]
+       DNS.2=<Your desired domain>
+       ```
+
+       Note: Replace 'casbin-webhook-svc.default.svc' with your actual service name if modified.
+
+   - Generate a certificate request:
+
+     ```shell
+     openssl req -new -nodes -keyout server.key -out server.csr -config openssl.cnf
+     ```
+
+   - Sign the certificate with the CA:
+
+     ```shell
+     openssl x509 -req -days 3650 -in server.csr -out server.crt -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_req -extensions SAN -extfile openssl.cnf
+     ```
+
+4. Update the 'CABundle' field in both `config/webhook_external.yaml` and `config/webhook_internal.yaml` with the base64-encoded new CA certificate.
+
+5. For Helm deployments, apply equivalent changes to the Helm charts.
+
+#### 5.1.2 Publicly Trusted Certificates
+
+With publicly trusted certificates, skip the above procedures. Remove the "CABundle" field from `config/webhook_external.yaml` and `config/webhook_internal.yaml`, and set the domain to your registered domain.

@@ -1,0 +1,40 @@
+---
+id: dispatchers
+title: Dispatchers
+description: Dispatchers provide a way to synchronize incremental changes of policy.
+keywords: [dispatcher]
+authors: [dovics]
+---
+
+Dispatchers enable synchronization of incremental policy changes across distributed Casbin enforcer instances. They rely on consistency algorithms like Raft to maintain uniform policy state across all enforcers, simplifying the creation of distributed authorization clusters.
+
+A dispatcher's functionality is split into two parts. The first consists of methods integrated with Casbin's core. These methods are called internally by Casbin, allowing developers to use Casbin's standard API without modification.
+
+The second part includes the dispatcher's own initialization and algorithm-specific features, such as dynamic membership management and configuration updates.
+
+<Callout>
+Dispatchers synchronize runtime policy changes only. They do not resolve pre-existing inconsistencies during initialization. You must ensure all enforcer instances start with identical policy states before enabling dispatchers.
+</Callout>
+
+Below is a list of available Casbin dispatchers. Contributions of new dispatchers are welcome—let us know, and we'll include them here.
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+
+</Tab>
+</Tabs>
+
+### DistributedEnforcer
+
+`DistributedEnforcer` wraps `SyncedEnforcer` to work with dispatchers.
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+    e, _ := casbin.NewDistributedEnforcer("examples/basic_model.conf", "examples/basic_policy.csv")
+```
+
+</Tab>
+</Tabs>

@@ -1,0 +1,57 @@
+---
+id: effector
+title: Effector
+description: The Effector interface in Casbin
+keywords: [effector, Effect, MergeEffects]
+authors: [ErikQQY]
+---
+
+The `Effect` represents policy rule outcomes, while the `Effector` interface manages effect handling within Casbin.
+
+## `MergeEffects()`
+
+The `MergeEffects()` function consolidates all matching results gathered by the enforcer into one final decision.
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+Effect, explainIndex, err = e.MergeEffects(expr, effects, matches, policyIndex, policyLength)
+```
+
+</Tab>
+</Tabs>
+
+Explanation of parameters:
+
+- `Effect` represents the final merged decision (initialized as `Indeterminate`).
+- `explainIndex` holds the `eft` index (`Allow` or `Deny`), initialized at `-1`.
+- `err` verifies effect support.
+- `expr` contains the string representation of policy effects.
+- `effects` is an array containing `Allow`, `Indeterminate`, or `Deny` values.
+- `matches` indicates which results match policies.
+- `policyIndex` identifies the policy position in the model.
+- `policyLength` specifies the policy count.
+
+The example demonstrates parameter passing to `MergeEffects()`, which processes effects and matches according to the `expr`.
+
+To utilize the `Effector`:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+var e Effector
+Effect, explainIndex, err = e.MergeEffects(expr, effects, matches, policyIndex, policyLength)
+```
+
+</Tab>
+</Tabs>
+
+The core concept of `MergeEffects()`: when `expr` matches results indicating `p_eft` is `allow`, effects merge together. Absent deny rule matches result in an allow decision.
+
+<Callout>
+When `expr` doesn't match `"priority(p_eft) || deny"` and `policyIndex` is less than `policyLength-1`, **short-circuiting** occurs, skipping intermediate effects.
+</Callout>

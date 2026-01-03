@@ -1,0 +1,340 @@
+---
+id: rbac-with-domains-api
+title: RBAC with Domains API
+description: A more user-friendly API for RBAC with domains. This API is a subset of the Management API. RBAC users can use this API to simplify their code.
+keywords: [RBAC with domains, API]
+authors: [hsluoyz]
+---
+
+This simplified API is designed for RBAC with domains. It is a subset of the Management API, making it easier for RBAC users to work with domain-based policies.
+
+## Reference
+
+The global variable `e` represents the Enforcer instance.
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Java']} persist>
+<Tab value="Go">
+
+```go
+e, err := NewEnforcer("examples/rbac_with_domains_model.conf", "examples/rbac_with_domains_policy.csv")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+const e = await newEnforcer('examples/rbac_with_domains_model.conf', 'examples/rbac_with_domains_policy.csv')
+
+</Tab>
+<Tab value="PHP">
+
+```php
+$e = new Enforcer('examples/rbac_with_domains_model.conf', 'examples/rbac_with_domains_policy.csv');
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+e = casbin.Enforcer("examples/rbac_with_domains_model.conf", "examples/rbac_with_domains_policy.csv")
+```
+
+</Tab>
+<Tab value=".NET">
+
+```csharp
+var e = new Enforcer("examples/rbac_with_domains_model.conf", "examples/rbac_with_domains_policy.csv");
+```
+
+</Tab>
+<Tab value="Rust">
+
+```rust
+let mut e = Enforcer::new("examples/rbac_with_domains_model.conf", "examples/rbac_with_domains_policy.csv").await?;
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+Enforcer e = new Enforcer("examples/rbac_with_domains_model.conf", "examples/rbac_with_domains_policy.csv");
+```
+
+</Tab>
+</Tabs>
+
+### `GetUsersForRoleInDomain()`
+
+`GetUsersForRoleInDomain()` retrieves all users assigned to a specific role within a domain.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python']} persist>
+<Tab value="Go">
+
+```go
+res := e.GetUsersForRoleInDomain("admin", "domain1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+const res = e.getUsersForRoleInDomain("admin", "domain1")
+
+</Tab>
+<Tab value="Python">
+
+```python
+res = e.get_users_for_role_in_domain("admin", "domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `GetRolesForUserInDomain()`
+
+`GetRolesForUserInDomain()` retrieves all roles assigned to a user within a domain.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Node.js', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+res := e.GetRolesForUserInDomain("admin", "domain1")
+```
+
+</Tab>
+<Tab value="Node.js">
+
+typescript
+const res = e.getRolesForUserInDomain("alice", "domain1")
+
+</Tab>
+<Tab value="Python">
+
+```python
+res = e.get_roles_for_user_in_domain("alice", "domain1")
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<String> res = e.getRolesForUserInDomain("admin", "domain1");
+```
+
+</Tab>
+</Tabs>
+
+### `GetPermissionsForUserInDomain()`
+
+`GetPermissionsForUserInDomain()` retrieves all permissions for a user or role within a domain.
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Java']} persist>
+<Tab value="Go">
+
+```go
+res := e.GetPermissionsForUserInDomain("alice", "domain1")
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+List<List<String>> res = e.getPermissionsForUserInDomain("alice", "domain1");
+```
+
+</Tab>
+</Tabs>
+
+### `AddRoleForUserInDomain()`
+
+`AddRoleForUserInDomain()` assigns a role to a user within a domain. Returns `false` if the user already has the role (no changes made).
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Python', 'Java']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.AddRoleForUserInDomain("alice", "admin", "domain1")
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+ok = e.add_role_for_user_in_domain("alice", "admin", "domain1")
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean ok = e.addRoleForUserInDomain("alice", "admin", "domain1");
+```
+
+</Tab>
+</Tabs>
+
+### `DeleteRoleForUserInDomain()`
+
+`DeleteRoleForUserInDomain()` removes a role from a user within a domain. Returns `false` if the user does not have the role (no changes made).
+
+For example:
+
+<Tabs groupId="langs" items={['Go', 'Java']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.DeleteRoleForUserInDomain("alice", "admin", "domain1")
+```
+
+</Tab>
+<Tab value="Java">
+
+```java
+boolean ok = e.deleteRoleForUserInDomain("alice", "admin", "domain1");
+```
+
+</Tab>
+</Tabs>
+
+### `DeleteRolesForUserInDomain()`
+
+`DeleteRolesForUserInDomain()` removes all roles from a user within a domain. Returns `false` if the user has no roles (no changes made).
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.DeleteRolesForUserInDomain("alice", "domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllUsersByDomain()`
+
+`GetAllUsersByDomain()` retrieves all users associated with the specified domain. Returns an empty string array if no domain is defined in the model.
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+res := e.GetAllUsersByDomain("domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `DeleteAllUsersByDomain()`
+
+`DeleteAllUsersByDomain()` removes all users associated with the specified domain. Returns `false` if no domain is defined in the model.
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.DeleteAllUsersByDomain("domain1")
+```
+
+</Tab>
+</Tabs>
+
+### `DeleteDomains()`
+
+`DeleteDomains()` removes all associated users and roles for the specified domains. If no parameters are provided, all domains are deleted.
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ok, err := e.DeleteDomains("domain1", "domain2")
+```
+
+</Tab>
+</Tabs>
+
+### `GetAllDomains()`
+
+`GetAllDomains()` retrieves all domains.
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+res, _ := e.GetAllDomains()
+```
+
+</Tab>
+</Tabs>
+
+<Callout>
+When handling domain names that contain `::`, unexpected behavior may occur. In Casbin, `::` is a reserved keyword, similar to `for` or `if` in programming languages. Never use `::` within a domain name.
+</Callout>
+
+### `GetAllRolesByDomain()`
+
+`GetAllRolesByDomain()` retrieves all roles associated with the specified domain.
+
+For example:
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+res := e.GetAllRolesByDomain("domain1")
+```
+
+</Tab>
+</Tabs>
+
+<Callout>
+This method does not apply to domains that have an inheritance relationship, also known as implicit roles.
+</Callout>
+
+### `GetImplicitUsersForResourceByDomain()`
+
+`GetImplicitUsersForResourceByDomain()` returns implicit users based on resource and domain.
+
+For example:
+
+```csv
+p, admin, domain1, data1, read
+p, admin, domain1, data1, write
+p, admin, domain2, data2, read
+p, admin, domain2, data2, write
+g, alice, admin, domain1
+g, bob, admin, domain2
+```
+
+GetImplicitUsersForResourceByDomain("data1", "domain1") will return `[["alice", "domain1", "data1", "read"],["alice", "domain1", "data1", "write"]], nil`
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+ImplicitUsers, err := e.GetImplicitUsersForResourceByDomain("data1", "domain1")
+```
+
+</Tab>
+</Tabs>
+
+<Callout>
+Only users will be returned, roles (2nd arg in "g") will be excluded.
+</Callout>

@@ -1,0 +1,69 @@
+---
+id: rbac-with-conditions-api
+title: RBAC with Conditions API
+description: A more user-friendly API for RBAC with conditions.
+keywords: [RBAC with conditions, API]
+authors: [PokIsemaine]
+---
+
+This API provides a simplified interface for working with [RBAC with conditions](RBACWithConditions.mdx).
+
+## Reference
+
+### AddNamedLinkConditionFunc
+
+`AddNamedLinkConditionFunc` attaches a condition function to a link between `userName` and `roleName`. The link is valid only when the function returns true.
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+e.AddNamedLinkConditionFunc("g", "userName", "roleName", YourLinkConditionFunc)
+```
+
+</Tab>
+</Tabs>
+
+### AddNamedDomainLinkConditionFunc
+
+`AddNamedDomainLinkConditionFunc` attaches a condition function to a link between `userName` and `{roleName, domain}`. The link is valid only when the function returns true.
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+e.AddNamedDomainLinkConditionFunc("g", "userName", "roleName", "domainName", YourLinkConditionFunc)
+```
+
+</Tab>
+</Tabs>
+
+### SetNamedLinkConditionFuncParams
+
+`SetNamedLinkConditionFuncParams` configures the parameters passed to the condition function for a link between `userName` and `roleName`.
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+e.SetNamedLinkConditionFuncParams("g", "userName", "roleName", "YourConditionFuncParam")
+e.SetNamedLinkConditionFuncParams("g", "userName2", "roleName2", "YourConditionFuncParam_1", "YourConditionFuncParam_2")
+```
+
+</Tab>
+</Tabs>
+
+### SetNamedDomainLinkConditionFuncParams
+
+`SetNamedDomainLinkConditionFuncParams` configures the parameters passed to the condition function for a link between `userName` and `{roleName, domain}`.
+
+<Tabs groupId="langs" items={['Go']} persist>
+<Tab value="Go">
+
+```go
+e.SetNamedDomainLinkConditionFuncParams("g", "userName", "roleName", "domainName", "YourConditionFuncParam")
+e.SetNamedDomainLinkConditionFuncParams("g", "userName2", "roleName2", "domainName2", "YourConditionFuncParam_1", "YourConditionFuncParam_2")
+```
+
+</Tab>
+</Tabs>
