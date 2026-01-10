@@ -5,7 +5,6 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
-<<<<<<< HEAD
   // i18n: {
   //   locales: ['en', 'zh', 'ja', 'ko', 'fr', 'de', 'es', 'ru', 'ar', 'pt', 'it', 'tr', 'id', 'th', 'ms', 'uk', 'vi'],
   //   defaultLocale: 'en',
@@ -18,8 +17,6 @@ const config = {
       },
     ],
   },
-=======
->>>>>>> afa4ddb (Initial commit from Create Fumadocs App)
 };
 
 export default withMDX(config);

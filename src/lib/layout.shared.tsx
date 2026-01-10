@@ -3,7 +3,6 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-<<<<<<< HEAD
       title: '',
       enabled: true,
       children: (
@@ -15,9 +14,6 @@ export function baseOptions(): BaseLayoutProps {
           />
         </a>
       ),
-=======
-      title: 'My App',
->>>>>>> afa4ddb (Initial commit from Create Fumadocs App)
     },
   };
 }
