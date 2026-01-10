@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Zap, Code, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 function AnimatedText({ words, interval = 3000 }: { words: string[]; interval?: number }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -586,43 +588,37 @@ function EditorPreview() {
   return (
     <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900/50">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
-            Try the Casbin Online Editor
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Write and test your Casbin model and policy in real-time with the interactive online editor. Try different access control models and see results instantly.
-          </p>
-        </div>
-
-        <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          <iframe
-            src="https://editor.casbin.org"
-            className="w-full h-96 md:h-[600px]"
-            title="Casbin Online Editor"
-          />
-        </div>
-
-        <div className="text-center mt-8">
-          <a
-            href="https://editor.casbin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg text-white font-semibold px-8 py-3 transition-all"
-            style={{
-              backgroundColor: '#443D80',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#5a4fa0';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#443D80';
-            }}
-          >
-            Open Full Editor
-            <ExternalLink size={18} />
-          </a>
-        </div>
+        <Card className="w-full">
+          <CardHeader className="text-center">
+            <CardTitle className="text-4xl md:text-5xl font-bold">
+              Try the Casbin Online Editor
+            </CardTitle>
+            <CardDescription className="text-lg max-w-2xl mx-auto">
+              Write and test your Casbin model and policy in real-time with the interactive online editor. Try different access control models and see results instantly.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="rounded-lg overflow-hidden border bg-white dark:bg-gray-800">
+              <iframe
+                src="https://editor.casbin.org"
+                className="w-full h-96 md:h-[600px]"
+                title="Casbin Online Editor"
+              />
+            </div>
+            <div className="flex justify-center">
+              <Button asChild size="lg" className="gap-2">
+                <a
+                  href="https://editor.casbin.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Full Editor
+                  <ExternalLink size={18} />
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
