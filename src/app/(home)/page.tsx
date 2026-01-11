@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Zap, Code, ExternalLink, Database, Scale, Users, Sparkles, Shield, Settings, Globe } from 'lucide-react';
+import { Zap, Code, ExternalLink, Database, Scale, Users, Sparkles, Shield, Globe, MessageSquare, Users2, HelpCircle, Github, Twitter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -605,84 +605,51 @@ function Showcase() {
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-black text-gray-300 dark:text-gray-400 py-12 md:py-16 border-t border-gray-800">
+    <footer className="bg-slate-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 py-8 md:py-12 border-t border-slate-200 dark:border-slate-700">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {/* Docs Section */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wide">Docs</h3>
-            <ul className="space-y-2">
-              <li><Link href="/docs/GetStarted" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">Getting Started</Link></li>
-              <li><Link href="/docs/ManagementAPI" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">Management API</Link></li>
-              <li><Link href="/docs/RBACAPI" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">RBAC API</Link></li>
-              <li><Link href="/docs/Middlewares" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">Middlewares</Link></li>
-            </ul>
+        {/* Main Footer Content */}
+        <div className="flex flex-col md:flex-row justify-start items-start gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="w-auto">
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src="https://cdn.casbin.org/img/casbin_logo_1024x256.png"
+                alt="Casbin"
+                className="h-8 object-contain"
+              />
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Copyright © {new Date().getFullYear()} Casbin Organization. Open source authorization library.
+            </div>
           </div>
 
-          {/* Community Section */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wide flex items-center gap-2">
-              <span>Community</span>
-              <img src="/images/casbin_min.svg" alt="Casbin" className="h-4 w-4 object-contain opacity-60" />
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://discord.gg/S5UjpzGZjN" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2 font-inter">
-                  <span>Discord</span>
-                </a>
-              </li>
-              <li>
-                <a href="https://stackoverflow.com/search?q=casbin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2 font-inter">
-                  <span>Stack Overflow</span>
-                </a>
-              </li>
-              <li>
-                <a href="https://groups.google.com/g/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2 font-inter">
-                  <span>Google Groups</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+          {/* Links Section */}
+          <div className="flex flex-col sm:flex-row gap-16 md:ml-8">
+            {/* Docs */}
+            <div>
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-3 text-sm">Docs</h3>
+              <ul className="space-y-2">
+                <li><Link href="/docs/GetStarted" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Getting Started</Link></li>
+                <li><Link href="/docs/ManagementAPI" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Management API</Link></li>
+                <li><Link href="/docs/RBACAPI" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">RBAC API</Link></li>
+              </ul>
+            </div>
 
-          {/* More Section */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wide">More</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="https://github.com/casbin/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition font-inter">
-                  GitHub Stars
-                </a>
-              </li>
-              <li>
-                <a href="https://twitter.com/casbinHQ" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition font-inter">
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a href="https://www.youtube.com/@casbinhq" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition font-inter">
-                  YouTube
-                </a>
-              </li>
-            </ul>
+            {/* Community */}
+            <div>
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-3 text-sm">Community</h3>
+              <ul className="space-y-2">
+                <li><a href="https://discord.gg/S5UjpzGZjN" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><MessageSquare className="h-4 w-4" />Discord</a></li>
+                <li><a href="https://stackoverflow.com/search?q=casbin" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><HelpCircle className="h-4 w-4" />Stack Overflow</a></li>
+                <li><a href="https://groups.google.com/g/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><Users2 className="h-4 w-4" />Google Groups</a></li>
+                <li><a href="https://github.com/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><Github className="h-4 w-4" />GitHub</a></li>
+                <li><a href="https://twitter.com/casbinHQ" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><Twitter className="h-4 w-4" />Twitter</a></li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-sm text-gray-400">
-            © {new Date().getFullYear()} Casbin Organization
-          </div>
-          <div className="flex gap-6">
-            <a href="https://github.com/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">
-              GitHub
-            </a>
-            <a href="https://twitter.com/casbinHQ" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">
-              Twitter
-            </a>
-            <a href="https://discord.gg/S5UjpzGZjN" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#443D80] transition text-sm font-inter">
-              Discord
-            </a>
-          </div>
-        </div>
+        
       </div>
     </footer>
   );
