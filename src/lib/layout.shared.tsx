@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -17,3 +18,38 @@ export function baseOptions(): BaseLayoutProps {
     },
   };
 }
+
+// Shared navigation links for all pages
+export const sharedLinks: LinkItemType[] = [
+  {
+    type: 'main',
+    url: '/docs',
+    text: 'Docs',
+  },
+  {
+    type: 'main',
+    url: '/docs/PluginsOverview',
+    text: 'Plugins',
+  },
+  {
+    type: 'main',
+    url: 'https://editor.casbin.org/gallery',
+    text: 'Authorization Models',
+  },
+  {
+    type: 'main',
+    url: 'https://editor.casbin.org',
+    text: 'GUI Policy Editor',
+    external: true,
+  },
+  {
+    type: 'main',
+    url: '/blog',
+    text: 'Blog',
+  },
+  {
+    type: 'main',
+    url: '/help',
+    text: 'Help',
+  },
+];
