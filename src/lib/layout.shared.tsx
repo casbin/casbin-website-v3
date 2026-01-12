@@ -28,7 +28,7 @@ export const sharedLinks: LinkItemType[] = [
   },
   {
     type: 'main',
-    url: '/docs/PluginsOverview',
+    url: '/ecosystem',
     text: 'Plugins',
   },
   {
