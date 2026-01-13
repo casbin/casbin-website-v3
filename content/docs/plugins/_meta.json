@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "plugins-overview",
+    "enforcers",
+    "adapters",
+    "watchers",
+    "dispatchers",
+    "role-managers",
+    "middlewares"
+  ],
+  "title": "Plugins"
+}

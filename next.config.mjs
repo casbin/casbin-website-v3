@@ -15,6 +15,10 @@ const config = {
         protocol: 'https',
         hostname: 'cdn.casbin.org',
       },
+      {
+        protocol: 'https',
+        hostname: 'hsluoyz.github.io',
+      },
     ],
   },
 };

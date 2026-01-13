@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "supported-models",
+    "syntax-for-models",
+    "effector",
+    "function",
+    "rbac",
+    "rebac",
+    "abac",
+    "pbac",
+    "mac",
+    "orbac",
+    "priority-model",
+    "ucon",
+    "super-admin"
+  ],
+  "title": "Model"
+}

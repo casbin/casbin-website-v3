@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Zap, Code, ExternalLink } from 'lucide-react';
+import { Zap, Code, ExternalLink, Database, Scale, Users, Sparkles, Shield, Globe, MessageSquare, Users2, HelpCircle, Github, Twitter } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 function AnimatedText({ words, interval = 3000 }: { words: string[]; interval?: number }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -54,7 +57,7 @@ function AnimatedText({ words, interval = 3000 }: { words: string[]; interval?: 
       <span 
         key={currentIndex} 
         ref={measureRef} 
-        className="inline-block animate-fade-in-up bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 bg-clip-text text-transparent font-bold"
+        className="inline-block animate-in fade-in-0 duration-500 text-white"
       >
         {words[currentIndex]}
       </span>
@@ -66,8 +69,8 @@ function AnimatedText({ words, interval = 3000 }: { words: string[]; interval?: 
       >
         <defs>
           <linearGradient id="wavy-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#a855f7" />
-            <stop offset="50%" stopColor="#ec4899" />
+            <stop offset="0%" stopColor="#7c3aed" />
+            <stop offset="50%" stopColor="#a855f7" />
             <stop offset="100%" stopColor="#f97316" />
           </linearGradient>
         </defs>
@@ -75,7 +78,7 @@ function AnimatedText({ words, interval = 3000 }: { words: string[]; interval?: 
           d="M0,5 Q10,0 20,5 T40,5 T60,5 T80,5 T100,5 T120,5 T140,5 T160,5 T180,5 T200,5" 
           stroke="url(#wavy-gradient)" 
           strokeWidth="3" 
-          fill="none" 
+          fill="none"
         />
       </svg>
     </span>
@@ -108,8 +111,12 @@ function HeroHeader() {
       const y = e.clientY - rect.top;
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        const size = 250;
-        haloEl.style.transform = `translate3d(${x - size / 2}px, ${y - size / 2}px, 0)`;
+        // Use actual halo element size so centering is exact
+        const w = haloEl.offsetWidth || 250;
+        const h = haloEl.offsetHeight || 250;
+        haloEl.style.left = `${Math.round(x - w / 2)}px`;
+        haloEl.style.top = `${Math.round(y - h / 2)}px`;
+        haloEl.style.transform = 'none';
         haloEl.style.opacity = '0.25';
       });
     };
@@ -132,78 +139,56 @@ function HeroHeader() {
   return (
     <header
       ref={headerRef}
-      className="relative overflow-hidden py-20 px-4"
+      className="relative overflow-hidden py-20 px-4 bg-gradient-to-br from-purple-900/75 to-blue-900/30 bg-cover bg-center"
       style={{
-        backgroundImage: 'linear-gradient(135deg, rgba(68, 61, 128, 0.75) 0%, rgba(100, 80, 160, 0.7) 100%), url(/images/background.png)',
-        backgroundSize: 'cover, cover',
-        backgroundPosition: 'center, center',
+        backgroundImage: 'url(/images/background.png)',
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-purple-900/40 to-blue-900/30" />
+      {/* Background video (lazy, fades in when ready) */}
+      <VideoBackground />
 
-      {/* Cursor halo - 250px size */}
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/40 to-blue-900/30 z-10" />
+
+      {/* Cursor halo */}
       <div
         ref={haloRef}
-        className="pointer-events-none absolute h-64 w-64 rounded-full blur-3xl"
+        className="pointer-events-none absolute h-64 w-64 rounded-full blur-3xl opacity-0 transition-opacity duration-300"
         style={{
           background: 'radial-gradient(circle at center, rgb(255 255 255 / 50%) 0%, rgb(255 255 255 / 22%) 25%, rgb(255 255 255 / 6%) 50%, rgb(255 255 255 / 0%) 100%)',
           mixBlendMode: 'screen',
-          zIndex: 1,
+          zIndex: 20,
         }}
         aria-hidden="true"
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl">
+      <div className="relative z-30 mx-auto max-w-4xl">
         {/* News pill */}
         <div className="mb-8 flex justify-center">
           <a
             href={`https://github.com/casbin/casbin/releases/tag/${latestVersion}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur transition-all hover:bg-white/20"
-            style={{
-              overflow: 'hidden',
-            }}
+            className="group hover:animate-none transform hover:scale-102 transition-all duration-300"
           >
-            {/* Animated border gradient */}
-            <div
-              className="absolute inset-0 rounded-full pointer-events-none"
-              style={{
-                padding: '1px',
-                background: 'linear-gradient(90deg, #7c3aed, #a855f7, #ec4899, #f97316, #7c3aed)',
-                backgroundSize: '200% 100%',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                opacity: 0,
-                transition: 'opacity 0.3s ease',
-                clipPath: 'inset(50% 50% 50% 50%)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.opacity = '1';
-                e.currentTarget.style.clipPath = 'inset(0% 0% 0% 0%)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.opacity = '0';
-                e.currentTarget.style.clipPath = 'inset(50% 50% 50% 50%)';
-              }}
-            />
-            <span className="text-xs font-bold text-white border border-white/50 rounded px-1.5 py-0.5 relative z-10">NEWS</span>
-            <span className="text-sm text-gray-200">{latestVersion} Released</span>
-            <span className="transition-transform group-hover:translate-x-0.5">→</span>
+            <Badge variant="outline" className="gap-2 px-4 py-2 text-sm bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm border-yellow-300/30 hover:border-yellow-300/50 hover:from-yellow-400/30 hover:to-orange-400/30 transition-all duration-300 font-inter shadow-lg hover:shadow-xl hover:shadow-yellow-300/20">
+              <Sparkles size={16} className="text-yellow-300" />
+              <span className="font-bold text-white drop-shadow-sm">NEWS</span>
+              <span className="text-white/90 drop-shadow-sm">{latestVersion} Released</span>
+              <span className="transition-transform group-hover:translate-x-1 group-hover:scale-110 text-white drop-shadow-sm">→</span>
+            </Badge>
           </a>
         </div>
 
         {/* Main heading */}
         <div className="text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
-            <span className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent animate-shimmer" style={{backgroundSize: '200% 200%'}}>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight font-inter">
+            <span className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent" style={{backgroundSize: '200% 200%'}}>
               Casbin
             </span>
             <br />
-            <div className="mt-4 text-3xl md:text-5xl">
+            <div className="mt-4 text-3xl md:text-5xl font-inter">
               <span className="text-gray-200">Open-source authorization for</span>
               <br />
               <span className="inline-block">
@@ -215,35 +200,26 @@ function HeroHeader() {
             </div>
           </h1>
 
-          <p className="mt-8 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="mt-8 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-inter leading-relaxed">
             A powerful and efficient open-source access control library that supports multiple authorization models
           </p>
         </div>
 
         {/* Action buttons */}
         <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-          <Link
-            href="/docs"
-            className="group inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-white text-white font-semibold px-8 py-3 transition-all hover:shadow-lg hover:-translate-y-0.5 relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, #fff 0%, #f0eeff 100%)',
-              color: '#443D80',
-              border: '2px solid #fff',
-            }}
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-60 transition-opacity" style={{animation: 'shimmer 0.6s ease forwards'}} />
-            <Zap size={20} className="relative z-10" />
-            <span className="relative z-10">Get Started</span>
-          </Link>
-          <a
-            href="https://editor.casbin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white text-white font-semibold px-8 py-3 transition-all hover:bg-white/10 hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <Code size={20} />
-            <span>Try Online Editor</span>
-          </a>
+          <Button asChild size="lg" className="gap-2 text-white relative overflow-hidden" style={{ backgroundColor: '#443D80' }}>
+            <Link href="/docs" className="relative z-10">
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-60 animate-shimmer" />
+              <Zap size={20} />
+              Get Started
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="gap-2 bg-white text-[#443D80] hover:bg-gray-100 hover:text-[#5a4fa0] border-white">
+            <a href="https://editor.casbin.org" target="_blank" rel="noopener noreferrer">
+              <Code size={20} />
+              Try Online Editor
+            </a>
+          </Button>
         </div>
 
         {/* Logo carousel in hero */}
@@ -255,14 +231,39 @@ function HeroHeader() {
   );
 }
 
+function VideoBackground() {
+  const [loaded, setLoaded] = useState(false);
+  const ref = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    // Attempt to autoplay; browsers may block but it's muted so usually okay
+    v.play().catch(() => {});
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src="https://cdn.casbin.org/video/background.mp4"
+      preload="auto"
+      poster="/images/background.png"
+      muted
+      loop
+      playsInline
+      onLoadedData={() => setLoaded(true)}
+      onCanPlayThrough={() => setLoaded(true)}
+      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+      style={{ zIndex: 0 }}
+      crossOrigin="anonymous"
+      aria-hidden="true"
+    />
+  );
+}
+
 function LogoCarousel() {
   const [items, setItems] = useState<Array<any>>([]);
-  const [position, setPosition] = useState(0);
-  const [paused, setPaused] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -279,44 +280,47 @@ function LogoCarousel() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!trackRef.current || items.length === 0) return;
-    const totalWidth = Math.max(1, Math.floor(trackRef.current.scrollWidth / 2));
-
-    const tick = (t: number) => {
-      if (paused) {
-        lastTimeRef.current = t;
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
-      if (lastTimeRef.current === null) lastTimeRef.current = t;
-      const delta = (t - lastTimeRef.current) / 1000;
-      lastTimeRef.current = t;
-
-      setPosition((prev) => {
-        const next = prev + delta * 30;
-        if (next >= totalWidth) return next - totalWidth;
-        return next;
-      });
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-      lastTimeRef.current = null;
-    };
-  }, [items, paused]);
-
   const display = items.length > 0 ? [...items, ...items] : [];
+
+  // duration scales with number of items to keep speed consistent
+  const duration = Math.max(12, Math.floor((items.length || 6) * 2.5));
+
+  // measure marquee distance (half of scrollWidth) and set CSS variable for smooth loop
+  useEffect(() => {
+    const container = trackRef.current;
+    if (!container) return;
+
+    const updateDistance = () => {
+      const marqueeEl = container.querySelector('.marquee') as HTMLElement | null;
+      if (!marqueeEl) return;
+      const full = marqueeEl.scrollWidth;
+      const half = Math.floor(full / 2);
+      container.style.setProperty('--marquee-distance', `${half}px`);
+    };
+
+    updateDistance();
+
+    // observe resize and image loads inside marquee
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => updateDistance());
+      ro.observe(container);
+    }
+
+    const imgs = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
+    const onImgLoad = () => updateDistance();
+    imgs.forEach((img) => img.addEventListener('load', onImgLoad));
+
+    return () => {
+      imgs.forEach((img) => img.removeEventListener('load', onImgLoad));
+      if (ro && container) ro.unobserve(container);
+    };
+  }, [items]);
 
   return (
     <div
-      ref={viewportRef}
-      className="relative overflow-hidden rounded-lg py-2"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      ref={trackRef}
+      className="carousel relative overflow-hidden rounded-lg py-2"
       style={{
         maskImage: 'linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)',
         WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)',
@@ -347,7 +351,13 @@ function LogoCarousel() {
         }}
       />
 
-      <div className="flex gap-8 items-center" style={{ transform: `translateX(${-position}px)` }} ref={trackRef}>
+      <div
+        className="flex gap-8 items-center marquee"
+        style={{
+          width: 'max-content',
+          ['--marquee-duration' as any]: `${duration}s`,
+        }}
+      >
         {display.map((item, idx) => (
           <a
             key={idx}
@@ -357,13 +367,13 @@ function LogoCarousel() {
             title={item.caption}
             className="flex-shrink-0 flex items-center justify-center h-14 transition-all duration-360 ease-cubic hover:opacity-100 hover:transform hover:-translate-y-1"
             style={{
-              opacity: paused ? 1 : 0.98,
+              opacity: 0.98,
               filter: 'grayscale(100%) contrast(0.95) brightness(0.95)',
             }}
           >
-            <img 
-              src={`/images/${item.image}`} 
-              alt={item.caption} 
+            <img
+              src={`/images/${item.image}`}
+              alt={item.caption}
               className="h-9 object-contain"
               style={{
                 maxWidth: '260px',
@@ -380,40 +390,60 @@ function LogoCarousel() {
 function FeatureCard({
   title,
   description,
-  image,
+  icon,
 }: {
   title: string;
-  description: string;
-  image?: string;
+  description: React.ReactNode;
+  icon?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-1">
-      {image && <img src={image} alt={title} className="mb-4 h-32 object-contain" />}
-      <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-50">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
-    </div>
+    <Card className="transition-all hover:shadow-md hover:-translate-y-1">
+      <CardContent className="p-6 text-center">
+        {icon && <div className="mb-4 flex justify-center">{icon}</div>}
+        <CardHeader className="p-0">
+          <CardTitle className="text-lg font-inter">{title}</CardTitle>
+        </CardHeader>
+        <p className="text-gray-600 dark:text-gray-400 font-inter">{description}</p>
+      </CardContent>
+    </Card>
   );
 }
 
 function Features() {
   const features = [
     {
-      title: 'Hybrid Access Control Models',
+      title: 'Flexible Access Models',
       description:
-        'Casbin uses CONF files to define access control models based on the PERM metamodel (Policy, Effect, Request, Matchers). You can change or upgrade your authorization mechanism by modifying the configuration file.',
-      image: '/images/model.png',
+        'Define authorization models using CONF files with PERM metamodel. Easily modify or upgrade access control logic by updating configuration.',
+      icon: <Shield size={48} className="text-[#443D80]" />,
     },
     {
-      title: 'Flexible Policy Storage',
-      description:
-        'Casbin policies can be stored in memory, files, or databases. We support dozens of storage backends including MySQL, Postgres, Oracle, MongoDB, Redis, Cassandra, and AWS S3. See the full list of adapters.',
-      image: '/images/storage.png',
+      title: 'Multi-Storage Support',
+      description: <>Store policies in memory, files, or databases. Supports 20+ backends including MySQL, PostgreSQL, Redis, and cloud storage. <Link href="/docs/Adapters" className="text-[#443D80] hover:underline">See full list of adapters</Link>.</>,
+      icon: <Database size={48} className="text-[#443D80]" />,
     },
     {
-      title: 'Cross-languages & Cross-platforms',
+      title: 'Cross-Platform Libraries',
       description:
-        'Casbin is implemented in multiple languages including Golang, Java, PHP, Node.js, Python, .NET, Rust, and more. All implementations share the same API and behavior.',
-      image: '/images/language.png',
+        'Available in Golang, Java, Node.js, Python, .NET, Rust, and more. Consistent API across all implementations.',
+      icon: <Globe size={48} className="text-[#443D80]" />,
+    },
+    {
+      title: 'Policy Persistence',
+      description:
+        'Lightweight core library with pluggable adapters for policy storage. Supports third-party adapter contributions.',
+      icon: <Database size={48} className="text-[#443D80]" />,
+    },
+    {
+      title: 'Scalable Enforcement',
+      description:
+        'Filtered policy loading for large-scale applications. Load only relevant policies to optimize performance in multi-tenant environments.',
+      icon: <Scale size={48} className="text-[#443D80]" />,
+    },
+    {
+      title: 'Role Management',
+      description: <>Handle RBAC hierarchies and user-role mappings. Load from Casbin policies or external sources like LDAP, Okta, and Azure AD. <Link href="/docs/RoleManagers" className="text-[#443D80] hover:underline">See all available role managers</Link>.</>,
+      icon: <Users size={48} className="text-[#443D80]" />,
     },
   ];
 
@@ -421,7 +451,7 @@ function Features() {
     <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900/50">
       <div className="mx-auto max-w-6xl px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 font-inter">
             Key Features
           </h2>
         </div>
@@ -454,7 +484,7 @@ function LanguageIntegration() {
     { name: 'Lua (OpenResty, Kong, APISIX)', icon: 'https://cdn.casbin.org/language/lua-5.svg', url: 'https://github.com/casbin/lua-casbin' },
     { name: 'Dart (Flutter)', icon: 'https://cdn.casbin.org/language/dart.svg', url: 'https://github.com/casbin/dart-casbin' },
     { name: 'Elixir', icon: 'https://cdn.casbin.org/language/elixir-lang-icon.svg', url: 'https://github.com/casbin/casbin-ex' },
-    { name: 'Cloud Native', icon: 'https://cdn.casbin.org/language/kubernets.svg', url: '/docs/cloud-native', fullName: 'Cloud Native (Kubernetes, Istio, Envoy, KubeSphere)' },
+    { name: 'Cloud Native (Kubernetes, Istio, Envoy, KubeSphere)', icon: 'https://cdn.casbin.org/language/kubernets.svg', url: '/docs/cloud-native' },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -463,119 +493,52 @@ function LanguageIntegration() {
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === languages.length - 1 ? -1 : prev + 1));
+      setCurrentIndex((prev) => (prev === languages.length - 1 ? 0 : prev + 1));
     }, 3000);
     return () => clearInterval(interval);
   }, [isPaused, languages.length]);
 
-  const displayName = currentIndex >= 0 ? (languages[currentIndex].fullName || languages[currentIndex].name) : 'Multiple Languages';
+  const displayName = currentIndex >= 0 ? languages[currentIndex].name : 'Multiple Languages';
 
   return (
     <section className="py-16 md:py-24 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4">
         <div className="text-center mb-12 min-h-24 flex items-center justify-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-50 whitespace-nowrap">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-50 whitespace-nowrap font-inter">
             <span className="text-gray-600 dark:text-gray-400">Use Casbin with </span>
             <span className="animate-fade-in-up" style={{color: '#443D80'}}>{displayName}</span>
           </h2>
         </div>
 
         <div
-          className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto px-4"
+          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-5xl mx-auto px-4"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {languages.map((lang, idx) => (
-            <a
+            <Card
               key={lang.name}
-              href={lang.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex justify-center items-center p-3 rounded-xl transition-all duration-300 ${
-                currentIndex === idx ? 'scale-110 -translate-y-1' : 'hover:-translate-y-1'
+              className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:border-gray-300 ${
+                currentIndex === idx ? 'ring-2 ring-[#443D80] bg-[#443D80]/5' : 'hover:bg-gray-50 dark:hover:bg-gray-800/30'
               }`}
-              style={{
-                border: currentIndex === idx ? '2px solid #443D80' : '2px solid transparent',
-                backgroundColor: currentIndex === idx ? 'rgba(68, 61, 128, 0.05)' : 'transparent',
-              }}
               onMouseEnter={() => setCurrentIndex(idx)}
-              title={lang.name}
             >
-              <img src={lang.icon} alt={lang.name} className="h-12 object-contain" />
-            </a>
+              <CardContent className="p-3 text-center flex flex-col items-center justify-center">
+                <a
+                  href={lang.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                  title={lang.name}
+                >
+                  <div className="mb-3 p-2 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 shadow-sm">
+                    <img src={lang.icon} alt={lang.name} className="h-10 w-10 object-contain mx-auto" />
+                  </div>
+                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 font-inter uppercase tracking-wide">{lang.name}</p>
+                </a>
+              </CardContent>
+            </Card>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PolicyPersistence() {
-  return (
-    <section className="py-16 md:py-24" style={{
-      background: 'linear-gradient(to right, rgba(68, 61, 128, 0.05) 0%, rgba(68, 61, 128, 0.02) 100%)',
-    }}>
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-4">Policy Persistence</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Casbin stores policies through adapters. To keep the library lightweight, adapter code is separated from the main library. We support third-party adapter contributions.{' '}
-              <Link href="/docs/Adapters" className="font-semibold" style={{color: '#443D80'}}>
-                See the full list of adapters
-              </Link>{' '}
-              for more information.
-            </p>
-          </div>
-          <div className="text-center">
-            <img src="/images/store.png" alt="Policy Persistence" className="max-w-full h-auto" />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PolicyEnforcement() {
-  return (
-    <section className="py-16 md:py-24 bg-white dark:bg-gray-950">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="text-center order-2 md:order-1">
-            <img src="/images/scale.png" alt="Policy Enforcement at Scale" className="max-w-full h-auto" />
-          </div>
-          <div className="order-1 md:order-2">
-            <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-4">Policy Enforcement at Scale</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-300">
-              Some adapters support filtered policy loading. This means Casbin can load only a subset of policies from storage based on specified filters. This feature is useful for large-scale, multi-tenant applications where loading all policies at once would be inefficient.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function RoleManager() {
-  return (
-    <section className="py-16 md:py-24" style={{
-      background: 'linear-gradient(to right, rgba(68, 61, 128, 0.05) 0%, rgba(68, 61, 128, 0.02) 100%)',
-    }}>
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-4">Role Manager</h3>
-            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              The role manager handles RBAC role hierarchy (user-role mappings) in Casbin. It can load role data from Casbin policy rules or from external sources like LDAP, Okta, Auth0, Azure AD, etc. To keep the library lightweight, role manager code is separated from the main library.{' '}
-              <Link href="/docs/RoleManagers" className="font-semibold" style={{color: '#443D80'}}>
-                See all available role managers
-              </Link>
-              .
-            </p>
-          </div>
-          <div className="text-center">
-            <img src="/images/role.png" alt="Role Manager" className="max-w-full h-auto" />
-          </div>
         </div>
       </div>
     </section>
@@ -586,43 +549,37 @@ function EditorPreview() {
   return (
     <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900/50">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
-            Try the Casbin Online Editor
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Write and test your Casbin model and policy in real-time with the interactive online editor. Try different access control models and see results instantly.
-          </p>
-        </div>
-
-        <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          <iframe
-            src="https://editor.casbin.org"
-            className="w-full h-96 md:h-[600px]"
-            title="Casbin Online Editor"
-          />
-        </div>
-
-        <div className="text-center mt-8">
-          <a
-            href="https://editor.casbin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg text-white font-semibold px-8 py-3 transition-all"
-            style={{
-              backgroundColor: '#443D80',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#5a4fa0';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#443D80';
-            }}
-          >
-            Open Full Editor
-            <ExternalLink size={18} />
-          </a>
-        </div>
+        <Card className="w-full">
+          <CardHeader className="text-center">
+            <CardTitle className="text-4xl md:text-5xl font-bold">
+              Try the Casbin Online Editor
+            </CardTitle>
+            <CardDescription className="text-lg max-w-2xl mx-auto">
+              Write and test your Casbin model and policy in real-time with the interactive online editor. Try different access control models and see results instantly.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="rounded-lg overflow-hidden border bg-white dark:bg-gray-800">
+              <iframe
+                src="https://editor.casbin.org"
+                className="w-full h-96 md:h-[600px]"
+                title="Casbin Online Editor"
+              />
+            </div>
+            <div className="flex justify-center">
+              <Button asChild size="lg" className="gap-2">
+                <a
+                  href="https://editor.casbin.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Full Editor
+                  <ExternalLink size={18} />
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
@@ -630,22 +587,28 @@ function EditorPreview() {
 
 function Showcase() {
   const [users, setUsers] = useState<Array<any>>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/data/users.json')
       .then((res) => res.json())
-      .then((data) => setUsers(Array.isArray(data) ? data.filter(Boolean) : []))
-      .catch(() => {});
+      .then((data) => {
+        setUsers(Array.isArray(data) ? data.filter(Boolean) : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
     <section className="py-16 md:py-24 bg-white dark:bg-gray-950">
       <div className="mx-auto max-w-6xl px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 font-inter">
             Who's using Casbin?
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter">
             Hundreds of projects use Casbin, from Fortune 500 companies to new startups. Check out{' '}
             <Link href="/docs/users" className="font-semibold" style={{color: '#443D80'}}>
               these apps
@@ -654,23 +617,28 @@ function Showcase() {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 items-center">
-          {users.map((user) => (
-            <a
-              key={user.caption}
-              href={user.infolink || user.link || '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={user.caption}
-              className="inline-flex justify-center items-center p-4 transition-all hover:opacity-100"
-              style={{
-                opacity: 0.7,
-              }}
-            >
-              <img src={`/images/${user.image}`} alt={user.caption} className="h-12 object-contain" />
-            </a>
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex flex-wrap justify-center gap-8 items-center">
+            {Array.from({ length: 12 }).map((_, idx) => (
+              <div key={idx} className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-8 items-center">
+            {users.map((user) => (
+              <a
+                key={user.caption}
+                href={user.infolink || user.link || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={user.caption}
+                className="inline-flex justify-center items-center p-4 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
+              >
+                <img src={`/images/${user.image}`} alt={user.caption} className="h-12 object-contain" />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -678,84 +646,51 @@ function Showcase() {
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-black text-gray-300 dark:text-gray-400 py-12 md:py-16 border-t border-gray-800">
+    <footer className="bg-slate-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 py-8 md:py-12 border-t border-slate-200 dark:border-slate-700">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {/* Docs Section */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wide">Docs</h3>
-            <ul className="space-y-2">
-              <li><Link href="/docs/GetStarted" className="transition text-sm" style={{color: '#999', }} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>Getting Started</Link></li>
-              <li><Link href="/docs/ManagementAPI" className="transition text-sm" style={{color: '#999',}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>Management API</Link></li>
-              <li><Link href="/docs/RBACAPI" className="transition text-sm" style={{color: '#999',}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>RBAC API</Link></li>
-              <li><Link href="/docs/Middlewares" className="transition text-sm" style={{color: '#999',}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>Middlewares</Link></li>
-            </ul>
+        {/* Main Footer Content */}
+        <div className="flex flex-col md:flex-row justify-start items-start gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="w-auto">
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src="https://cdn.casbin.org/img/casbin_logo_1024x256.png"
+                alt="Casbin"
+                className="h-8 object-contain"
+              />
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Copyright © {new Date().getFullYear()} Casbin Organization. Open source authorization library.
+            </div>
           </div>
 
-          {/* Community Section */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wide flex items-center gap-2">
-              <span>Community</span>
-              <img src="/images/casbin_min.svg" alt="Casbin" className="h-4 w-4 object-contain opacity-60" />
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://discord.gg/S5UjpzGZjN" target="_blank" rel="noopener noreferrer" className="transition text-sm inline-flex items-center gap-2" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-                  <span>Discord</span>
-                </a>
-              </li>
-              <li>
-                <a href="https://stackoverflow.com/search?q=casbin" target="_blank" rel="noopener noreferrer" className="transition text-sm inline-flex items-center gap-2" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-                  <span>Stack Overflow</span>
-                </a>
-              </li>
-              <li>
-                <a href="https://groups.google.com/g/casbin" target="_blank" rel="noopener noreferrer" className="transition text-sm inline-flex items-center gap-2" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-                  <span>Google Groups</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+          {/* Links Section */}
+          <div className="flex flex-col sm:flex-row gap-16 md:ml-8">
+            {/* Docs */}
+            <div>
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-3 text-sm">Docs</h3>
+              <ul className="space-y-2">
+                <li><Link href="/docs/GetStarted" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Getting Started</Link></li>
+                <li><Link href="/docs/ManagementAPI" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Management API</Link></li>
+                <li><Link href="/docs/RBACAPI" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">RBAC API</Link></li>
+              </ul>
+            </div>
 
-          {/* More Section */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-sm uppercase tracking-wide">More</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="https://github.com/casbin/casbin" target="_blank" rel="noopener noreferrer" className="transition" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-                  GitHub Stars
-                </a>
-              </li>
-              <li>
-                <a href="https://twitter.com/casbinHQ" target="_blank" rel="noopener noreferrer" className="transition" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a href="https://www.youtube.com/@casbinhq" target="_blank" rel="noopener noreferrer" className="transition" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-                  YouTube
-                </a>
-              </li>
-            </ul>
+            {/* Community */}
+            <div>
+              <h3 className="text-gray-900 dark:text-white font-semibold mb-3 text-sm">Community</h3>
+              <ul className="space-y-2">
+                <li><a href="https://discord.gg/S5UjpzGZjN" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><MessageSquare className="h-4 w-4" />Discord</a></li>
+                <li><a href="https://stackoverflow.com/search?q=casbin" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><HelpCircle className="h-4 w-4" />Stack Overflow</a></li>
+                <li><a href="https://groups.google.com/g/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><Users2 className="h-4 w-4" />Google Groups</a></li>
+                <li><a href="https://github.com/casbin" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><Github className="h-4 w-4" />GitHub</a></li>
+                <li><a href="https://twitter.com/casbinHQ" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm inline-flex items-center gap-2"><Twitter className="h-4 w-4" />Twitter</a></li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-sm text-gray-400">
-            © {new Date().getFullYear()} Casbin Organization
-          </div>
-          <div className="flex gap-6">
-            <a href="https://github.com/casbin" target="_blank" rel="noopener noreferrer" className="transition text-sm" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-              GitHub
-            </a>
-            <a href="https://twitter.com/casbinHQ" target="_blank" rel="noopener noreferrer" className="transition text-sm" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-              Twitter
-            </a>
-            <a href="https://discord.gg/S5UjpzGZjN" target="_blank" rel="noopener noreferrer" className="transition text-sm" style={{color: '#999'}} onMouseEnter={(e) => e.currentTarget.style.color = '#443D80'} onMouseLeave={(e) => e.currentTarget.style.color = '#999'}>
-              Discord
-            </a>
-          </div>
-        </div>
+        
       </div>
     </footer>
   );
@@ -764,65 +699,11 @@ function Footer() {
 export default function HomePage() {
   return (
     <main className="flex flex-col">
-      <style>{`
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fade-in {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
-
-        @keyframes border-gradient-shift {
-          0% {
-            background-position: 0% 0%;
-          }
-          100% {
-            background-position: 200% 0%;
-          }
-        }
-
-        @keyframes shimmer {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
-        @keyframes border-gradient-animate {
-          0% {
-            clip-path: inset(0 50% 0 50%);
-          }
-          100% {
-            clip-path: inset(0);
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-in-out;
-        }
-      `}</style>
+      
       <HeroHeader />
       <LanguageIntegration />
       <Features />
       <EditorPreview />
-      <PolicyPersistence />
-      <PolicyEnforcement />
-      <RoleManager />
       <Showcase />
       <Footer />
     </main>

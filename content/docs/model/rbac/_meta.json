@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "rbac-overview",
+    "rbac",
+    "rbac-with-pattern",
+    "rbac-with-domains",
+    "rbac-with-conditions",
+    "casbin-rbac-and-rbac96"
+  ],
+  "title": "RBAC"
+}

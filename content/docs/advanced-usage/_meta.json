@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "multi-threading",
+    "benchmark",
+    "performance",
+    "k8s-authz",
+    "k8s-gate-keeper",
+    "envoy-authz"
+  ],
+  "title": "Advanced Usage"
+}
