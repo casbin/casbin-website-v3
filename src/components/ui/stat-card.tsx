@@ -11,13 +11,13 @@ interface StatCardProps extends React.ComponentProps<typeof Card> {
 }
 
 /**
- * StatCard 组件: 用于展示统计数据的卡片
- * 使用 CSS 变量来设置颜色，遵循 Tailwind CSS 最佳实践
- * @param icon - Lucide 图标组件
- * @param iconColor - 十六进制颜色值 (e.g., '#EF4444')
- * @param value - 统计数值
- * @param label - 标签文本
- * @param className - 额外的 Tailwind 类
+ * StatCard component: Card for displaying statistical data
+ * Uses CSS variables to set colors, following Tailwind CSS best practices
+ * @param icon - Lucide icon component
+ * @param iconColor - Hexadecimal color value (e.g., '#EF4444')
+ * @param value - Statistical value
+ * @param label - Label text
+ * @param className - Additional Tailwind classes
  */
 function StatCard({
   icon: Icon,

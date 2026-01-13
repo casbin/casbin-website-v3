@@ -11,12 +11,12 @@ interface ColorBadgeProps
 }
 
 /**
- * ColorBadge 组件: 支持动态颜色的 Badge 组件
- * 使用 CSS 变量来设置颜色，遵循 Tailwind CSS 最佳实践
- * @param color - 十六进制颜色值 (e.g., '#00ADD8')
- * @param isSelected - 是否处于选中状态
- * @param variant - Badge 变体
- * @param className - 额外的 Tailwind 类
+ * ColorBadge component: Badge component with dynamic color support
+ * Uses CSS variables to set colors, following Tailwind CSS best practices
+ * @param color - Hexadecimal color value (e.g., '#00ADD8')
+ * @param isSelected - Whether it is in selected state
+ * @param variant - Badge variant
+ * @param className - Additional Tailwind classes
  */
 function ColorBadge({
   color,
