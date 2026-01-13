@@ -157,3 +157,9 @@ vite.config.ts.timestamp-*
 .env*.local
 .vercel
 next-env.d.ts
+
+# Python virtual environment
+.venv/
+
+# Migration and formatting scripts
+scripts/

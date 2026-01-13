@@ -5,6 +5,7 @@ import { PluginFilters } from '@/components/ecosystem/PluginFilters';
 import { PluginGrid } from '@/components/ecosystem/PluginGrid';
 import { PluginStats } from '@/components/ecosystem/PluginStats';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Github, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
@@ -41,12 +42,23 @@ export default function EcosystemPage() {
               </p>
 
               <div className="flex items-center justify-center gap-4 pt-4">
-                <Link href="https://github.com/casbin" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="gap-2 bg-[#443D80] hover:bg-[#6B5B95]">
-                    <Github className="h-5 w-5" />
-                    Contribute a Plugin
-                  </Button>
-                </Link>
+                <Tooltip delayDuration={500}>
+                  <TooltipTrigger asChild>
+                    <Link href="https://github.com/casbin/casbin-website-v3" target="_blank" rel="noopener noreferrer">
+                      <Button size="lg" className="gap-2 bg-[#443D80] hover:bg-[#6B5B95]">
+                        <Github className="h-5 w-5" />
+                        Contribute a Plugin
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <div className="space-y-1">
+                      <p className="font-medium">Contribute Guide:</p>
+                      <p className="text-sm">1. Fork repo → 2. Add plugin data → 3. PR</p>
+                      <p className="text-xs text-muted-foreground">See src/data/plugins/README.md</p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </div>
 

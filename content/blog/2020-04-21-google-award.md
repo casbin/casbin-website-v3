@@ -8,7 +8,7 @@ authorImageURL: "https://avatars.githubusercontent.com/casbin"
 
 Today, we are pleased to announce that Casbin's founder, [Yang Luo](https://github.com/hsluoyz) is awarded the "Google Open Source Peer Bonus winners" for his work on [Casbin](/), [Npcap](https://nmap.org/npcap/) and [Nmap](https://nmap.org/) in 2019 Q3.
 
-![ospb](https://hsluoyz.github.io/download/Open%20Source%20Peer%20Bonus%20Q3%202019%20-%20Yang%20Luo%20-%20OSPB%20Award%20Letter.png)
+![ospb](/images/blog/google-award.png)
 
 > The original award letter can be accessed [here](https://github.com/hsluoyz/hsluoyz.github.io/blob/master/download/Open%20Source%20Peer%20Bonus%20Q3%202019%20-%20Yang%20Luo%20-%20OSPB%20Award%20Letter.pdf).
 

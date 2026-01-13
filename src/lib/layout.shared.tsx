@@ -16,6 +16,7 @@ export function baseOptions(): BaseLayoutProps {
         </a>
       ),
     },
+    githubUrl: 'https://github.com/casbin/casbin',
   };
 }
 

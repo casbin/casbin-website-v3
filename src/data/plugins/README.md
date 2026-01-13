@@ -13,6 +13,7 @@ This directory contains all the plugin data for the Casbin ecosystem page.
 ### 1. Create a new data file
 
 Create a file for each category, for example:
+
 - `adapter-*.ts` for adapters
 - `middleware-*.ts` for middlewares  
 - `watcher-*.ts` for watchers
@@ -66,9 +67,11 @@ Each plugin object should have:
 ### 4. Available Tags
 
 #### Languages
+
 - `Go`, `Java`, `NodeJS`, `PHP`, `Python`, `dotNET`, `Rust`, `Lua`, `Swift`, `Ruby`, `Cpp`
 
 #### Plugin Types
+
 - `Adapter` - Policy storage adapters
 - `Dispatcher` - Distributed enforcement
 - `Middleware` - Web framework integration

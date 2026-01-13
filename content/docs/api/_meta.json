@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "api-overview",
+    "management-api",
+    "rbac-api",
+    "rbac-with-domains-api",
+    "rbac-with-conditions-api",
+    "role-manager-api"
+  ],
+  "title": "API",
+  "defaultOpen": true
+}
