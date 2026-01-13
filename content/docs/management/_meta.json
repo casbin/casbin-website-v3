@@ -6,6 +6,5 @@
     "log-error",
     "frontend-usage"
   ],
-  "title": "Management",
-  "defaultOpen": true
+  "title": "Management"
 }

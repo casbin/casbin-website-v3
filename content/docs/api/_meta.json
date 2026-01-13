@@ -7,6 +7,5 @@
     "rbac-with-conditions-api",
     "role-manager-api"
   ],
-  "title": "API",
-  "defaultOpen": true
+  "title": "API"
 }

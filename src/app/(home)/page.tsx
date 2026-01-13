@@ -111,8 +111,12 @@ function HeroHeader() {
       const y = e.clientY - rect.top;
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        const size = 250;
-        haloEl.style.transform = `translate3d(${x - size / 2}px, ${y - size / 2}px, 0)`;
+        // Use actual halo element size so centering is exact
+        const w = haloEl.offsetWidth || 250;
+        const h = haloEl.offsetHeight || 250;
+        haloEl.style.left = `${Math.round(x - w / 2)}px`;
+        haloEl.style.top = `${Math.round(y - h / 2)}px`;
+        haloEl.style.transform = 'none';
         haloEl.style.opacity = '0.25';
       });
     };
@@ -140,8 +144,11 @@ function HeroHeader() {
         backgroundImage: 'url(/images/background.png)',
       }}
     >
+      {/* Background video (lazy, fades in when ready) */}
+      <VideoBackground />
+
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/40 to-blue-900/30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/40 to-blue-900/30 z-10" />
 
       {/* Cursor halo */}
       <div
@@ -150,13 +157,13 @@ function HeroHeader() {
         style={{
           background: 'radial-gradient(circle at center, rgb(255 255 255 / 50%) 0%, rgb(255 255 255 / 22%) 25%, rgb(255 255 255 / 6%) 50%, rgb(255 255 255 / 0%) 100%)',
           mixBlendMode: 'screen',
-          zIndex: 1,
+          zIndex: 20,
         }}
         aria-hidden="true"
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl">
+      <div className="relative z-30 mx-auto max-w-4xl">
         {/* News pill */}
         <div className="mb-8 flex justify-center">
           <a
@@ -224,14 +231,40 @@ function HeroHeader() {
   );
 }
 
+function VideoBackground() {
+  const [loaded, setLoaded] = useState(false);
+  const ref = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    // Attempt to autoplay; browsers may block but it's muted so usually okay
+    v.play().catch(() => {});
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src="https://cdn.casbin.org/video/background.mp4"
+      preload="auto"
+      fetchPriority="high"
+      poster="/images/background.png"
+      muted
+      loop
+      playsInline
+      onLoadedData={() => setLoaded(true)}
+      onCanPlayThrough={() => setLoaded(true)}
+      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+      style={{ zIndex: 0 }}
+      crossOrigin="anonymous"
+      aria-hidden="true"
+    />
+  );
+}
+
 function LogoCarousel() {
   const [items, setItems] = useState<Array<any>>([]);
-  const [position, setPosition] = useState(0);
-  const [paused, setPaused] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -248,44 +281,47 @@ function LogoCarousel() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!trackRef.current || items.length === 0) return;
-    const totalWidth = Math.max(1, Math.floor(trackRef.current.scrollWidth / 2));
-
-    const tick = (t: number) => {
-      if (paused) {
-        lastTimeRef.current = t;
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
-      if (lastTimeRef.current === null) lastTimeRef.current = t;
-      const delta = (t - lastTimeRef.current) / 1000;
-      lastTimeRef.current = t;
-
-      setPosition((prev) => {
-        const next = prev + delta * 30;
-        if (next >= totalWidth) return next - totalWidth;
-        return next;
-      });
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-      lastTimeRef.current = null;
-    };
-  }, [items, paused]);
-
   const display = items.length > 0 ? [...items, ...items] : [];
+
+  // duration scales with number of items to keep speed consistent
+  const duration = Math.max(12, Math.floor((items.length || 6) * 2.5));
+
+  // measure marquee distance (half of scrollWidth) and set CSS variable for smooth loop
+  useEffect(() => {
+    const container = trackRef.current;
+    if (!container) return;
+
+    const updateDistance = () => {
+      const marqueeEl = container.querySelector('.marquee') as HTMLElement | null;
+      if (!marqueeEl) return;
+      const full = marqueeEl.scrollWidth;
+      const half = Math.floor(full / 2);
+      container.style.setProperty('--marquee-distance', `${half}px`);
+    };
+
+    updateDistance();
+
+    // observe resize and image loads inside marquee
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => updateDistance());
+      ro.observe(container);
+    }
+
+    const imgs = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
+    const onImgLoad = () => updateDistance();
+    imgs.forEach((img) => img.addEventListener('load', onImgLoad));
+
+    return () => {
+      imgs.forEach((img) => img.removeEventListener('load', onImgLoad));
+      if (ro && container) ro.unobserve(container);
+    };
+  }, [items]);
 
   return (
     <div
-      ref={viewportRef}
-      className="relative overflow-hidden rounded-lg py-2"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      ref={trackRef}
+      className="carousel relative overflow-hidden rounded-lg py-2"
       style={{
         maskImage: 'linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)',
         WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)',
@@ -316,7 +352,13 @@ function LogoCarousel() {
         }}
       />
 
-      <div className="flex gap-8 items-center" style={{ transform: `translateX(${-position}px)` }} ref={trackRef}>
+      <div
+        className="flex gap-8 items-center marquee"
+        style={{
+          width: 'max-content',
+          ['--marquee-duration' as any]: `${duration}s`,
+        }}
+      >
         {display.map((item, idx) => (
           <a
             key={idx}
@@ -326,13 +368,13 @@ function LogoCarousel() {
             title={item.caption}
             className="flex-shrink-0 flex items-center justify-center h-14 transition-all duration-360 ease-cubic hover:opacity-100 hover:transform hover:-translate-y-1"
             style={{
-              opacity: paused ? 1 : 0.98,
+              opacity: 0.98,
               filter: 'grayscale(100%) contrast(0.95) brightness(0.95)',
             }}
           >
-            <img 
-              src={`/images/${item.image}`} 
-              alt={item.caption} 
+            <img
+              src={`/images/${item.image}`}
+              alt={item.caption}
               className="h-9 object-contain"
               style={{
                 maxWidth: '260px',
@@ -658,58 +700,7 @@ function Footer() {
 export default function HomePage() {
   return (
     <main className="flex flex-col">
-      <style>{`
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fade-in {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
-
-        @keyframes border-gradient-shift {
-          0% {
-            background-position: 0% 0%;
-          }
-          100% {
-            background-position: 200% 0%;
-          }
-        }
-
-        @keyframes shimmer {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
-        @keyframes border-gradient-animate {
-          0% {
-            clip-path: inset(0 50% 0 50%);
-          }
-          100% {
-            clip-path: inset(0);
-          }
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-in-out;
-        }
-      `}</style>
+      
       <HeroHeader />
       <LanguageIntegration />
       <Features />

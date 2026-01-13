@@ -8,6 +8,5 @@
     "role-managers",
     "middlewares"
   ],
-  "title": "Plugins",
-  "defaultOpen": true
+  "title": "Plugins"
 }

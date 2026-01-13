@@ -7,6 +7,5 @@
     "k8s-gate-keeper",
     "envoy-authz"
   ],
-  "title": "Advanced Usage",
-  "defaultOpen": true
+  "title": "Advanced Usage"
 }

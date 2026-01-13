@@ -4,6 +4,5 @@
     "policy-storage",
     "policy-subset-loading"
   ],
-  "title": "Storage",
-  "defaultOpen": true
+  "title": "Storage"
 }
