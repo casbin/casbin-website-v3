@@ -247,7 +247,6 @@ function VideoBackground() {
       ref={ref}
       src="https://cdn.casbin.org/video/background.mp4"
       preload="auto"
-      fetchPriority="high"
       poster="/images/background.png"
       muted
       loop
