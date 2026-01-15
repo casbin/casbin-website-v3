@@ -618,13 +618,13 @@ function Showcase() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-4 md:grid-cols-7 lg:grid-cols-7 gap-1 justify-items-center">
+          <div className="flex flex-wrap justify-center gap-8 items-center">
             {Array.from({ length: 12 }).map((_, idx) => (
-              <div key={idx} className="w-28 h-28 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+              <div key={idx} className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-4 md:grid-cols-7 lg:grid-cols-7 gap-1 justify-items-center">
+          <div className="flex flex-wrap justify-center gap-8 items-center">
             {users.map((user) => (
               <a
                 key={user.caption}
@@ -632,9 +632,9 @@ function Showcase() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={user.caption}
-                className="inline-flex justify-center items-center p-1 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                className="inline-flex justify-center items-center p-4 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
               >
-                <img src={`/images/${user.image}`} alt={user.caption} className="w-28 h-28 object-contain" />
+                <img src={`/images/${user.image}`} alt={user.caption} className="h-12 object-contain" />
               </a>
             ))}
           </div>
