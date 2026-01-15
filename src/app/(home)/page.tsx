@@ -624,7 +624,7 @@ function Showcase() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-wrap justify-center gap-8 items-center">
+          <div className="flex flex-wrap justify-center gap-3 items-center mx-auto">
             {users.map((user) => (
               <a
                 key={user.caption}
@@ -632,9 +632,14 @@ function Showcase() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={user.caption}
-                className="inline-flex justify-center items-center p-4 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                className="inline-flex justify-center items-center p-3 transition-all opacity-70 hover:opacity-100 hover:scale-105 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
               >
-                <img src={`/images/${user.image}`} alt={user.caption} className="h-12 object-contain" />
+                <img
+                  src={`/images/${user.image}`}
+                  alt={user.caption}
+                  className="object-contain"
+                  style={{ maxWidth: '150px', maxHeight: '90px' }}
+                />
               </a>
             ))}
           </div>
