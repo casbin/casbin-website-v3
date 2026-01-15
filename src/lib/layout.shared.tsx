@@ -34,14 +34,13 @@ export const sharedLinks: LinkItemType[] = [
   },
   {
     type: 'main',
-    url: 'https://editor.casbin.org/gallery',
+    url: '/gallery',
     text: 'Authorization Models',
   },
   {
     type: 'main',
-    url: 'https://editor.casbin.org',
+    url: '/editor',
     text: 'GUI Policy Editor',
-    external: true,
   },
   {
     type: 'main',

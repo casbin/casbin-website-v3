@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-<<<<<<< HEAD
 import { Zap, Code, ExternalLink, Database, Scale, Users, Sparkles, Shield, Globe, MessageSquare, Users2, HelpCircle, Github, Twitter } from 'lucide-react';
-=======
-import { Zap, ChevronLeft, ChevronRight, ExternalLink, Database, Scale, Users, Sparkles, Shield, Globe, MessageSquare, Users2, HelpCircle, Github, Twitter } from 'lucide-react';
->>>>>>> cbe33c5 (add hover animation to buttons in hero section)
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -211,30 +207,16 @@ function HeroHeader() {
 
         {/* Action buttons */}
         <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-<<<<<<< HEAD
           <Button asChild size="lg" className="gap-2 text-white relative overflow-hidden" style={{ backgroundColor: '#443D80' }}>
             <Link href="/docs" className="relative z-10">
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-60 animate-shimmer" />
-=======
-          <Button asChild size="lg" className="gap-2 text-white relative overflow-hidden before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.5)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]" style={{ backgroundColor: '#443D80' }}>
-            <Link href="/docs" className="relative z-10">
->>>>>>> cbe33c5 (add hover animation to buttons in hero section)
               <Zap size={20} />
               Get Started
             </Link>
           </Button>
-<<<<<<< HEAD
           <Button asChild variant="outline" size="lg" className="gap-2 bg-white text-[#443D80] hover:bg-gray-100 hover:text-[#5a4fa0] border-white">
             <a href="https://editor.casbin.org" target="_blank" rel="noopener noreferrer">
               <Code size={20} />
-=======
-          <Button asChild variant="outline" size="lg" className="gap-2 bg-white text-[#443D80] hover:bg-gray-100 hover:text-[#5a4fa0] border-white group">
-            <a href="https://editor.casbin.org" target="_blank" rel="noopener noreferrer">
-              <div className="flex items-center -space-x-1">
-                <ChevronLeft size={20} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
-                <ChevronRight size={20} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-              </div>
->>>>>>> cbe33c5 (add hover animation to buttons in hero section)
               Try Online Editor
             </a>
           </Button>
@@ -636,15 +618,6 @@ function Showcase() {
         </div>
 
         {loading ? (
-<<<<<<< HEAD
-          <div className="flex flex-wrap justify-center gap-8 items-center">
-            {Array.from({ length: 12 }).map((_, idx) => (
-              <div key={idx} className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-wrap justify-center gap-8 items-center">
-=======
           <div className="grid grid-cols-4 md:grid-cols-7 lg:grid-cols-7 gap-1 justify-items-center">
             {Array.from({ length: 12 }).map((_, idx) => (
               <div key={idx} className="w-28 h-28 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
@@ -652,7 +625,6 @@ function Showcase() {
           </div>
         ) : (
           <div className="grid grid-cols-4 md:grid-cols-7 lg:grid-cols-7 gap-1 justify-items-center">
->>>>>>> deb9186 (improve user logos display in homepage)
             {users.map((user) => (
               <a
                 key={user.caption}
@@ -660,15 +632,9 @@ function Showcase() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={user.caption}
-<<<<<<< HEAD
-                className="inline-flex justify-center items-center p-4 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
-              >
-                <img src={`/images/${user.image}`} alt={user.caption} className="h-12 object-contain" />
-=======
                 className="inline-flex justify-center items-center p-1 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
               >
                 <img src={`/images/${user.image}`} alt={user.caption} className="w-28 h-28 object-contain" />
->>>>>>> deb9186 (improve user logos display in homepage)
               </a>
             ))}
           </div>
