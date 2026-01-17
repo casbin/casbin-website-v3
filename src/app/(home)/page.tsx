@@ -612,7 +612,7 @@ function Showcase() {
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter">
             Hundreds of projects use Casbin, from Fortune 500 companies to new startups. Check out{' '}
-            <Link href="/docs/users" className="font-semibold" style={{color: '#443D80'}}>
+            <Link href="/user" className="font-semibold" style={{color: '#443D80'}}>
               these apps
             </Link>
             !
@@ -677,9 +677,9 @@ function Footer() {
             <div>
               <h3 className="text-gray-900 dark:text-white font-semibold mb-3 text-sm">Docs</h3>
               <ul className="space-y-2">
-                <li><Link href="/docs/GetStarted" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Getting Started</Link></li>
-                <li><Link href="/docs/ManagementAPI" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Management API</Link></li>
-                <li><Link href="/docs/RBACAPI" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">RBAC API</Link></li>
+                <li><Link href="/docs/get-started" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Getting Started</Link></li>
+                <li><Link href="/docs/management-api" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">Management API</Link></li>
+                <li><Link href="/docs/rbac-api" className="text-gray-600 dark:text-gray-400 hover:text-[#443D80] transition text-sm">RBAC API</Link></li>
               </ul>
             </div>
 
