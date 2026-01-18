@@ -33,17 +33,17 @@ export default function Page() {
             <article key={page.slugs.join('/')} className="bg-white/80 backdrop-blur-sm border rounded-lg p-4 shadow-sm">
               <h2 className="text-lg font-semibold">
                 <Link href={`/blog/${page.slugs.join('/')}`} className="hover:underline">
-                  {page.data.title}
+                  {(page.data as any).title}
                 </Link>
               </h2>
-              {page.data.description && (
+              {(page.data as any).description && (
                 <p className="text-muted-foreground mt-2">
-                  {page.data.description}
+                  {(page.data as any).description}
                 </p>
               )}
-              {page.data.date && (
+              {(page.data as any).date && (
                 <p className="text-sm text-muted-foreground mt-2">
-                  {new Date(page.data.date).toLocaleDateString()}
+                  {new Date((page.data as any).date).toLocaleDateString()}
                 </p>
               )}
             </article>

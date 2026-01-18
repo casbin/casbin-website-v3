@@ -12,12 +12,12 @@ export default async function Page({
 
   if (!page) notFound();
 
-  const MDX = page.data.body;
+  const MDX = (page.data as any).body;
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
       <DocsBody>
-        <h1>{page.data.title}</h1>
+        <h1>{(page.data as any).title}</h1>
         <MDX />
       </DocsBody>
     </DocsPage>
