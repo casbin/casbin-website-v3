@@ -9,23 +9,7 @@ import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
-// import * as Twoslash from 'fumadocs-twoslash/ui';
-
-// import { Feedback } from '@/components/feedback/client';
-// import { onPageFeedbackAction } from '@/lib/github';
-// import { LastUpdated } from '@/components/last-updated';
 import Link from 'next/link';
-
-
-// Helper function to normalize doc file paths
-function normalizeDocPath(path: string): string {
-  let normalized = path.startsWith('content/') ? path : `content/${path}`;
-  if (!normalized.startsWith('content/docs/')) {
-    normalized = normalized.replace(/^content\//, 'content/docs/');
-  }
-  return normalized;
-}
-
 import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
@@ -68,27 +52,6 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           ))}
         </div>
       )}
-      {/* <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">
-        {(() => {
-          const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${filePath}`;
-
-          return (
-            <>
-              <LLMCopyButton
-                markdownUrl={`/api/mdx?path=${encodeURIComponent(page.path)}`}
-                githubUrl={githubUrl}
-                pagePath={page.path}
-                title={page.data.title}
-                description={page.data.description}
-              />
-              <ViewOptions
-                markdownUrl={`/api/mdx?path=${encodeURIComponent(page.path)}`}
-                githubUrl={githubUrl}
-              />
-            </>
-          );
-        })()}
-      </div> */}
       <DocsBody>
         <MDX
           components={getMDXComponents({

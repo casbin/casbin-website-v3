@@ -19,6 +19,11 @@ const config = {
         protocol: 'https',
         hostname: 'hsluoyz.github.io',
       },
+      {
+        protocol: 'https',
+        hostname: 'learn.microsoft.com',
+        pathname: '/**'
+      }
     ],
   },
 };

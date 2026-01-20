@@ -14,7 +14,7 @@ RBAC is a method of restricting access to resources based on the roles that indi
 
 ## Understanding Azure's Hierarchical RBAC
 
-![Azure Hierarchy](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-setup-guide/media/organize-resources/scope-levels.png)
+![Azure Hierarchy](/images/scope-levels.png)
 
 There is a role called **Owner** for all resources in Azure. Suppose if I have the **Owner** role assigned to me at the
 subscription level, that means I am the **Owner** of all the resource groups and resources under that subscription. If I have
