@@ -4,6 +4,7 @@ author: Helong Zhang
 authorTitle: Casbin Maintainer
 authorURL: "http://github.com/BetaCat0"
 authorImageURL: "https://avatars.githubusercontent.com/BetaCat0"
+date: "2018-08-07"
 ---
 
 Some of our customers ask if Casbin can be used as a service instead of a library. The

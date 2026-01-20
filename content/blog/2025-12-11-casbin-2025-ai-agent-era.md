@@ -4,6 +4,7 @@ slug: casbin-2025-ai-agent-era
 author: Yang Luo
 authorURL: "http://github.com/hsluoyz"
 authorImageURL: "https://avatars.githubusercontent.com/hsluoyz"
+date: "2025-12-11"
 tags: [casbin, roadmap, AI, MCP, edge-computing, LLM]
 ---
 

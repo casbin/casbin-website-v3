@@ -12,7 +12,9 @@ import { remarkFeedbackBlock } from 'fumadocs-core/mdx-plugins/remark-feedback-b
 export const docs = defineDocs({
   dir: 'content/docs',
   docs: {
-    schema: frontmatterSchema,
+    schema: frontmatterSchema.extend({
+      authors: z.array(z.string()).optional(),
+    }),
     postprocess: {
       includeProcessedMarkdown: true,
     },
@@ -27,6 +29,9 @@ export const blog = defineDocs({
   docs: {
     schema: frontmatterSchema.extend({
       author: z.string().optional(),
+      authorTitle: z.string().optional(),
+      authorURL: z.string().optional(),
+      authorImageURL: z.string().optional(),
       date: z.string().date().or(z.date()).optional(),
     }),
     postprocess: {
