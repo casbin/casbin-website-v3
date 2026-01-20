@@ -10,12 +10,27 @@ import { getMDXComponents } from '@/mdx-components';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 
+import { Feedback } from '@/components/feedback/client';
+import { onPageFeedbackAction } from '@/lib/github';
+import { LastUpdated } from '@/components/last-updated';
+
+
+// Helper function to normalize doc file paths
+function normalizeDocPath(path: string): string {
+  let normalized = path.startsWith('content/') ? path : `content/${path}`;
+  if (!normalized.startsWith('content/docs/')) {
+    normalized = normalized.replace(/^content\//, 'content/docs/');
+  }
+  return normalized;
+}
+
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
   const MDX = page.data.body;
+  const filePath = normalizeDocPath(page.path ?? '');
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
@@ -29,6 +44,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           })}
         />
       </DocsBody>
+      <Feedback onSendAction={onPageFeedbackAction} />
+      <LastUpdated filePath={filePath} />
     </DocsPage>
   );
 }

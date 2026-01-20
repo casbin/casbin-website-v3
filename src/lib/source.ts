@@ -4,7 +4,7 @@ import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
 
 // Keep doc URLs flat so folder names stay out of the final pathname.
 function flattenDocSlugs({ path }: { path: string }): string[] {
-  const segments = path.replace(/\\/g, '/').split('/').filter(Boolean);
+  const segments = path.replace(/\\/g, '/' ).split('/' ).filter(Boolean);
   const fileName = segments.pop() ?? '';
   const baseName = fileName.replace(/\.[^/.]+$/, '');
 

@@ -162,4 +162,7 @@ next-env.d.ts
 .venv/
 
 # Migration and formatting scripts
-scripts/
+# scripts/
+
+# AI agent instructions
+AGENTS.md
