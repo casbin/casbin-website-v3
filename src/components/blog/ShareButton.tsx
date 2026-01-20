@@ -2,14 +2,13 @@
 
 import * as React from "react";
 import { Share2, Check } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface ShareButtonProps {
   url: string;
-  className?: string;
 }
 
-export function ShareButton({ url, className }: ShareButtonProps) {
+export function ShareButton({ url }: ShareButtonProps) {
   const [isChecked, setIsChecked] = React.useState(false);
 
   const onCopy = React.useCallback(() => {
@@ -19,15 +18,14 @@ export function ShareButton({ url, className }: ShareButtonProps) {
   }, [url]);
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
+      size="default"
       onClick={onCopy}
-      className={buttonVariants({
-        className: `gap-2 bg-[#443D80] text-white hover:bg-[#443D80]/90 hover:shadow-md ${className}`,
-      })}
+      className="gap-2 border-[#443D80] bg-[#443D80] text-white hover:bg-[#443D80]/90 hover:shadow-md"
     >
       {isChecked ? <Check className="size-4" /> : <Share2 className="size-4" />}
       {isChecked ? "Copied URL" : "Share Post"}
-    </button>
+    </Button>
   );
 }
