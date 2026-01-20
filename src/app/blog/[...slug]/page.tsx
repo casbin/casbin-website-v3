@@ -1,13 +1,10 @@
-import { blogSource } from '@/lib/source';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import { getMDXComponents } from '@/mdx-components';
+import { blogSource } from "@/lib/source";
+import { DocsPage, DocsBody } from "fumadocs-ui/page";
+import { notFound } from "next/navigation";
+import { getMDXComponents } from "@/mdx-components";
+import { AuthorCard } from "@/components/blog/AuthorCard";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string[] }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
   const page = blogSource.getPage(slug);
 
@@ -18,6 +15,11 @@ export default async function Page({
   return (
     <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
       <DocsBody>
+        {(page.data as any).author && <AuthorCard
+          author={(page.data as any).author}
+          authorURL={(page.data as any).authorURL}
+          date={(page.data as any).date}
+        />}
         <h1>{(page.data as any).title}</h1>
         <MDX components={getMDXComponents()} />
       </DocsBody>

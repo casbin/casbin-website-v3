@@ -15,6 +15,7 @@ import * as Twoslash from 'fumadocs-twoslash/ui';
 import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
+import Link from 'next/link';
 
 
 // Helper function to normalize doc file paths
@@ -40,7 +41,22 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
     <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
       <DocsTitle>{(page.data as any).title}</DocsTitle>
       <DocsDescription className="!mb-2 text-base">{(page.data as any).description}</DocsDescription>
-      {/* <AuthorCard authorInfo={page.data as any} /> */}
+      {(page.data as any).authors && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+          <span>Author:</span>
+          {(page.data as any).authors.map((author: string) => (
+            <Link
+              key={author}
+              href={`https://github.com/${author}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium hover:underline"
+            >
+              {author}
+            </Link>
+          ))}
+        </div>
+      )}
       <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">
         {(() => {
           const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${filePath}`;
