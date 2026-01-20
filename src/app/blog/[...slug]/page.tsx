@@ -1,6 +1,7 @@
 import { blogSource } from '@/lib/source';
 import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
+import { getMDXComponents } from '@/mdx-components';
 
 export default async function Page({
   params,
@@ -18,7 +19,7 @@ export default async function Page({
     <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
       <DocsBody>
         <h1>{(page.data as any).title}</h1>
-        <MDX />
+        <MDX components={getMDXComponents()} />
       </DocsBody>
     </DocsPage>
   );

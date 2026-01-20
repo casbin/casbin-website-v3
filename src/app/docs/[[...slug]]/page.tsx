@@ -12,12 +12,29 @@ import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import * as Twoslash from 'fumadocs-twoslash/ui';
 
+import { Feedback } from '@/components/feedback/client';
+import { onPageFeedbackAction } from '@/lib/github';
+import { LastUpdated } from '@/components/last-updated';
+
+
+// Helper function to normalize doc file paths
+function normalizeDocPath(path: string): string {
+  let normalized = path.startsWith('content/') ? path : `content/${path}`;
+  if (!normalized.startsWith('content/docs/')) {
+    normalized = normalized.replace(/^content\//, 'content/docs/');
+  }
+  return normalized;
+}
+
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
   const MDX = (page.data as any).body;
+  
+  // Get the file path for last updated
+  const filePath = normalizeDocPath(page.path ?? '');
 
   return (
     <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
@@ -26,12 +43,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       {/* <AuthorCard authorInfo={page.data as any} /> */}
       <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">
         {(() => {
-          const p = page.path ?? '';
-          let normalized = p.startsWith('content/') ? p : `content/${p}`;
-          if (!normalized.startsWith('content/docs/')) {
-            normalized = normalized.replace(/^content\//, 'content/docs/');
-          }
-          const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${normalized}`;
+          const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${filePath}`;
 
           return (
             <>
@@ -59,6 +71,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           })}
         />
       </DocsBody>
+      <Feedback onSendAction={onPageFeedbackAction} />
+      <LastUpdated filePath={filePath} />
     </DocsPage>
   );
 }
