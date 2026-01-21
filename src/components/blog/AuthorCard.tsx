@@ -15,11 +15,7 @@ export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
 
   const githubUrl = authorURL.replace(/^http:\/\//, "https://").replace(/^"|"$/g, "")
 
-  const formattedDate = date ? new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric"
-  }) : null
+  const formattedDate = date ? new Date(date).toDateString() : null
 
   return (
     <div className="flex flex-row gap-4 text-sm mb-8">
