@@ -40,8 +40,16 @@ export function getPageImage(page: InferPageType<typeof source>) {
   };
 }
 
-interface PageData {
+export interface PageData {
   title: string;
+  description?: string;
+  body?: string;
+  toc?: any;
+  full?: boolean;
+  authors?: string[];
+  author?: string;
+  authorURL?: string;
+  date?: string | Date;
   getText: (type: string) => Promise<string>;
   [key: string]: unknown;
 }

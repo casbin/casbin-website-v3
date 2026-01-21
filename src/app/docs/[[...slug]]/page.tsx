@@ -1,4 +1,4 @@
-import { getPageImage, source } from '@/lib/source';
+import { getPageImage, source, PageData } from '@/lib/source';
 import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions';
 import {
   DocsBody,
@@ -17,7 +17,6 @@ import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
 import Link from 'next/link';
 
-
 // Helper function to normalize doc file paths
 function normalizeDocPath(path: string): string {
   let normalized = path.startsWith('content/') ? path : `content/${path}`;
@@ -27,24 +26,25 @@ function normalizeDocPath(path: string): string {
   return normalized;
 }
 
-export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
+export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const MDX = page.data.body;
+  const data = page.data as unknown as PageData;
+  const MDX = data.body as any; // Fumadocs MDX component
   
   // Get the file path for last updated
   const filePath = normalizeDocPath(page.path ?? '');
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription className="!mb-2 text-base">{page.data.description}</DocsDescription>
-      {page.data.authors && (
+    <DocsPage toc={data.toc} full={data.full}>
+      <DocsTitle>{data.title}</DocsTitle>
+      <DocsDescription className="!mb-2 text-base">{data.description}</DocsDescription>
+      {data.authors && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <span>Author:</span>
-          {page.data.authors.map((author: string) => {
+          {data.authors.map((author: string) => {
              // Validate that the author string is a simple username (alphanumeric, hyphens)
              // to prevent malicious URL construction. Use regex to validate.
              const safeAuthor = /^[a-zA-Z0-9-]+$/.test(author) ? author : null;
@@ -74,8 +74,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
                 markdownUrl={`/api/mdx?path=${encodeURIComponent(page.path)}`}
                 githubUrl={githubUrl}
                 pagePath={page.path}
-                title={page.data.title}
-                description={page.data.description}
+                title={data.title}
+                description={data.description}
               />
               <ViewOptions
                 markdownUrl={`/api/mdx?path=${encodeURIComponent(page.path)}`}
@@ -105,7 +105,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: PageProps<'/docs/[[...slug]]'>,
+  props: { params: Promise<{ slug?: string[] }> },
 ): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug);

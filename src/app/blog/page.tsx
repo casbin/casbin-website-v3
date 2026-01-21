@@ -1,4 +1,4 @@
-import { blogSource } from '@/lib/source';
+import { blogSource, PageData } from '@/lib/source';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -29,21 +29,24 @@ export default function Page() {
       <section className="w-full px-6 mt-12 mb-12">
         <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-4">
-          {pages.map((page) => (
-            <Link
-              key={page.slugs.join('/')}
-              href={`/blog/${page.slugs.join('/')}`}
-              className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl border shadow-sm p-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:shadow-lg"
-            >
-              <p className="font-medium">{page.data.title}</p>
-              
-              {page.data.date && (
-                <p className="mt-auto pt-4 text-xs text-[#443D80]">
-                  {new Date(page.data.date).toDateString()}
-                </p>
-              )}
-            </Link>
-          ))}
+          {pages.map((page) => {
+            const data = page.data as unknown as PageData;
+            return (
+              <Link
+                key={page.slugs.join('/')}
+                href={`/blog/${page.slugs.join('/')}`}
+                className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl border shadow-sm p-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:shadow-lg"
+              >
+                <p className="font-medium">{data.title}</p>
+                
+                {data.date && (
+                  <p className="mt-auto pt-4 text-xs text-[#443D80]">
+                    {new Date(data.date).toDateString()}
+                  </p>
+                )}
+              </Link>
+            );
+          })}
         </div>
         </div>
       </section>

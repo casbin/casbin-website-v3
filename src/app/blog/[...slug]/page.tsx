@@ -1,4 +1,4 @@
-import { blogSource } from "@/lib/source";
+import { blogSource, PageData } from "@/lib/source";
 import { DocsPage, DocsBody } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
@@ -12,19 +12,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
 
   if (!page) notFound();
 
-  const MDX = page.data.body;
-  const toc = page.data.toc;
+  const data = page.data as unknown as PageData;
+  const MDX = data.body as any; // Fumadocs MDX component
+  const toc = data.toc;
   const url = `/blog/${page.slugs.join("/")}`;
 
   return (
-    <DocsPage toc={toc} full={page.data.full}>
+    <DocsPage toc={toc} full={data.full}>
       <DocsBody>
-        {page.data.author && <AuthorCard
-          author={page.data.author}
-          authorURL={page.data.authorURL}
-          date={page.data.date ? new Date(page.data.date).toISOString() : undefined}
+        {data.author && <AuthorCard
+          author={data.author}
+          authorURL={data.authorURL}
+          date={data.date ? new Date(data.date).toISOString() : undefined}
         />}
-        <h1>{page.data.title}</h1>
+        <h1>{data.title}</h1>
         <BlogPostActions url={url} />
         {toc && toc.length > 0 && (
           <div className="my-6">

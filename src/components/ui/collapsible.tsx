@@ -14,7 +14,8 @@ const CollapsibleContent = forwardRef<
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // Delay setting mounted to avoid synchronous state update warning and ensure animation only plays after interactions
+    requestAnimationFrame(() => setMounted(true));
   }, []);
 
   return (

@@ -40,8 +40,12 @@ function AnimatedText({ words, interval = 3000 }: { words: string[]; interval?: 
     });
 
     document.body.removeChild(measurer);
-    setDisplayWidth(Math.max(1, maxWidth - 50));
-    setUnderlineWidth(Math.max(1, maxWidth - 50));
+    
+    // Avoid synchronous state update in effect
+    requestAnimationFrame(() => {
+      setDisplayWidth(Math.max(1, maxWidth - 50));
+      setUnderlineWidth(Math.max(1, maxWidth - 50));
+    });
   }, [words]);
 
   if (words.length === 0) return null;
@@ -608,7 +612,7 @@ function Showcase() {
       <div className="mx-auto max-w-6xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 font-inter">
-            Who's using Casbin?
+            Who&apos;s using Casbin?
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter">
             Hundreds of projects use Casbin, from Fortune 500 companies to new startups. Check out{' '}
