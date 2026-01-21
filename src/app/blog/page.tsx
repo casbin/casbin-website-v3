@@ -2,6 +2,13 @@ import { blogSource } from '@/lib/source';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+// Define proper type for blog page data
+type BlogPageData = {
+  title: string;
+  description?: string;
+  date?: string;
+};
+
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Latest updates and news from Casbin',
@@ -29,25 +36,28 @@ export default function Page() {
       <section className="w-full px-6 mt-12 mb-12">
         <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {pages.map((page) => (
-            <article key={page.slugs.join('/')} className="bg-white/80 backdrop-blur-sm border rounded-lg p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">
-                <Link href={`/blog/${page.slugs.join('/')}`} className="hover:underline">
-                  {page.data.title}
-                </Link>
-              </h2>
-              {page.data.description && (
-                <p className="text-muted-foreground mt-2">
-                  {page.data.description}
-                </p>
-              )}
-              {page.data.date && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  {new Date(page.data.date).toLocaleDateString()}
-                </p>
-              )}
-            </article>
-          ))}
+          {pages.map((page) => {
+            const data = page.data as BlogPageData;
+            return (
+              <article key={page.slugs.join('/')} className="bg-white/80 backdrop-blur-sm border rounded-lg p-4 shadow-sm">
+                <h2 className="text-lg font-semibold">
+                  <Link href={`/blog/${page.slugs.join('/')}`} className="hover:underline">
+                    {data.title}
+                  </Link>
+                </h2>
+                {data.description && (
+                  <p className="text-muted-foreground mt-2">
+                    {data.description}
+                  </p>
+                )}
+                {data.date && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {new Date(data.date).toLocaleDateString()}
+                  </p>
+                )}
+              </article>
+            );
+          })}
         </div>
         </div>
       </section>

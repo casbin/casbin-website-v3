@@ -2,6 +2,20 @@ import { blogSource } from '@/lib/source';
 import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
+// Define proper type for blog page data
+type BlogPageData = {
+  title: string;
+  description?: string;
+  body: unknown;
+  toc?: Array<{
+    title: string;
+    url: string;
+    depth: number;
+    items?: Array<{ title: string; url: string; depth: number }>;
+  }>;
+  full?: boolean;
+};
+
 export default async function Page({
   params,
 }: {
@@ -12,12 +26,13 @@ export default async function Page({
 
   if (!page) notFound();
 
-  const MDX = page.data.body;
+  const data = page.data as BlogPageData;
+  const MDX = data.body as React.ComponentType;
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    <DocsPage toc={data.toc} full={data.full}>
       <DocsBody>
-        <h1>{page.data.title}</h1>
+        <h1>{data.title}</h1>
         <MDX />
       </DocsBody>
     </DocsPage>

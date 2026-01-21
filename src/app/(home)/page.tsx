@@ -264,7 +264,7 @@ function VideoBackground() {
 }
 
 function LogoCarousel() {
-  const [items, setItems] = useState<Array<any>>([]);
+  const [items, setItems] = useState<Array<{ infolink?: string; link?: string; image: string; caption: string }>>([]);
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -357,7 +357,7 @@ function LogoCarousel() {
         className="flex gap-8 items-center marquee"
         style={{
           width: 'max-content',
-          ['--marquee-duration' as any]: `${duration}s`,
+          ['--marquee-duration' as string]: `${duration}s`,
         }}
       >
         {display.map((item, idx) => (
@@ -588,7 +588,7 @@ function EditorPreview() {
 }
 
 function Showcase() {
-  const [users, setUsers] = useState<Array<any>>([]);
+  const [users, setUsers] = useState<Array<{ infolink?: string; link?: string; image: string; caption: string }>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
