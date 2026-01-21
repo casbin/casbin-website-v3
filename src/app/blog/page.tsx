@@ -28,25 +28,21 @@ export default function Page() {
 
       <section className="w-full px-6 mt-12 mb-12">
         <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-4">
           {pages.map((page) => (
-            <article key={page.slugs.join('/')} className="bg-white/80 backdrop-blur-sm border rounded-lg p-4 shadow-sm">
-              <h2 className="text-lg font-semibold">
-                <Link href={`/blog/${page.slugs.join('/')}`} className="hover:underline">
-                  {page.data.title}
-                </Link>
-              </h2>
-              {page.data.description && (
-                <p className="text-muted-foreground mt-2">
-                  {page.data.description}
+            <Link
+              key={page.slugs.join('/')}
+              href={`/blog/${page.slugs.join('/')}`}
+              className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl border shadow-sm p-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:shadow-lg"
+            >
+              <p className="font-medium">{(page.data as any).title}</p>
+              
+              {(page.data as any).date && (
+                <p className="mt-auto pt-4 text-xs text-[#443D80]">
+                  {new Date((page.data as any).date).toDateString()}
                 </p>
               )}
-              {page.data.date && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  {new Date(page.data.date).toLocaleDateString()}
-                </p>
-              )}
-            </article>
+            </Link>
           ))}
         </div>
         </div>
