@@ -57,16 +57,19 @@ async function getFeedbackDestination(): Promise<RepositoryInfo | null> {
   if (!octokit) return null;
 
   try {
-    const result = await octokit.graphql(`
-    query {
-      repository(owner: "${owner}", name: "${repo}") {
-        id
-        discussionCategories(first: 25) {
-          nodes { id name }
+    const result = await octokit.graphql(
+      `
+      query ($owner: String!, $repo: String!) {
+        repository(owner: $owner, name: $repo) {
+          id
+          discussionCategories(first: 25) {
+            nodes { id name }
+          }
         }
       }
-    }
-  `) as { repository: RepositoryInfo };
+    `,
+      { owner, repo },
+    ) as { repository: RepositoryInfo };
   
     return (cachedDestination = result.repository);
   } catch (e) {
@@ -114,61 +117,127 @@ async function createDiscussionThread(pageId: string, body: string): Promise<Act
 
   const title = `Feedback for ${pageId}`;
   
-  // TODO: Add error handling for GitHub API responses
-  // - Handle rate limiting (HTTP 403/429)
-  // - Handle network timeouts
-  // - Handle unexpected response formats
-  // - Handle missing fields in response
-  
-  const {
-    search: {
-      nodes: [discussion],
-    },
-  }: {
-    search: {
-      nodes: { id: string; url: string }[];
-    };
-  } = await octokit.graphql(`
-          query {
-            search(type: DISCUSSION, query: ${JSON.stringify(`${title} in:title repo:${owner}/${repo} author:@me`)}, first: 1) {
-              nodes {
-                ... on Discussion { id, url }
-              }
-            }
-          }`);
+  const searchQuery = `
+    query ($query: String!, $first: Int!) {
+      search(type: DISCUSSION, query: $query, first: $first) {
+        nodes {
+          ... on Discussion { id, url }
+        }
+      }
+    }
+  `;
 
-  if (discussion) {
-    // TODO: Add try-catch for mutation errors
-    // - Handle API rate limiting
-    // - Handle authentication failures
-    // - Log errors for debugging
-    
-    const result: {
-      addDiscussionComment: {
-        comment: { id: string; url: string };
+  try {
+    const searchVariables = {
+      query: `${title} in:title repo:${owner}/${repo} author:@me`,
+      first: 1,
+    };
+
+    const {
+      search: {
+        nodes: [discussion],
+      },
+    }: {
+      search: {
+        nodes: { id: string; url: string }[];
       };
-    } = await octokit.graphql(`
-            mutation {
-              addDiscussionComment(input: { body: ${JSON.stringify(body)}, discussionId: "${discussion.id}" }) {
-                comment { id, url }
-              }
-            }`);
+    } = await octokit.graphql(searchQuery, searchVariables);
 
-    return {
-      githubUrl: result.addDiscussionComment.comment.url,
-    };
-  } else {
-    const result: {
-      discussion: { id: string; url: string };
-    } = await octokit.graphql(`
-            mutation {
-              createDiscussion(input: { repositoryId: "${destination.id}", categoryId: "${category.id}", body: ${JSON.stringify(body)}, title: ${JSON.stringify(title)} }) {
-                discussion { id, url }
-              }
-            }`);
+    if (discussion && discussion.id && discussion.url) {
+      const addCommentMutation = `
+        mutation ($input: AddDiscussionCommentInput!) {
+          addDiscussionComment(input: $input) {
+            comment { id, url }
+          }
+        }
+      `;
 
-    return {
-      githubUrl: result.discussion.url,
-    };
+      const addCommentVariables = {
+        input: {
+          body,
+          discussionId: discussion.id,
+        },
+      };
+
+      const result: {
+        addDiscussionComment: {
+          comment: { id: string; url: string };
+        };
+      } = await octokit.graphql(addCommentMutation, addCommentVariables);
+
+      if (
+        result &&
+        result.addDiscussionComment &&
+        result.addDiscussionComment.comment &&
+        result.addDiscussionComment.comment.url
+      ) {
+        return {
+          githubUrl: result.addDiscussionComment.comment.url,
+        };
+      }
+
+      console.warn('GitHub addDiscussionComment response missing expected fields');
+      return { githubUrl: undefined };
+    } else {
+      const createDiscussionMutation = `
+        mutation ($input: CreateDiscussionInput!) {
+          createDiscussion(input: $input) {
+            discussion { id, url }
+          }
+        }
+      `;
+
+      const createDiscussionVariables = {
+        input: {
+          repositoryId: destination.id,
+          categoryId: category.id,
+          body,
+          title,
+        },
+      };
+
+      const result: {
+        createDiscussion: {
+          discussion: { id: string; url: string };
+        };
+      } = await octokit.graphql(createDiscussionMutation, createDiscussionVariables);
+
+      if (
+        result &&
+        result.createDiscussion &&
+        result.createDiscussion.discussion &&
+        result.createDiscussion.discussion.url
+      ) {
+        return {
+          githubUrl: result.createDiscussion.discussion.url,
+        };
+      }
+
+      console.warn('GitHub createDiscussion response missing expected fields');
+      return { githubUrl: undefined };
+    }
+  } catch (error: unknown) {
+    const err = error as any;
+
+    if (err && typeof err === 'object') {
+      const status = err.status as number | undefined;
+      if (status === 403 || status === 429) {
+        console.warn(
+          'GitHub API rate limit encountered while creating feedback discussion or comment',
+        );
+      } else {
+        console.error(
+          'Error while calling GitHub GraphQL API for feedback discussion',
+          err,
+        );
+      }
+    } else {
+      console.error(
+        'Unknown error while calling GitHub GraphQL API for feedback discussion',
+        err,
+      );
+    }
+
+    return { githubUrl: undefined };
   }
 }

@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
   useTransition,
+  useEffect,
 } from 'react';
 import { Collapsible, CollapsibleContent } from '../ui/collapsible';
 import { cva } from 'class-variance-authority';
@@ -37,13 +38,6 @@ const rateButtonVariants = cva(
   },
 );
 
-const pageFeedbackResult = z.extend(pageFeedback, {
-  response: actionResponse,
-});
-
-const blockFeedbackResult = z.extend(blockFeedback, {
-  response: actionResponse,
-});
 
 export function Feedback({
   onSendAction,
@@ -172,6 +166,8 @@ export function FeedbackBlock({
   const [error, setError] = useState<string | null>(null);
   const submissionRef = useRef<number>(0);
 
+const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   function submit(e?: SyntheticEvent) {
     // Prevent double submission
     if (isPending) return;
@@ -179,6 +175,12 @@ export function FeedbackBlock({
     const currentSubmission = Date.now();
     submissionRef.current = currentSubmission;
     
+    // Clear any existing timer
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+
     startTransition(async () => {
       try {
         const feedback: BlockFeedback = {
@@ -202,16 +204,13 @@ export function FeedbackBlock({
         setShowSuccess(true);
         
         // After 3 seconds, close popover and reset
-        const timer = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
           if (submissionRef.current === currentSubmission) {
             setShowSuccess(false);
             setPrevious(null);
             setOpen(false);
           }
         }, 3000);
-        
-        // Store timer for cleanup if needed
-        (feedback as any)._timer = timer;
         
       } catch (error) {
         console.error('Feedback submission failed:', error);
@@ -221,6 +220,15 @@ export function FeedbackBlock({
 
     e?.preventDefault();
   }
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

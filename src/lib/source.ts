@@ -4,7 +4,7 @@ import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
 
 // Keep doc URLs flat so folder names stay out of the final pathname.
 function flattenDocSlugs({ path }: { path: string }): string[] {
-  const segments = path.replace(/\\/g, '/' ).split('/' ).filter(Boolean);
+  const segments = path.replace(/\\/g, '/').split('/').filter(Boolean);
   const fileName = segments.pop() ?? '';
   const baseName = fileName.replace(/\.[^/.]+$/, '');
 
@@ -40,10 +40,17 @@ export function getPageImage(page: InferPageType<typeof source>) {
   };
 }
 
-export async function getLLMText(page: InferPageType<typeof source>) {
-  const processed = await (page.data as any).getText('processed');
+interface PageData {
+  title: string;
+  getText: (type: string) => Promise<string>;
+  [key: string]: unknown;
+}
 
-  return `# ${(page.data as any).title}
+export async function getLLMText(page: InferPageType<typeof source>) {
+  const data = page.data as unknown as PageData;
+  const processed = await data.getText('processed');
+
+  return `# ${data.title}
 
 ${processed}`;
 }

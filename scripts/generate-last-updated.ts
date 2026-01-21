@@ -9,7 +9,7 @@
  * Format: { "docs/getting-started.mdx": "2024-01-15T10:30:00.000Z", ... }
  */
 
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import { readFileSync, statSync, writeFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import { glob } from 'glob';
@@ -33,10 +33,9 @@ async function main() {
     try {
       const absolutePath = resolve(process.cwd(), filePath);
       
-      // Try to get git commit date
-      const gitCommand = `git log -1 --format=%cd --date=iso-strict -- "${absolutePath}"`;
-      const gitDate = execSync(gitCommand, { 
-        encoding: 'utf8', 
+      // Try to get git commit date using execFileSync for safer execution
+      const gitDate = execFileSync('git', ['log', '-1', '--format=%cd', '--date=iso-strict', '--', absolutePath], {
+        encoding: 'utf8',
         maxBuffer: 1024 * 1024,
         timeout: 5000  // 5 second timeout per file
       }).trim();

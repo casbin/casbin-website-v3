@@ -11,11 +11,24 @@ interface ShareButtonProps {
 export function ShareButton({ url }: ShareButtonProps) {
   const [isChecked, setIsChecked] = React.useState(false);
 
+  const timeoutRef = React.useRef<number | null>(null);
+
   const onCopy = React.useCallback(() => {
     void navigator.clipboard.writeText(`${window.location.origin}${url}`);
     setIsChecked(true);
-    setTimeout(() => setIsChecked(false), 2000);
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = window.setTimeout(() => setIsChecked(false), 2000);
   }, [url]);
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Button

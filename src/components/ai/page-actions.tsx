@@ -29,7 +29,32 @@ export function LLMCopyButton({
   const [checked, onClick] = useCopyButton(async () => {
     let content = cache.get(markdownUrl);
     if (!content) {
-      const res = await fetch(markdownUrl);
+      let res: Response;
+      try {
+        res = await fetch(markdownUrl);
+      } catch (error) {
+        console.error('Failed to fetch markdown content for copy.', error);
+        throw new Error('Unable to fetch content to copy.');
+      }
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch content: ${res.status} ${res.statusText}`);
+      }
+
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.toLowerCase().includes('text/')) {
+        throw new Error('Unexpected content type received when fetching content to copy.');
+      }
+
+      const contentLengthHeader = res.headers.get('content-length');
+      if (contentLengthHeader) {
+        const contentLength = Number(contentLengthHeader);
+        const MAX_CONTENT_LENGTH = 2 * 1024 * 1024; // 2 MiB
+        if (!Number.isNaN(contentLength) && contentLength > MAX_CONTENT_LENGTH) {
+          throw new Error('Content is too large to copy.');
+        }
+      }
+
       content = await res.text();
       cache.set(markdownUrl, content);
     }

@@ -13,7 +13,12 @@ interface AuthorCardProps {
 export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
   if (!author || !authorURL) return null
 
-  const githubUrl = authorURL.replace(/^http:\/\//, "https://").replace(/^"|"$/g, "")
+  const normalizedUrl = authorURL
+    .trim()
+    .replace(/^http:\/\//, "https://")
+    .replace(/^['"]|['"]$/g, "")
+
+  const isGithubUrl = normalizedUrl.startsWith("https://github.com/")
 
   const formattedDate = date ? new Date(date).toDateString() : null
 
@@ -21,7 +26,18 @@ export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
     <div className="flex flex-row gap-4 text-sm mb-8">
       <div>
         <p className="mb-1 text-muted-foreground">Written by</p>
-        <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="font-medium">{author}</Link>
+        {isGithubUrl ? (
+          <Link
+            href={normalizedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium"
+          >
+            {author}
+          </Link>
+        ) : (
+          <span className="font-medium">{author}</span>
+        )}
       </div>
 
       {formattedDate && (

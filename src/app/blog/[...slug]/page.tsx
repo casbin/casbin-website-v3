@@ -12,19 +12,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
 
   if (!page) notFound();
 
-  const MDX = (page.data as any).body;
-  const toc = (page.data as any).toc;
+  const MDX = page.data.body;
+  const toc = page.data.toc;
   const url = `/blog/${page.slugs.join("/")}`;
 
   return (
-    <DocsPage toc={toc} full={(page.data as any).full}>
+    <DocsPage toc={toc} full={page.data.full}>
       <DocsBody>
-        {(page.data as any).author && <AuthorCard
-          author={(page.data as any).author}
-          authorURL={(page.data as any).authorURL}
-          date={(page.data as any).date}
+        {page.data.author && <AuthorCard
+          author={page.data.author}
+          authorURL={page.data.authorURL}
+          date={page.data.date ? new Date(page.data.date).toISOString() : undefined}
         />}
-        <h1>{(page.data as any).title}</h1>
+        <h1>{page.data.title}</h1>
         <BlogPostActions url={url} />
         {toc && toc.length > 0 && (
           <div className="my-6">

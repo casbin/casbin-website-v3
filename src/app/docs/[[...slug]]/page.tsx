@@ -32,29 +32,36 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const MDX = (page.data as any).body;
+  const MDX = page.data.body;
   
   // Get the file path for last updated
   const filePath = normalizeDocPath(page.path ?? '');
 
   return (
-    <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
-      <DocsTitle>{(page.data as any).title}</DocsTitle>
-      <DocsDescription className="!mb-2 text-base">{(page.data as any).description}</DocsDescription>
-      {(page.data as any).authors && (
+    <DocsPage toc={page.data.toc} full={page.data.full}>
+      <DocsTitle>{page.data.title}</DocsTitle>
+      <DocsDescription className="!mb-2 text-base">{page.data.description}</DocsDescription>
+      {page.data.authors && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <span>Author:</span>
-          {(page.data as any).authors.map((author: string) => (
-            <Link
-              key={author}
-              href={`https://github.com/${author}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium hover:underline"
-            >
-              {author}
-            </Link>
-          ))}
+          {page.data.authors.map((author: string) => {
+             // Validate that the author string is a simple username (alphanumeric, hyphens)
+             // to prevent malicious URL construction. Use regex to validate.
+             const safeAuthor = /^[a-zA-Z0-9-]+$/.test(author) ? author : null;
+             if (!safeAuthor) return null;
+
+             return (
+              <Link
+                key={safeAuthor}
+                href={`https://github.com/${safeAuthor}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium hover:underline"
+              >
+                {safeAuthor}
+              </Link>
+             );
+          })}
         </div>
       )}
       <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">

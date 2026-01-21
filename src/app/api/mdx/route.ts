@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { source } from '@/lib/source';
+import path from 'path';
 
 export async function GET(request: Request) {
   try {
@@ -10,7 +11,9 @@ export async function GET(request: Request) {
     const decoded = decodeURIComponent(p).replace(/\\+/g, '/').replace(/^\//, '');
 
     // prevent path traversal
-    if (decoded.includes('..')) return NextResponse.json({ error: 'invalid path' }, { status: 400 });
+    if (decoded.includes('..') || decoded.includes('\0') || path.isAbsolute(decoded)) {
+        return NextResponse.json({ error: 'invalid path' }, { status: 400 });
+    }
 
     // Try to find a page by matching its `page.path` to the requested path.
     // Accept both `docs/...` and bare `...` forms.
@@ -24,7 +27,7 @@ export async function GET(request: Request) {
     }
 
     if (!page) {
-      return NextResponse.json({ error: `not found: tried ${candidates.join(', ')}` }, { status: 404 });
+      return NextResponse.json({ error: 'not found' }, { status: 404 });
     }
 
     // Use the source page API to get the raw file contents. This delegates
