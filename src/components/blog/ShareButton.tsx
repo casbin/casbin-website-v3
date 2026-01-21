@@ -25,7 +25,6 @@ export function ShareButton({ url }: ShareButtonProps) {
   return (
     <Button
       variant="outline"
-      size="default"
       onClick={onCopy}
       className="gap-2 border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-primary)]/90 hover:shadow-md"
       aria-label={isChecked ? "Copied URL" : "Share Post"}

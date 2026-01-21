@@ -171,6 +171,7 @@ export function FeedbackBlock({
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const submissionRef = useRef<number>(0);
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   function submit(e?: SyntheticEvent) {
     // Prevent double submission
@@ -201,17 +202,19 @@ export function FeedbackBlock({
         setError(null);
         setShowSuccess(true);
         
+        // Clear any existing timer
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
+        
         // After 3 seconds, close popover and reset
-        const timer = setTimeout(() => {
+        timerRef.current = setTimeout(() => {
           if (submissionRef.current === currentSubmission) {
             setShowSuccess(false);
             setPrevious(null);
             setOpen(false);
           }
         }, 3000);
-        
-        // Store timer for cleanup if needed
-        (feedback as any)._timer = timer;
         
       } catch (error) {
         console.error('Feedback submission failed:', error);

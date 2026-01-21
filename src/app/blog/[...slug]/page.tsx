@@ -6,9 +6,10 @@ import { AuthorCard } from "@/components/blog/AuthorCard";
 import { BlogPostActions } from "@/components/blog/BlogPostActions";
 import { InlineTOC } from "@/components/inline-toc";
 import type { TOCItemType } from "fumadocs-core/toc";
+import type { MDXComponents } from 'mdx/types';
 
 interface BlogPageData {
-  body: any;
+  body: React.ComponentType<{ components?: MDXComponents }>;
   toc: TOCItemType[];
   full: boolean;
   author?: string;
