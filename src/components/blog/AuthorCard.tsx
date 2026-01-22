@@ -1,6 +1,3 @@
-"use client"
-
-import * as React from "react"
 import Link from "next/link"
 
 interface AuthorCardProps {
@@ -26,7 +23,7 @@ export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
       {formattedDate && (
         <div>
           <p className="mb-1 text-sm text-muted-foreground">At</p>
-          <time className="font-medium">{formattedDate}</time>
+          <time dateTime={date} className="font-medium">{formattedDate}</time>
         </div>
       )}
     </div>
