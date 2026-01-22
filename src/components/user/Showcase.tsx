@@ -63,7 +63,7 @@ export default function Showcase() {
         <CardContent className="relative p-12 text-center space-y-6">
           <h2 className="text-3xl font-bold">Is your organization using Casbin?</h2>
           <p className="max-w-xl mx-auto text-white/80 text-lg">
-            We'd love to showcase your project here. Join the list of companies relying on Casbin for robust access control.
+            We&apos;d love to showcase your project here. Join the list of companies relying on Casbin for robust access control.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="gap-2">

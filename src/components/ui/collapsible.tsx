@@ -1,6 +1,6 @@
 'use client';
 import * as Primitive from '@radix-ui/react-collapsible';
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useLayoutEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const Collapsible = Primitive.Root;
@@ -13,8 +13,10 @@ const CollapsibleContent = forwardRef<
 >(({ children, ...props }, ref) => {
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     setMounted(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   return (

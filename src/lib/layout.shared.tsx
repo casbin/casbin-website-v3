@@ -1,5 +1,6 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
+import Link from 'next/link';
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -7,13 +8,13 @@ export function baseOptions(): BaseLayoutProps {
       title: '',
       enabled: true,
       children: (
-        <a href="/" className="inline-flex items-center gap-2 font-semibold text-lg">
+        <Link href="/" className="inline-flex items-center gap-2 font-semibold text-lg">
           <img 
             src="https://cdn.casbin.org/img/casbin_logo_1024x256.png" 
             alt="Casbin" 
             className="h-8 object-contain"
           />
-        </a>
+        </Link>
       ),
     },
     githubUrl: 'https://github.com/casbin/casbin',
