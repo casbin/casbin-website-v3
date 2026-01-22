@@ -6,7 +6,6 @@ import Link from "next/link"
 interface AuthorCardProps {
   author?: string
   authorURL?: string
-  authorImageURL?: string
   date?: string
 }
 

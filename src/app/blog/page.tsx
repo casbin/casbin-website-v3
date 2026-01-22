@@ -1,5 +1,6 @@
 import { blogSource } from '@/lib/source';
 import type { Metadata } from 'next';
+import type { InferPageType } from 'fumadocs-core/source';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -7,8 +8,10 @@ export const metadata: Metadata = {
   description: 'Latest updates and news from Casbin',
 };
 
+type BlogPage = InferPageType<typeof blogSource>;
+
 export default function Page() {
-  const pages = blogSource.getPages();
+  const pages: BlogPage[] = blogSource.getPages();
 
   return (
     <>
@@ -35,11 +38,11 @@ export default function Page() {
               href={`/blog/${page.slugs.join('/')}`}
               className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl border shadow-sm p-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:shadow-lg"
             >
-              <p className="font-medium">{(page.data as any).title}</p>
-              
-              {(page.data as any).date && (
-                <p className="mt-auto pt-4 text-xs text-[#443D80]">
-                  {new Date((page.data as any).date).toDateString()}
+              <p className="font-medium">{page.data.title}</p>
+
+              {page.data.date && (
+                <p className="mt-auto pt-4 text-xs text-[color:var(--casbin-purple)]">
+                  {new Date(page.data.date).toDateString()}
                 </p>
               )}
             </Link>
