@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 import Link from "next/link"
-=======
-"use client"
-
-import * as React from "react";
-import Link from "next/link";
->>>>>>> ae5b2c7 (Update src/components/blog/AuthorCard.tsx)
 
 interface AuthorCardProps {
   author?: string
