@@ -37,7 +37,7 @@ export default function Page() {
               key={page.slugs.join('/')}
               href={`/blog/${page.slugs.join('/')}`}
               className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl border shadow-sm p-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:shadow-lg"
-              aria-label={`Read ${page.data.title}${page.data.date ? ` - Published ${new Date(page.data.date).toLocaleDateString()}` : ''}`}
+              aria-label={`Read ${page.data.title}${page.data.date ? ` - Published ${new Date(page.data.date).toDateString()}` : ''}`}
             >
               <p className="font-medium">{page.data.title}</p>
               {page.data.description && (
@@ -48,7 +48,7 @@ export default function Page() {
 
               {page.data.date && (
                 <time dateTime={new Date(page.data.date).toISOString()} className="mt-auto pt-4 text-xs text-[color:var(--brand-primary)]">
-                  {new Date(page.data.date).toLocaleDateString()}
+                  {new Date(page.data.date).toDateString()}
                 </time>
               )}
             </Link>

@@ -31,7 +31,7 @@ export function InlineTOC({ items, ...props }: InlineTocProps) {
               href={item.url}
               className="border-s py-1.5 hover:text-fd-accent-foreground"
               style={{
-                paddingInlineStart: 12 * Math.max(item.depth - 1, 0),
+                paddingInlineStart: `calc(0.75em * ${Math.max(item.depth - 1, 0)})`,
               }}
             >
               {item.title}

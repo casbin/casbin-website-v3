@@ -5,6 +5,17 @@ import { getMDXComponents } from "@/mdx-components";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { BlogPostActions } from "@/components/blog/BlogPostActions";
 import { InlineTOC } from "@/components/inline-toc";
+import type { TOCItemType } from "fumadocs-core/toc";
+
+interface BlogPageData {
+  body: any;
+  toc: TOCItemType[];
+  full: boolean;
+  author?: string;
+  authorURL?: string;
+  date?: string;
+  title: string;
+}
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
@@ -12,19 +23,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
 
   if (!page) notFound();
 
-  const MDX = (page.data as any).body;
-  const toc = (page.data as any).toc;
+  const pageData = page.data as BlogPageData;
+  const MDX = pageData.body;
+  const toc = pageData.toc;
   const url = `/blog/${page.slugs.join("/")}`;
 
   return (
-    <DocsPage toc={toc} full={(page.data as any).full}>
+    <DocsPage toc={toc} full={pageData.full}>
       <DocsBody>
-        {(page.data as any).author && <AuthorCard
-          author={(page.data as any).author}
-          authorURL={(page.data as any).authorURL}
-          date={(page.data as any).date}
+        {pageData.author && <AuthorCard
+          author={pageData.author}
+          authorURL={pageData.authorURL}
+          date={pageData.date}
         />}
-        <h1>{(page.data as any).title}</h1>
+        <h1>{pageData.title}</h1>
         <BlogPostActions url={url} />
         {toc && toc.length > 0 && (
           <div className="my-6">

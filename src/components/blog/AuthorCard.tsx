@@ -6,19 +6,49 @@ interface AuthorCardProps {
   date?: string
 }
 
-export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
-  if (!author || !authorURL) return null
+function sanitizeAuthorUrl(authorURL?: string): string | null {
+  if (!authorURL) return null
 
-  const githubUrl = authorURL.replace(/^http:\/\//, "https://").replace(/^"|"$/g, "")
+  const trimmed = authorURL.trim().replace(/^"|"$/g, "")
+  if (!trimmed) return null
+
+  // If there is no scheme, treat as a relative/path URL and return as-is.
+  if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
+    return trimmed
+  }
+
+  try {
+    const url = new URL(trimmed)
+    if (url.protocol === "http:") {
+      url.protocol = "https:"
+    }
+    return url.toString()
+  } catch {
+    return null
+  }
+}
+
+export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
+  if (!author && !date) return null
+
+  const githubUrl = sanitizeAuthorUrl(authorURL)
 
   const formattedDate = date ? new Date(date).toDateString() : null
 
   return (
     <div className="flex flex-row gap-4 text-sm mb-8">
-      <div>
-        <p className="mb-1 text-muted-foreground">Written by</p>
-        <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="font-medium">{author}</Link>
-      </div>
+      {author && (
+        <div>
+          <p className="mb-1 text-muted-foreground">Written by</p>
+          {githubUrl ? (
+            <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="font-medium">
+              {author}
+            </Link>
+          ) : (
+            <span className="font-medium">{author}</span>
+          )}
+        </div>
+      )}
 
       {formattedDate && (
         <div>

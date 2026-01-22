@@ -13,6 +13,16 @@ import Link from 'next/link';
 import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
+import type { TOCItemType } from "fumadocs-core/toc";
+
+interface DocsPageData {
+  body: any;
+  toc: TOCItemType[];
+  full: boolean;
+  title: string;
+  description?: string;
+  authors?: string[];
+}
 
 
 // Helper function to normalize doc file paths
@@ -29,17 +39,18 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const MDX = page.data.body;
+  const pageData = page.data as DocsPageData;
+  const MDX = pageData.body;
   const filePath = normalizeDocPath(page.path ?? '');
 
   return (
-    <DocsPage toc={(page.data as any).toc} full={(page.data as any).full}>
-      <DocsTitle>{(page.data as any).title}</DocsTitle>
-      <DocsDescription className="!mb-2 text-base">{(page.data as any).description}</DocsDescription>
-      {(page.data as any).authors && (
+    <DocsPage toc={pageData.toc} full={pageData.full}>
+      <DocsTitle>{pageData.title}</DocsTitle>
+      <DocsDescription className="!mb-2 text-base">{pageData.description}</DocsDescription>
+      {pageData.authors && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <span>Author:</span>
-          {(page.data as any).authors.map((author: string) => (
+          {pageData.authors.map((author: string) => (
             <Link
               key={author}
               href={`https://github.com/${author}`}
