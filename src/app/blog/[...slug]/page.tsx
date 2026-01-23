@@ -1,24 +1,48 @@
-import { blogSource } from '@/lib/source';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import { getMDXComponents } from '@/mdx-components';
+import { blogSource } from "@/lib/source";
+import { DocsPage, DocsBody } from "fumadocs-ui/page";
+import { notFound } from "next/navigation";
+import { getMDXComponents } from "@/mdx-components";
+import { AuthorCard } from "@/components/blog/AuthorCard";
+import { BlogPostActions } from "@/components/blog/BlogPostActions";
+import { InlineTOC } from "@/components/inline-toc";
+import type { TOCItemType } from "fumadocs-core/toc";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string[] }>;
-}) {
+interface BlogPageData {
+  body: any;
+  toc: TOCItemType[];
+  full: boolean;
+  author?: string;
+  authorURL?: string;
+  date?: string;
+  title: string;
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
   const page = blogSource.getPage(slug);
 
   if (!page) notFound();
 
-  const MDX = page.data.body;
+  const pageData = page.data as BlogPageData;
+  const MDX = pageData.body;
+  const toc = pageData.toc;
+  const url = `/blog/${page.slugs.join("/")}`;
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    <DocsPage toc={toc} full={pageData.full}>
       <DocsBody>
-        <h1>{(page.data as any).title}</h1>
+        {pageData.author && <AuthorCard
+          author={pageData.author}
+          authorURL={pageData.authorURL}
+          date={pageData.date}
+        />}
+        <h1>{pageData.title}</h1>
+        <BlogPostActions url={url} />
+        {toc && toc.length > 0 && (
+          <div className="my-6">
+            <InlineTOC items={toc} />
+          </div>
+        )}
         <MDX components={getMDXComponents()} />
       </DocsBody>
     </DocsPage>

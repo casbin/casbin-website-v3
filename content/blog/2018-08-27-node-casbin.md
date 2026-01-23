@@ -4,6 +4,7 @@ author: Zixuan Liu
 authorTitle: Casbin Maintainer
 authorURL: "http://github.com/nodece"
 authorImageURL: "https://avatars.githubusercontent.com/nodece"
+date: "2018-08-27"
 ---
 
 Today, we successfully ported Casbin to Node.js, which is named as:
