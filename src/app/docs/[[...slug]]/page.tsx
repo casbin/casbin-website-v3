@@ -16,7 +16,6 @@ import Link from 'next/link';
 import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
-import type { TOCItemType } from "fumadocs-core/toc";
 
 // Define proper type for docs page data
 type DocsPageData = {
@@ -51,13 +50,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const data = page.data as DocsPageData;
   const MDX = data.body as React.ComponentType<{ components?: MDXComponents }>;
   const filePath = normalizeDocPath(page.path ?? '');
-
-  const p = page.path ?? '';
-  let normalized = p.startsWith('content/') ? p : `content/${p}`;
-  if (!normalized.startsWith('content/docs/')) {
-    normalized = normalized.replace(/^content\//, 'content/docs/');
-  }
-  const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${normalized}`;
+  const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${filePath}`;
 
   return (
     <DocsPage toc={data.toc} full={data.full}>
@@ -80,13 +73,17 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         </div>
       )}
       <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">
-        <LLMCopyButton
-          pagePath={page.path}
-        />
-        <ViewOptions
-          pagePath={page.path}
-          githubUrl={githubUrl}
-        />
+        {page.path && (
+          <>
+            <LLMCopyButton
+              pagePath={page.path}
+            />
+            <ViewOptions
+              pagePath={page.path}
+              githubUrl={githubUrl}
+            />
+          </>
+        )}
       </div>
       <DocsBody>
         <MDX components={getMDXComponents({

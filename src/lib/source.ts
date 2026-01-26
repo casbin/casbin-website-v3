@@ -11,7 +11,8 @@ type PageData = {
   toc?: Array<{
     title: string;
     url: string;
-    items?: Array<{ title: string; url: string }>;
+    depth?: number;
+    items?: Array<{ title: string; url: string; depth?: number }>;
   }>;
   full?: boolean;
 };
@@ -22,7 +23,7 @@ type FumadocsPageData = PageData & {
 
 // Keep doc URLs flat so folder names stay out of the final pathname.
 function flattenDocSlugs({ path }: { path: string }): string[] {
-  const segments = path.replace(/\\/g, '/' ).split('/' ).filter(Boolean);
+  const segments = path.replace(/\\/g, '/').split('/').filter(Boolean);
   const fileName = segments.pop() ?? '';
   const baseName = fileName.replace(/\.[^/.]+$/, '');
 
@@ -61,25 +62,27 @@ export function getPageImage(page: InferPageType<typeof source>) {
 export async function getLLMText(page: InferPageType<typeof source>) {
   const pageData = page.data as FumadocsPageData;
   const raw = await pageData.getText('raw');
-  
+
   // Build metadata section
   const metadata: string[] = [];
-  
+
   // Add page URL
   metadata.push(`URL: ${page.url}`);
-  
+
   // Add source file URL on GitHub
-  const sourceUrl = `https://github.com/casbin/casbin-website-v3/blob/master/content/docs/${page.path}`;
+  const normalizedPath = page.path.startsWith('content/') ? page.path : `content/${page.path}`;
+  const sourceUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${normalizedPath}`;
   metadata.push(`Source: ${sourceUrl}`);
-  
+
   // Add description if available
   if (pageData.description) {
     metadata.push(`\n${pageData.description}`);
   }
 
   // Clean up raw MDX content: remove MDX component tags and excessive blank lines
+  // Only remove tags that are clearly MDX components (contain capital letters or hyphenated names)
   const cleanedContent = raw
-    .replace(/<[^>]+\/?>/g, "") // Remove self-closing and opening MDX component tags like <Feedback />
+    .replace(/<[A-Z][^>]*\/?>/g, "") // Remove MDX components starting with capital letter (e.g., <Feedback />, <Card>)
     .trim()
     .replace(/\n\s*\n\s*\n+/g, '\n\n');
 
