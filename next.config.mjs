@@ -1,6 +1,9 @@
 import { createMDX } from 'fumadocs-mdx/next';
+import { docs, blog } from './source.config.ts';
 
-const withMDX = createMDX();
+const withMDX = createMDX({
+  collections: { docs, blog },
+});
 
 /** @type {import('next').NextConfig} */
 const config = {

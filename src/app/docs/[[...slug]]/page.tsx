@@ -1,4 +1,5 @@
 import { getPageImage, source } from '@/lib/source';
+import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions';
 import {
   DocsBody,
   DocsDescription,
@@ -7,22 +8,30 @@ import {
 } from 'fumadocs-ui/layouts/docs/page';
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
+import type { MDXComponents } from 'mdx/types';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import * as Twoslash from 'fumadocs-twoslash/ui';
 import Link from 'next/link';
 import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
 import type { TOCItemType } from "fumadocs-core/toc";
 
-interface DocsPageData {
-  body: any;
-  toc: TOCItemType[];
-  full: boolean;
+// Define proper type for docs page data
+type DocsPageData = {
   title: string;
   description?: string;
+  body: unknown;
+  toc?: Array<{
+    title: string;
+    url: string;
+    depth: number;
+    items?: Array<{ title: string; url: string; depth: number }>;
+  }>;
+  full?: boolean;
   authors?: string[];
-}
+};
 
 
 // Helper function to normalize doc file paths
@@ -39,18 +48,25 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const pageData = page.data as DocsPageData;
-  const MDX = pageData.body;
+  const data = page.data as DocsPageData;
+  const MDX = data.body as React.ComponentType<{ components?: MDXComponents }>;
   const filePath = normalizeDocPath(page.path ?? '');
 
+  const p = page.path ?? '';
+  let normalized = p.startsWith('content/') ? p : `content/${p}`;
+  if (!normalized.startsWith('content/docs/')) {
+    normalized = normalized.replace(/^content\//, 'content/docs/');
+  }
+  const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${normalized}`;
+
   return (
-    <DocsPage toc={pageData.toc} full={pageData.full}>
-      <DocsTitle>{pageData.title}</DocsTitle>
-      <DocsDescription className="!mb-2 text-base">{pageData.description}</DocsDescription>
-      {pageData.authors && (
+    <DocsPage toc={data.toc} full={data.full}>
+      <DocsTitle>{data.title}</DocsTitle>
+      <DocsDescription className="!mb-2 text-base">{data.description}</DocsDescription>
+      {data.authors && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <span>Author:</span>
-          {pageData.authors.map((author: string) => (
+          {data.authors.map((author: string) => (
             <Link
               key={author}
               href={`https://github.com/${author}`}
@@ -63,13 +79,21 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           ))}
         </div>
       )}
-      <DocsBody>
-        <MDX
-          components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(source, page),
-          })}
+      <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">
+        <LLMCopyButton
+          pagePath={page.path}
         />
+        <ViewOptions
+          pagePath={page.path}
+          githubUrl={githubUrl}
+        />
+      </div>
+      <DocsBody>
+        <MDX components={getMDXComponents({
+          ...Twoslash,
+          // this allows you to link to other pages with relative file paths
+          a: createRelativeLink(source, page),
+        })} />
       </DocsBody>
       <Feedback onSendAction={onPageFeedbackAction} />
       <LastUpdated filePath={filePath} />
