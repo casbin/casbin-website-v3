@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import Giscus from '@giscus/react';
+import Comments from '@/components/Comments';
 
 export default function GalleryPage() {
   const { theme } = useTheme();
@@ -29,23 +29,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Comments */}
-      <div className="comments-container px-6 py-8 max-w-7xl mx-auto">
-        <Giscus
-          id="comments"
-          repo="casbin/casbin"
-          repoId="MDEwOlJlcG9zaXRvcnk4NzYxNzUwOA=="
-          category="Docs comments"
-          categoryId="DIC_kwDOBTjv5M4CRIiA"
-          mapping="pathname"
-          strict="0"
-          reactionsEnabled="1"
-          emitMetadata="0"
-          inputPosition="top"
-          theme={theme === 'dark' ? 'dark' : 'light'}
-          lang="en"
-          loading="lazy"
-        />
-      </div>
+      <Comments />
     </div>
   );
 }

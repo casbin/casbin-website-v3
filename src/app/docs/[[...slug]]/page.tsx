@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
+import Comments from '@/components/Comments';
 
 // Define proper type for docs page data
 type DocsPageData = {
@@ -94,6 +95,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       </DocsBody>
       <Feedback onSendAction={onPageFeedbackAction} />
       <LastUpdated filePath={filePath} />
+      <Comments />
     </DocsPage>
   );
 }
