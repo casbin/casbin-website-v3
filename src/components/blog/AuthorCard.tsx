@@ -1,9 +1,14 @@
 import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 interface AuthorCardProps {
   author?: string
   authorURL?: string
+  authorImageURL?: string
   date?: string
+  readTime?: string
+  className?: string
 }
 
 function sanitizeAuthorUrl(authorURL?: string): string | null {
@@ -28,33 +33,62 @@ function sanitizeAuthorUrl(authorURL?: string): string | null {
   }
 }
 
-export function AuthorCard({ author, authorURL, date }: AuthorCardProps) {
+export function AuthorCard({ author, authorURL, authorImageURL, date, readTime, className }: AuthorCardProps) {
   if (!author && !date) return null
 
   const githubUrl = sanitizeAuthorUrl(authorURL)
+  const avatarUrl = authorImageURL?.trim().replace(/^"|"$/g, "") || (author && !author.includes(" ") ? `https://github.com/${author}.png` : null)
 
-  const formattedDate = date ? new Date(date).toDateString() : null
+  const formattedDate = date ? new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }) : null
 
   return (
-    <div className="flex flex-row gap-4 text-sm mb-8">
-      {author && (
-        <div>
-          <p className="mb-1 text-muted-foreground">Written by</p>
+    <div className={cn("flex flex-wrap items-center gap-2 text-sm text-muted-foreground", className)}>
+      {avatarUrl && (
+        <div className="relative shrink-0">
           {githubUrl ? (
-            <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="font-medium">
-              {author}
+            <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="block leading-none">
+              <Avatar className="h-6 w-6 border border-border/50">
+                <AvatarImage src={avatarUrl} alt={author || 'Author'} className="object-cover" />
+                <AvatarFallback>{author ? author.charAt(0).toUpperCase() : 'A'}</AvatarFallback>
+              </Avatar>
             </Link>
           ) : (
-            <span className="font-medium">{author}</span>
+            <Avatar className="h-6 w-6 border border-border/50">
+              <AvatarImage src={avatarUrl} alt={author || 'Author'} className="object-cover" />
+              <AvatarFallback>{author ? author.charAt(0).toUpperCase() : 'A'}</AvatarFallback>
+            </Avatar>
           )}
         </div>
       )}
 
-      {formattedDate && (
-        <div>
-          <p className="mb-1 text-sm text-muted-foreground">At</p>
-          <time dateTime={date} className="font-medium">{formattedDate}</time>
+      {author && (
+        <div className="font-semibold text-foreground">
+          {githubUrl ? (
+            <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
+              {author}
+            </Link>
+          ) : (
+            <span>{author}</span>
+          )}
         </div>
+      )}
+
+      {readTime && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{readTime} read</span>
+        </>
+      )}
+
+      {formattedDate && (
+        <>
+          <span aria-hidden="true">·</span>
+          <time dateTime={date}>{formattedDate}</time>
+        </>
       )}
     </div>
   )

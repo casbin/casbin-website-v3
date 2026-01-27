@@ -6,6 +6,7 @@ import { AuthorCard } from "@/components/blog/AuthorCard";
 import { BlogPostActions } from "@/components/blog/BlogPostActions";
 import { InlineTOC } from "@/components/inline-toc";
 import type { TOCItemType } from "fumadocs-core/toc";
+import { calculateReadingTime } from "@/lib/utils";
 
 interface BlogPageData {
   body: any;
@@ -13,8 +14,10 @@ interface BlogPageData {
   full: boolean;
   author?: string;
   authorURL?: string;
+  authorImageURL?: string;
   date?: string;
   title: string;
+  getText: (type: 'raw' | 'processed') => Promise<string>;
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
@@ -27,16 +30,27 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const MDX = pageData.body;
   const toc = pageData.toc;
   const url = `/blog/${page.slugs.join("/")}`;
+  
+  const rawContent = await pageData.getText('raw');
+  const readTime = calculateReadingTime(rawContent);
 
   return (
     <DocsPage toc={toc} full={pageData.full}>
+      <div className="mb-8">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{pageData.title}</h1>
+          {(pageData.author || pageData.date) && (
+            <AuthorCard
+              author={pageData.author}
+              authorURL={pageData.authorURL}
+              authorImageURL={pageData.authorImageURL}
+              date={pageData.date}
+              readTime={readTime}
+              className="mt-4"
+            />
+          )}
+      </div>
+
       <DocsBody>
-        {pageData.author && <AuthorCard
-          author={pageData.author}
-          authorURL={pageData.authorURL}
-          date={pageData.date}
-        />}
-        <h1>{pageData.title}</h1>
         <BlogPostActions url={url} />
         {toc && toc.length > 0 && (
           <div className="my-6">
