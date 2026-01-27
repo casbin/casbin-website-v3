@@ -54,7 +54,14 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${filePath}`;
 
   return (
-    <DocsPage toc={data.toc} full={data.full}>
+    <DocsPage
+      toc={data.toc}
+      full={data.full}
+      footer={{
+        // Render comments below the built-in prev/next recommendations
+        children: <Comments />,
+      }}
+    >
       <DocsTitle>{data.title}</DocsTitle>
       <DocsDescription className="!mb-2 text-base">{data.description}</DocsDescription>
       {data.authors && (
@@ -95,7 +102,6 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       </DocsBody>
       <Feedback onSendAction={onPageFeedbackAction} />
       <LastUpdated filePath={filePath} />
-      <Comments />
     </DocsPage>
   );
 }
