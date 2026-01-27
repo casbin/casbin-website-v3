@@ -17,6 +17,8 @@ import { Feedback } from '@/components/feedback/client';
 import { onPageFeedbackAction } from '@/lib/github';
 import { LastUpdated } from '@/components/last-updated';
 import Comments from '@/components/Comments';
+import { AuthorCard } from '@/components/blog/AuthorCard';
+import { calculateReadingTime } from '@/lib/utils';
 
 // Define proper type for docs page data
 type DocsPageData = {
@@ -31,6 +33,8 @@ type DocsPageData = {
   }>;
   full?: boolean;
   authors?: string[];
+  date?: string;
+  getText: (type: 'raw' | 'processed') => Promise<string>;
 };
 
 
@@ -52,6 +56,9 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const MDX = data.body as React.ComponentType<{ components?: MDXComponents }>;
   const filePath = normalizeDocPath(page.path ?? '');
   const githubUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${filePath}`;
+  
+  const rawContent = await data.getText('raw');
+  const readTime = calculateReadingTime(rawContent);
 
   return (
     <DocsPage
@@ -64,19 +71,17 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
     >
       <DocsTitle>{data.title}</DocsTitle>
       <DocsDescription className="!mb-2 text-base">{data.description}</DocsDescription>
-      {data.authors && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-          <span>Author:</span>
+      {data.authors && data.authors.length > 0 && (
+        <div className="mb-4">
           {data.authors.map((author: string) => (
-            <Link
+            <AuthorCard
               key={author}
-              href={`https://github.com/${author}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium hover:underline"
-            >
-              {author}
-            </Link>
+              author={author}
+              authorURL={`https://github.com/${author}`}
+              date={data.date}
+              readTime={readTime}
+              className="mb-2"
+            />
           ))}
         </div>
       )}
