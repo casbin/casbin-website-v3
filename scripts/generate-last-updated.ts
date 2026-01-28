@@ -51,7 +51,7 @@ function isGhCliAvailable(): boolean {
   }
 }
 
-function runGh(args: string[]): any {
+function runGh(args: string[]): unknown | null {
   try {
     const formattedArgs = args.map(arg => {
       if (arg.includes('&') || arg.includes('?') || arg.includes('=')) {
