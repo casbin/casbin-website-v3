@@ -62,8 +62,8 @@ function getLocalGitDate(filePath: string): Date | null {
   try {
     const normalizedPath = filePath.replace(/\\/g, '/');
     const stdout = execSync(`git log -1 --format=%cd --date=iso-strict -- "${normalizedPath}"`, {
+      encoding: 'utf8',
       timeout: 5000,
-      timeout: 2000,
       stdio: ['ignore', 'pipe', 'ignore']
     }).trim();
     return stdout ? new Date(stdout) : null;
