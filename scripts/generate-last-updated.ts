@@ -199,6 +199,7 @@ async function main() {
     v2Map = await getV2FileMap(useGh);
   } catch (e: any) {
     console.error(`❌ Critical: Failed to fetch v2 file list. ${e.message}`);
+    throw e;
   }
   
   // 2. Scan V3 Files
