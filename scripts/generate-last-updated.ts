@@ -81,7 +81,7 @@ async function githubFetch(url: string): Promise<any> {
   };
 
   if (token) {
-    headers['Authorization'] = `token ${token}`;
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
   const response = await fetch(url, { headers });
