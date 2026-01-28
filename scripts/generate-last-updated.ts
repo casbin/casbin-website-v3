@@ -141,7 +141,7 @@ async function getV2FileDate(filePath: string, useGh: boolean): Promise<Date | n
       }
     }
   } catch (e) {
-    // console.warn(`Failed to fetch date for ${filePath}`);
+    console.warn(`⚠️ Failed to fetch v2 date for ${filePath}:`, e);
   }
   return null;
 }
