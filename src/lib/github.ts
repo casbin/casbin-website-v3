@@ -67,7 +67,7 @@ async function getFeedbackDestination(): Promise<RepositoryInfo | null> {
       }
     }
   `) as { repository: RepositoryInfo };
-  
+
     return (cachedDestination = result.repository);
   } catch (e) {
     console.warn('Failed to fetch GitHub Discussion categories:', e);
@@ -98,7 +98,7 @@ async function createDiscussionThread(pageId: string, body: string): Promise<Act
   if (!octokit) {
     return { githubUrl: undefined };
   }
-  
+
   const destination = await getFeedbackDestination();
   if (!destination) {
     return { githubUrl: undefined };
@@ -113,22 +113,19 @@ async function createDiscussionThread(pageId: string, body: string): Promise<Act
   }
 
   const title = `Feedback for ${pageId}`;
-  
-  // TODO: Add error handling for GitHub API responses
-  // - Handle rate limiting (HTTP 403/429)
-  // - Handle network timeouts
-  // - Handle unexpected response formats
-  // - Handle missing fields in response
-  
-  const {
-    search: {
-      nodes: [discussion],
-    },
-  }: {
-    search: {
-      nodes: { id: string; url: string }[];
-    };
-  } = await octokit.graphql(`
+
+  let discussion: { id: string; url: string } | undefined;
+
+  try {
+    const {
+      search: {
+        nodes: [discussionNode],
+      },
+    }: {
+      search: {
+        nodes: { id: string; url: string }[];
+      };
+    } = await octokit.graphql(`
           query {
             search(type: DISCUSSION, query: ${JSON.stringify(`${title} in:title repo:${owner}/${repo} author:@me`)}, first: 1) {
               nodes {
@@ -136,39 +133,49 @@ async function createDiscussionThread(pageId: string, body: string): Promise<Act
               }
             }
           }`);
+    discussion = discussionNode;
+  } catch (error) {
+    console.error('Failed to search for existing discussion:', error);
+    return { githubUrl: undefined };
+  }
 
   if (discussion) {
-    // TODO: Add try-catch for mutation errors
-    // - Handle API rate limiting
-    // - Handle authentication failures
-    // - Log errors for debugging
-    
-    const result: {
-      addDiscussionComment: {
-        comment: { id: string; url: string };
-      };
-    } = await octokit.graphql(`
+    try {
+      const result: {
+        addDiscussionComment: {
+          comment: { id: string; url: string };
+        };
+      } = await octokit.graphql(`
             mutation {
               addDiscussionComment(input: { body: ${JSON.stringify(body)}, discussionId: "${discussion.id}" }) {
                 comment { id, url }
               }
             }`);
 
-    return {
-      githubUrl: result.addDiscussionComment.comment.url,
-    };
+      return {
+        githubUrl: result.addDiscussionComment.comment.url,
+      };
+    } catch (error) {
+      console.error('Failed to add discussion comment:', error);
+      return { githubUrl: undefined };
+    }
   } else {
-    const result: {
-      discussion: { id: string; url: string };
-    } = await octokit.graphql(`
+    try {
+      const result: {
+        discussion: { id: string; url: string };
+      } = await octokit.graphql(`
             mutation {
               createDiscussion(input: { repositoryId: "${destination.id}", categoryId: "${category.id}", body: ${JSON.stringify(body)}, title: ${JSON.stringify(title)} }) {
                 discussion { id, url }
               }
             }`);
 
-    return {
-      githubUrl: result.discussion.url,
-    };
+      return {
+        githubUrl: result.discussion.url,
+      };
+    } catch (error) {
+      console.error('Failed to create discussion:', error);
+      return { githubUrl: undefined };
+    }
   }
 }

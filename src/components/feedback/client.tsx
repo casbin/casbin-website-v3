@@ -55,9 +55,15 @@ export function Feedback({
   const [opinion, setOpinion] = useState<'good' | 'bad' | null>(null);
   const [message, setMessage] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   function submit(e?: SyntheticEvent) {
+    e?.preventDefault();
     if (opinion == null) return;
+    if (message.trim() === '') {
+      setError('Please provide feedback.');
+      return;
+    }
 
     startTransition(async () => {
       const feedback: PageFeedback = {
@@ -73,9 +79,8 @@ export function Feedback({
       });
       setMessage('');
       setOpinion(null);
+      setError(null);
     });
-
-    e?.preventDefault();
   }
 
   const activeOpinion = (previous as { opinion?: string })?.opinion ?? opinion;
@@ -130,7 +135,10 @@ export function Feedback({
             <Textarea
               autoFocus
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                if (error) setError(null);
+              }}
               className='min-h-[80px] resize-none'
               placeholder='Leave your feedback...'
               onKeyDown={(e) => {
@@ -139,6 +147,11 @@ export function Feedback({
                 }
               }}
             />
+            {error && (
+              <p className='text-sm text-red-500' role='alert'>
+                {error}
+              </p>
+            )}
             <button
               type='submit'
               className={cn(buttonVariants({ variant: 'outline' }), 'w-fit px-3')}
@@ -173,12 +186,17 @@ export function FeedbackBlock({
   const submissionRef = useRef<number>(0);
 
   function submit(e?: SyntheticEvent) {
+    e?.preventDefault();
     // Prevent double submission
     if (isPending) return;
-    
+    if (message.trim() === '') {
+      setError('Please provide feedback.');
+      return;
+    }
+
     const currentSubmission = Date.now();
     submissionRef.current = currentSubmission;
-    
+
     startTransition(async () => {
       try {
         const feedback: BlockFeedback = {
@@ -189,18 +207,18 @@ export function FeedbackBlock({
         };
 
         const response = await onSendAction(feedback);
-        
+
         // Check if this is still the latest submission
         if (submissionRef.current !== currentSubmission) {
           return; // Ignore old submissions
         }
-        
+
         // Batch state updates
         setPrevious({ response, ...feedback });
         setMessage('');
         setError(null);
         setShowSuccess(true);
-        
+
         // After 3 seconds, close popover and reset
         const timer = setTimeout(() => {
           if (submissionRef.current === currentSubmission) {
@@ -209,10 +227,10 @@ export function FeedbackBlock({
             setOpen(false);
           }
         }, 3000);
-        
+
         // Store timer for cleanup if needed
         (feedback as any)._timer = timer;
-        
+
       } catch (error) {
         console.error('Feedback submission failed:', error);
         setError('Failed to submit feedback. Please try again.');
@@ -263,11 +281,6 @@ export function FeedbackBlock({
           </p>
         ) : (
           <form className='flex flex-col gap-2' onSubmit={submit}>
-            {error && (
-              <p className='text-sm text-red-500' role='alert'>
-                {error}
-              </p>
-            )}
             <Textarea
               autoFocus
               value={message}
@@ -283,6 +296,11 @@ export function FeedbackBlock({
                 }
               }}
             />
+            {error && (
+              <p className='text-sm text-red-500' role='alert'>
+                {error}
+              </p>
+            )}
             <button
               type='submit'
               className={cn(buttonVariants({ variant: 'outline' }), 'w-fit px-3')}
@@ -299,7 +317,7 @@ export function FeedbackBlock({
 
 function useSubmissionState<Result>() {
   const [value, setValue] = useState<Result | null>(null);
-  
+
   return {
     previous: value,
     setPrevious: setValue,
