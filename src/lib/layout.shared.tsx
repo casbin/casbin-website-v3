@@ -1,6 +1,7 @@
-import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
-import type { LinkItemType } from "fumadocs-ui/layouts/shared";
-import Link from "next/link";
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -9,9 +10,11 @@ export function baseOptions(): BaseLayoutProps {
       enabled: true,
       children: (
         <Link href="/" className="inline-flex items-center gap-2 font-semibold text-lg">
-          <img
+          <Image
             src="https://cdn.casbin.org/img/casbin_logo_1024x256.png"
             alt="Casbin"
+            width={128}
+            height={32}
             className="h-8 object-contain"
           />
         </Link>
@@ -52,5 +55,13 @@ export const sharedLinks: LinkItemType[] = [
     type: "main",
     url: "/help",
     text: "Help",
+  },
+  {
+    type: 'icon',
+    url: 'https://discord.gg/S5UjpzGZjN',
+    text: 'Discord',
+    label: 'Discord',
+    icon: <Image src="/icons/discord.svg" alt="Discord" width={20} height={20} className="size-5" />,
+    external: true,
   },
 ];
