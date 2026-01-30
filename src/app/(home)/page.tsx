@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Zap, ChevronLeft, ChevronRight, ExternalLink, Database, Scale, Users, Sparkles, Shield, Globe, MessageSquare, Users2, HelpCircle, Github, Twitter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -375,9 +376,11 @@ function LogoCarousel() {
               filter: 'grayscale(100%) contrast(0.95) brightness(0.95)',
             }}
           >
-            <img
+            <Image
               src={`/images/${item.image}`}
               alt={item.caption}
+              width={260}
+              height={36}
               className="h-9 object-contain"
               style={{
                 maxWidth: '260px',
@@ -536,7 +539,7 @@ function LanguageIntegration() {
                   title={lang.name}
                 >
                   <div className="mb-3 p-2 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 shadow-sm">
-                    <img src={lang.icon} alt={lang.name} className="h-10 w-10 object-contain mx-auto" />
+                    <Image src={lang.icon} alt={lang.name} width={40} height={40} className="h-10 w-10 object-contain mx-auto" />
                   </div>
                   <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 font-inter uppercase tracking-wide">{lang.name}</p>
                 </a>
@@ -638,9 +641,11 @@ function Showcase() {
                 title={user.caption}
                 className="inline-flex justify-center items-center p-3 transition-all opacity-70 hover:opacity-100 hover:scale-105 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
               >
-                <img
+                <Image
                   src={`/images/${user.image}`}
                   alt={user.caption}
+                  width={150}
+                  height={90}
                   className="object-contain"
                   style={{ maxWidth: '150px', maxHeight: '90px' }}
                 />
@@ -662,9 +667,11 @@ function Footer() {
           {/* Brand Section */}
           <div className="w-auto">
             <div className="flex items-center gap-3 mb-4">
-              <img
+              <Image
                 src="https://cdn.casbin.org/img/casbin_logo_1024x256.png"
                 alt="Casbin"
+                width={128}
+                height={32}
                 className="h-8 object-contain"
               />
             </div>

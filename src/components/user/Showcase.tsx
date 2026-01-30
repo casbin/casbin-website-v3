@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Plus, Github } from 'lucide-react';
@@ -45,9 +46,11 @@ export default function Showcase() {
                   title={user.caption}
                   className="flex items-center justify-center p-2 transition-all duration-500 opacity-80 hover:opacity-100 h-32"
                 >
-                  <img
+                  <Image
                     src={`/images/${user.image}`}
                     alt={user.caption}
+                    width={80}
+                    height={80}
                     className="max-h-20 max-w-full object-contain"
                   />
                 </a>
