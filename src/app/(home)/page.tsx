@@ -182,7 +182,7 @@ function HeroHeader() {
       />
 
       {/* Content */}
-      <div className="relative z-30 mx-auto max-w-4xl">
+      <div className="relative z-30 mx-auto max-w-8xl px-4">
         {/* News pill */}
         <div className="mb-8 flex justify-center">
           <a
@@ -215,15 +215,12 @@ function HeroHeader() {
               Casbin
             </span>
             <br />
-            <div className="mt-4 text-3xl md:text-5xl font-inter">
+            <div className="mt-4 text-3xl md:text-5xl lg:text-5xl font-inter flex flex-wrap justify-center gap-x-3">
               <span className="text-gray-200">Open-source authorization for</span>
-              <br />
-              <span className="inline-block">
-                <AnimatedText
-                  words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
-                  interval={3000}
-                />
-              </span>
+              <AnimatedText
+                words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
+                interval={3000}
+              />
             </div>
           </h1>
 
@@ -285,7 +282,7 @@ function VideoBackground() {
     const v = ref.current;
     if (!v) return;
     // Attempt to autoplay; browsers may block but it's muted so usually okay
-    v.play().catch(() => {});
+    v.play().catch(() => { });
   }, []);
 
   return (
@@ -320,7 +317,7 @@ function LogoCarousel() {
         const list = Array.isArray(data) ? data.filter(Boolean) : [];
         setItems(list);
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       mounted = false;
     };
@@ -660,11 +657,10 @@ function LanguageIntegration() {
           {languages.map((lang, idx) => (
             <Card
               key={lang.name}
-              className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:border-gray-300 ${
-                currentIndex === idx
+              className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:border-gray-300 ${currentIndex === idx
                   ? "ring-2 ring-[#443D80] bg-[#443D80]/5"
                   : "hover:bg-gray-50 dark:hover:bg-gray-800/30"
-              }`}
+                }`}
               onMouseEnter={() => setCurrentIndex(idx)}
             >
               <CardContent className="p-3 text-center flex flex-col items-center justify-center">
