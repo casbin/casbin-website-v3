@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+build
+dist
+.source
+
+# Config files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Environment files
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# Generated files
+next-env.d.ts
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.log
+*.swp
+*.swo
+coverage
+
+# Content files
+*.md
+*.mdx
+
+# Public files
+public/
