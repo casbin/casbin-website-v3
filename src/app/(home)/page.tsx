@@ -157,7 +157,7 @@ function HeroHeader() {
   return (
     <header
       ref={headerRef}
-      className="relative overflow-hidden py-20 px-4 bg-gradient-to-br from-purple-900/75 to-blue-900/30 bg-cover bg-center"
+      className="relative overflow-hidden py-24 md:py-32 px-4 bg-gradient-to-br from-purple-900/75 to-blue-900/30 bg-cover bg-center"
       style={{
         backgroundImage: "url(/images/background.png)",
       }}
@@ -165,8 +165,8 @@ function HeroHeader() {
       {/* Background video (lazy, fades in when ready) */}
       <VideoBackground />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/40 to-blue-900/30 z-10" />
+      {/* Enhanced overlay with gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 via-blue-900/40 to-indigo-900/30 z-10" />
 
       {/* Cursor halo */}
       <div
@@ -182,14 +182,14 @@ function HeroHeader() {
       />
 
       {/* Content */}
-      <div className="relative z-30 mx-auto max-w-4xl">
+      <div className="relative z-30 mx-auto max-w-5xl">
         {/* News pill */}
-        <div className="mb-8 flex justify-center">
+        <div className="mb-10 flex justify-center">
           <a
             href={`https://github.com/casbin/casbin/releases/tag/${latestVersion}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group hover:animate-none transform hover:scale-102 transition-all duration-300"
+            className="group hover:animate-none transform hover:scale-105 transition-all duration-300"
           >
             <Badge
               variant="outline"
@@ -205,20 +205,20 @@ function HeroHeader() {
           </a>
         </div>
 
-        {/* Main heading */}
+        {/* Main heading with improved spacing */}
         <div className="text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight font-inter">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-inter">
             <span
-              className="bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent"
+              className="bg-gradient-to-r from-white via-indigo-100 to-purple-200 bg-clip-text text-transparent drop-shadow-2xl"
               style={{ backgroundSize: "200% 200%" }}
             >
               Casbin
             </span>
             <br />
-            <div className="mt-4 text-3xl md:text-5xl font-inter">
-              <span className="text-gray-200">Open-source authorization for</span>
+            <div className="mt-6 text-3xl md:text-5xl lg:text-6xl font-inter">
+              <span className="text-gray-100 drop-shadow-lg">Open-source authorization for</span>
               <br />
-              <span className="inline-block">
+              <span className="inline-block mt-2">
                 <AnimatedText
                   words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
                   interval={3000}
@@ -227,18 +227,18 @@ function HeroHeader() {
             </div>
           </h1>
 
-          <p className="mt-8 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-inter leading-relaxed">
+          <p className="mt-10 text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto font-inter leading-relaxed drop-shadow-md">
             A powerful and efficient open-source access control library that supports multiple
             authorization models
           </p>
         </div>
 
-        {/* Action buttons */}
-        <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
+        {/* Action buttons with improved spacing */}
+        <div className="mt-14 flex flex-col sm:flex-row justify-center gap-4">
           <Button
             asChild
             size="lg"
-            className="gap-2 text-white relative overflow-hidden before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.5)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms]"
+            className="gap-2 text-white text-lg py-6 px-8 relative overflow-hidden before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.5)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] hover:shadow-2xl hover:shadow-purple-500/30"
             style={{ backgroundColor: "#443D80" }}
           >
             <Link href="/docs" className="relative z-10">
@@ -250,7 +250,7 @@ function HeroHeader() {
             asChild
             variant="outline"
             size="lg"
-            className="gap-2 bg-white text-[#443D80] hover:bg-gray-100 hover:text-[#5a4fa0] border-white group"
+            className="gap-2 text-lg py-6 px-8 bg-white text-[#443D80] hover:bg-gray-100 hover:text-[#5a4fa0] border-white group hover:shadow-2xl hover:shadow-white/20"
           >
             <a href="https://editor.casbin.org" target="_blank" rel="noopener noreferrer">
               <div className="flex items-center -space-x-1">
@@ -269,7 +269,7 @@ function HeroHeader() {
         </div>
 
         {/* Logo carousel in hero */}
-        <div className="mt-16">
+        <div className="mt-20">
           <LogoCarousel />
         </div>
       </div>
@@ -451,15 +451,130 @@ function FeatureCard({
   icon?: React.ReactNode;
 }) {
   return (
-    <Card className="transition-all hover:shadow-md hover:-translate-y-1">
-      <CardContent className="p-6 text-center">
-        {icon && <div className="mb-4 flex justify-center">{icon}</div>}
+    <Card className="transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-2 hover:border-[#443D80]/30 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 group">
+      <CardContent className="p-8 text-center">
+        {icon && (
+          <div className="mb-6 flex justify-center transition-transform duration-300 group-hover:scale-110">
+            {icon}
+          </div>
+        )}
         <CardHeader className="p-0">
-          <CardTitle className="text-lg font-inter">{title}</CardTitle>
+          <CardTitle className="text-xl font-inter mb-3">{title}</CardTitle>
         </CardHeader>
-        <p className="text-gray-600 dark:text-gray-400 font-inter">{description}</p>
+        <p className="text-gray-600 dark:text-gray-400 font-inter leading-relaxed">
+          {description}
+        </p>
       </CardContent>
     </Card>
+  );
+}
+
+function StatsSection() {
+  const [stars, setStars] = useState("18.5k+");
+  const [downloads, setDownloads] = useState("1M+");
+
+  useEffect(() => {
+    fetch("https://api.github.com/repos/casbin/casbin")
+      .then((res) => res.json())
+      .then((data) => {
+        const starCount = data.stargazers_count || 18500;
+        setStars(starCount >= 1000 ? `${(starCount / 1000).toFixed(1)}k+` : `${starCount}+`);
+      })
+      .catch(() => {});
+  }, []);
+
+  const stats = [
+    { label: "GitHub Stars", value: stars, icon: "⭐" },
+    { label: "Downloads", value: downloads, icon: "📥" },
+    { label: "Languages", value: "17+", icon: "🌐" },
+    { label: "Companies", value: "500+", icon: "🏢" },
+  ];
+
+  return (
+    <section className="py-12 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900/50">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((stat, idx) => (
+            <div
+              key={idx}
+              className="text-center p-6 rounded-lg bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="text-4xl mb-2">{stat.icon}</div>
+              <div className="text-3xl font-bold text-[#443D80] dark:text-purple-400 font-inter mb-1">
+                {stat.value}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 font-inter">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyCasbinSection() {
+  const useCases = [
+    {
+      title: "API Authorization",
+      description: "Secure your REST and GraphQL APIs with fine-grained access control policies.",
+      icon: "🔐",
+    },
+    {
+      title: "Multi-Tenant SaaS",
+      description: "Manage complex permission hierarchies across multiple organizations and teams.",
+      icon: "🏗️",
+    },
+    {
+      title: "Cloud Native Apps",
+      description: "Integrate seamlessly with Kubernetes, Istio, and other cloud-native platforms.",
+      icon: "☁️",
+    },
+    {
+      title: "AI Gateway",
+      description: "Control access to AI models and LLM endpoints with dynamic policy enforcement.",
+      icon: "🤖",
+    },
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-white dark:bg-gray-950 relative overflow-hidden">
+      {/* Background pattern */}
+      <div
+        className="absolute inset-0 opacity-5 dark:opacity-[0.02]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23443D80' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
+      <div className="mx-auto max-w-6xl px-4 relative">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 font-inter">
+            Why Choose Casbin?
+          </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter">
+            The most flexible and powerful authorization library for modern applications
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {useCases.map((useCase, idx) => (
+            <Card
+              key={idx}
+              className="transition-all hover:shadow-xl hover:-translate-y-1 border-2 hover:border-[#443D80]/20"
+            >
+              <CardContent className="p-8">
+                <div className="text-5xl mb-4">{useCase.icon}</div>
+                <CardHeader className="p-0 mb-3">
+                  <CardTitle className="text-2xl font-inter">{useCase.title}</CardTitle>
+                </CardHeader>
+                <p className="text-gray-600 dark:text-gray-400 font-inter leading-relaxed">
+                  {useCase.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -520,15 +635,25 @@ function Features() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900/50">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 font-inter">
+    <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden">
+      {/* Background pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03] dark:opacity-[0.015]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 2.5a17.5 17.5 0 1 0 0 35 17.5 17.5 0 0 0 0-35z' fill='%23443D80' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+        }}
+      />
+      <div className="mx-auto max-w-6xl px-4 relative">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-6 font-inter">
             Key Features
           </h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter">
+            Everything you need to implement robust authorization in your applications
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, idx) => (
             <FeatureCard key={idx} {...feature} />
           ))}
@@ -641,9 +766,17 @@ function LanguageIntegration() {
   const displayName = currentIndex >= 0 ? languages[currentIndex].name : "Multiple Languages";
 
   return (
-    <section className="py-16 md:py-24 bg-white dark:bg-gray-950">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="text-center mb-12 min-h-24 flex items-center justify-center">
+    <section className="py-16 md:py-24 bg-white dark:bg-gray-950 relative overflow-hidden">
+      {/* Subtle grid background */}
+      <div
+        className="absolute inset-0 opacity-[0.015] dark:opacity-[0.008]"
+        style={{
+          backgroundImage: `linear-gradient(to right, #443D80 1px, transparent 1px), linear-gradient(to bottom, #443D80 1px, transparent 1px)`,
+          backgroundSize: "40px 40px",
+        }}
+      />
+      <div className="mx-auto max-w-6xl px-4 relative">
+        <div className="text-center mb-16 min-h-24 flex items-center justify-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-50 whitespace-nowrap font-inter">
             <span className="text-gray-600 dark:text-gray-400">Use Casbin with </span>
             <span className="animate-fade-in-up" style={{ color: "#443D80" }}>
@@ -660,14 +793,14 @@ function LanguageIntegration() {
           {languages.map((lang, idx) => (
             <Card
               key={lang.name}
-              className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:border-gray-300 ${
+              className={`transition-all duration-300 cursor-pointer hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600 ${
                 currentIndex === idx
-                  ? "ring-2 ring-[#443D80] bg-[#443D80]/5"
+                  ? "ring-2 ring-[#443D80] bg-[#443D80]/10 shadow-lg shadow-[#443D80]/20"
                   : "hover:bg-gray-50 dark:hover:bg-gray-800/30"
               }`}
               onMouseEnter={() => setCurrentIndex(idx)}
             >
-              <CardContent className="p-3 text-center flex flex-col items-center justify-center">
+              <CardContent className="p-4 text-center flex flex-col items-center justify-center">
                 <a
                   href={lang.url}
                   target="_blank"
@@ -675,7 +808,7 @@ function LanguageIntegration() {
                   className="block"
                   title={lang.name}
                 >
-                  <div className="mb-3 p-2 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 shadow-sm">
+                  <div className="mb-3 p-3 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 shadow-sm hover:shadow-md transition-shadow">
                     <img
                       src={lang.icon}
                       alt={lang.name}
@@ -697,20 +830,20 @@ function LanguageIntegration() {
 
 function EditorPreview() {
   return (
-    <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900/50">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900/50 dark:to-gray-950">
       <div className="mx-auto max-w-6xl px-4">
-        <Card className="w-full">
-          <CardHeader className="text-center">
-            <CardTitle className="text-4xl md:text-5xl font-bold">
+        <Card className="w-full shadow-2xl border-2 hover:border-[#443D80]/30 transition-all duration-300">
+          <CardHeader className="text-center pb-8">
+            <CardTitle className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[#443D80] to-purple-600 bg-clip-text text-transparent">
               Try the Casbin Online Editor
             </CardTitle>
-            <CardDescription className="text-lg max-w-2xl mx-auto">
+            <CardDescription className="text-lg max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
               Write and test your Casbin model and policy in real-time with the interactive online
               editor. Try different access control models and see results instantly.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-lg overflow-hidden border bg-white dark:bg-gray-800">
+            <div className="rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg">
               <iframe
                 src="https://editor.casbin.org"
                 className="w-full h-96 md:h-[600px]"
@@ -718,7 +851,11 @@ function EditorPreview() {
               />
             </div>
             <div className="flex justify-center">
-              <Button asChild size="lg" className="gap-2">
+              <Button
+                asChild
+                size="lg"
+                className="gap-2 text-lg py-6 px-8 bg-[#443D80] hover:bg-[#5a4fa0] text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/30 transition-all"
+              >
                 <a href="https://editor.casbin.org" target="_blank" rel="noopener noreferrer">
                   Open Full Editor
                   <ExternalLink size={18} />
@@ -749,15 +886,27 @@ function Showcase() {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 bg-white dark:bg-gray-950">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 font-inter">
+    <section className="py-16 md:py-24 bg-white dark:bg-gray-950 relative overflow-hidden">
+      {/* Background pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #443D80 1px, transparent 0)`,
+          backgroundSize: "40px 40px",
+        }}
+      />
+      <div className="mx-auto max-w-6xl px-4 relative">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-6 font-inter">
             Who&apos;s using Casbin?
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-inter leading-relaxed">
             Hundreds of projects use Casbin, from Fortune 500 companies to new startups. Check out{" "}
-            <Link href="/user" className="font-semibold" style={{ color: "#443D80" }}>
+            <Link
+              href="/user"
+              className="font-semibold hover:underline transition-all"
+              style={{ color: "#443D80" }}
+            >
               these apps
             </Link>
             !
@@ -767,11 +916,14 @@ function Showcase() {
         {loading ? (
           <div className="flex flex-wrap justify-center gap-8 items-center">
             {Array.from({ length: 12 }).map((_, idx) => (
-              <div key={idx} className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+              <div
+                key={idx}
+                className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
+              ></div>
             ))}
           </div>
         ) : (
-          <div className="flex flex-wrap justify-center gap-3 items-center mx-auto">
+          <div className="flex flex-wrap justify-center gap-4 items-center mx-auto">
             {users.map((user) => (
               <a
                 key={user.caption}
@@ -779,7 +931,7 @@ function Showcase() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={user.caption}
-                className="inline-flex justify-center items-center p-3 transition-all opacity-70 hover:opacity-100 hover:scale-105 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                className="inline-flex justify-center items-center p-4 transition-all opacity-70 hover:opacity-100 hover:scale-110 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:shadow-lg"
               >
                 <img
                   src={`/images/${user.image}`}
@@ -924,8 +1076,10 @@ export default function HomePage() {
   return (
     <main className="flex flex-col">
       <HeroHeader />
-      <LanguageIntegration />
+      <StatsSection />
+      <WhyCasbinSection />
       <Features />
+      <LanguageIntegration />
       <EditorPreview />
       <Showcase />
       <Footer />
