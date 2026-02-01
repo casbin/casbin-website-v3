@@ -282,7 +282,7 @@ function VideoBackground() {
     const v = ref.current;
     if (!v) return;
     // Attempt to autoplay; browsers may block but it's muted so usually okay
-    v.play().catch(() => { });
+    v.play().catch(() => {});
   }, []);
 
   return (
@@ -317,7 +317,7 @@ function LogoCarousel() {
         const list = Array.isArray(data) ? data.filter(Boolean) : [];
         setItems(list);
       })
-      .catch(() => { });
+      .catch(() => {});
     return () => {
       mounted = false;
     };
@@ -657,10 +657,11 @@ function LanguageIntegration() {
           {languages.map((lang, idx) => (
             <Card
               key={lang.name}
-              className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:border-gray-300 ${currentIndex === idx
+              className={`transition-all duration-300 cursor-pointer hover:shadow-md hover:border-gray-300 ${
+                currentIndex === idx
                   ? "ring-2 ring-[#443D80] bg-[#443D80]/5"
                   : "hover:bg-gray-50 dark:hover:bg-gray-800/30"
-                }`}
+              }`}
               onMouseEnter={() => setCurrentIndex(idx)}
             >
               <CardContent className="p-3 text-center flex flex-col items-center justify-center">
