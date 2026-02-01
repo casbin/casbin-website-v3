@@ -36,7 +36,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const readTime = calculateReadingTime(rawContent);
 
   return (
-    <DocsPage toc={toc} full={pageData.full}>
+    <DocsPage
+      toc={toc}
+      full={pageData.full}
+      footer={{
+        // Render comments below the built-in prev/next recommendations
+        children: <Comments />,
+      }}
+    >
       <div className="mb-8">
         <h1 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {pageData.title}
@@ -61,7 +68,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
           </div>
         )}
         <MDX components={getMDXComponents()} />
-        <Comments />
       </DocsBody>
     </DocsPage>
   );
