@@ -131,11 +131,10 @@ find . -type f -name '*.go' -exec sed -i 's|github.com/casbin/casbin/v2|github.c
 If you're using an adapter, check if it has been updated for v3. Most popular adapters have v3 versions:
 
 ```go
-// PostgreSQL Adapter
+// Example: PostgreSQL Adapter
 import "github.com/casbin/casbin-pg-adapter" // Check for v3 support
 
-// File Adapter (built-in, no change needed)
-import "github.com/casbin/casbin/v3/persist/file-adapter"
+// Note: File Adapter is built-in and works with both v2 and v3
 ```
 
 Check the adapter's repository for v3 compatibility. Most adapters work with both v2 and v3 since the adapter interface didn't change.
