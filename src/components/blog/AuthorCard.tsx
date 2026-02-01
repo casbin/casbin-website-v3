@@ -64,7 +64,7 @@ export function AuthorCard({
             : null;
 
           return (
-            <div key={authorName} className="flex items-center gap-2">
+            <div key={`${authorName}-${index}`} className="flex items-center gap-2">
               {avatarUrl && (
                 <div className="relative shrink-0">
                   <Link
