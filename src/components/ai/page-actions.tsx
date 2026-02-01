@@ -35,7 +35,9 @@ export function LLMCopyButton({
     } catch (error) {
       console.error("Failed to copy markdown to clipboard:", error);
       const errorMessage = error instanceof Error ? error.message : String(error);
-      window.alert(`Failed to copy the markdown to your clipboard: ${errorMessage}\n\nPlease copy it manually.`);
+      window.alert(
+        `Failed to copy the markdown to your clipboard: ${errorMessage}\n\nPlease copy it manually.`,
+      );
       throw error;
     } finally {
       setLoading(false);
