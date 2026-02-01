@@ -1,0 +1,23 @@
+{
+  "nav": {
+    "docs": "文档",
+    "ecosystem": "生态系统",
+    "help": "帮助",
+    "editor": "编辑器",
+    "gallery": "画廊",
+    "blog": "博客"
+  },
+  "search": {
+    "placeholder": "搜索文档..."
+  },
+  "footer": {
+    "copyright": "© 2024 Casbin. 版权所有。"
+  },
+  "docs": {
+    "onThisPage": "目录",
+    "lastUpdated": "最后更新",
+    "editOnGitHub": "在 GitHub 上编辑",
+    "previousPage": "上一页",
+    "nextPage": "下一页"
+  }
+}

@@ -2,6 +2,12 @@ import { defineConfig, defineDocs, frontmatterSchema, metaSchema } from "fumadoc
 import { z } from "zod";
 import { remarkFeedbackBlock } from "fumadocs-core/mdx-plugins/remark-feedback-block";
 
+// i18n configuration
+const i18n = {
+  defaultLanguage: "en",
+  languages: ["en", "zh", "ja", "ko", "fr", "de", "es", "ru", "ar", "pt", "it", "tr", "id", "th", "ms", "uk", "vi"],
+};
+
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
 export const docs = defineDocs({
@@ -18,6 +24,7 @@ export const docs = defineDocs({
   meta: {
     schema: metaSchema,
   },
+  i18n,
 });
 
 export const blog = defineDocs({
@@ -37,6 +44,7 @@ export const blog = defineDocs({
   meta: {
     schema: metaSchema,
   },
+  i18n,
 });
 
 export default defineConfig({

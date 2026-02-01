@@ -1,6 +1,8 @@
 import { docs, blog } from "fumadocs-mdx:collections/server";
 import { type InferPageType, loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
+import { i18nLoader } from "fumadocs-core/source/i18n-loader";
+import { i18n } from "./i18n";
 
 // Define proper types for page data
 type PageData = {
@@ -35,15 +37,17 @@ function flattenDocSlugs({ path }: { path: string }): string[] {
 }
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
-export const source = loader({
+export const source = i18nLoader({
   baseUrl: "/docs",
+  i18n,
   source: docs.toFumadocsSource(),
   slugs: flattenDocSlugs,
   plugins: [lucideIconsPlugin()],
 });
 
-export const blogSource = loader({
+export const blogSource = i18nLoader({
   baseUrl: "/blog",
+  i18n,
   source: blog.toFumadocsSource(),
   plugins: [lucideIconsPlugin()],
 });
