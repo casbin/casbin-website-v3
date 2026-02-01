@@ -1,9 +1,9 @@
 ---
 title: "Upgrading Casbin (Go) from v2 to v3: A Complete Migration Guide"
 slug: upgrading-casbin-go-v2-to-v3
-author: Casbin Team
-authorURL: "http://github.com/casbin"
-authorImageURL: "https://avatars.githubusercontent.com/u/27810343"
+author: Yang Luo
+authorURL: "http://github.com/hsluoyz"
+authorImageURL: "https://avatars.githubusercontent.com/hsluoyz"
 date: "2026-02-01"
 tags: [casbin, go, migration, upgrade, v3]
 ---
