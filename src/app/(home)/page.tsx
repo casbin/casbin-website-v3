@@ -182,7 +182,7 @@ function HeroHeader() {
       />
 
       {/* Content */}
-      <div className="relative z-30 mx-auto max-w-4xl">
+      <div className="relative z-30 mx-auto max-w-8xl px-4">
         {/* News pill */}
         <div className="mb-8 flex justify-center">
           <a
@@ -215,15 +215,12 @@ function HeroHeader() {
               Casbin
             </span>
             <br />
-            <div className="mt-4 text-3xl md:text-5xl font-inter">
+            <div className="mt-4 text-3xl md:text-5xl lg:text-5xl font-inter flex flex-wrap justify-center gap-x-3">
               <span className="text-gray-200">Open-source authorization for</span>
-              <br />
-              <span className="inline-block">
-                <AnimatedText
-                  words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
-                  interval={3000}
-                />
-              </span>
+              <AnimatedText
+                words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
+                interval={3000}
+              />
             </div>
           </h1>
 
