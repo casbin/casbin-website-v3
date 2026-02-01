@@ -166,3 +166,6 @@ next-env.d.ts
 
 # AI agent instructions
 AGENTS.md
+
+# Generated files (auto-generated during build, should not be committed)
+public/last-updated.json
