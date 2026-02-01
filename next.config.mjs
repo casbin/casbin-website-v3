@@ -1,5 +1,9 @@
+import { createRequire } from "module";
 import { createMDX } from "fumadocs-mdx/next";
-import { docs, blog } from "./source.config.ts";
+
+const require = createRequire(import.meta.url);
+const jiti = require("jiti")(import.meta.url);
+const { docs, blog } = jiti("./source.config.ts");
 
 const withMDX = createMDX({
   collections: { docs, blog },
