@@ -2,7 +2,11 @@ import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { baseOptions } from "@/lib/layout.shared";
 
-export default function Layout({ children }: LayoutProps<"/docs">) {
+export default async function Layout({ 
+  children, 
+  params 
+}: LayoutProps<"/[locale]/docs">) {
+  const { locale } = await params;
   const base = baseOptions();
 
   // Override nav for docs only: move logo into `nav.title` so it sits left
@@ -20,7 +24,7 @@ export default function Layout({ children }: LayoutProps<"/docs">) {
 
   return (
     <DocsLayout
-      tree={source.pageTree}
+      tree={source.pageTree[locale]}
       {...base}
       nav={docsNav}
       sidebar={{

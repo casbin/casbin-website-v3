@@ -1,0 +1,23 @@
+{
+  "nav": {
+    "docs": "Docs",
+    "ecosystem": "Ecosystem",
+    "help": "Help",
+    "editor": "Editor",
+    "gallery": "Gallery",
+    "blog": "Blog"
+  },
+  "search": {
+    "placeholder": "Search documentation..."
+  },
+  "footer": {
+    "copyright": "© 2024 Casbin. All rights reserved."
+  },
+  "docs": {
+    "onThisPage": "On This Page",
+    "lastUpdated": "Last updated",
+    "editOnGitHub": "Edit on GitHub",
+    "previousPage": "Previous",
+    "nextPage": "Next"
+  }
+}
