@@ -1,7 +1,7 @@
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import type { LinkItemType } from 'fumadocs-ui/layouts/shared';
-import Link from 'next/link';
-import Image from 'next/image';
+import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import type { LinkItemType } from "fumadocs-ui/layouts/shared";
+import Link from "next/link";
+import Image from "next/image";
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -57,11 +57,13 @@ export const sharedLinks: LinkItemType[] = [
     text: "Help",
   },
   {
-    type: 'icon',
-    url: 'https://discord.gg/S5UjpzGZjN',
-    text: 'Discord',
-    label: 'Discord',
-    icon: <Image src="/icons/discord.svg" alt="Discord" width={20} height={20} className="size-5" />,
+    type: "icon",
+    url: "https://discord.gg/S5UjpzGZjN",
+    text: "Discord",
+    label: "Discord",
+    icon: (
+      <Image src="/icons/discord.svg" alt="Discord" width={20} height={20} className="size-5" />
+    ),
     external: true,
   },
 ];
