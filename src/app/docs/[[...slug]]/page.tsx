@@ -65,18 +65,18 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
     >
       <DocsTitle>{data.title}</DocsTitle>
       <DocsDescription className="!mb-2 text-base">{data.description}</DocsDescription>
-      {data.authors && data.authors.length > 0 && (
-        <div className="mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pt-1 pb-4 mb-4 gap-2">
+        {data.authors && data.authors.length > 0 && (
           <AuthorCard authors={data.authors} date={data.date} readTime={readTime} />
-        </div>
-      )}
-      <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">
-        {page.path && (
-          <>
-            <LLMCopyButton pagePath={page.path} />
-            <ViewOptions pagePath={page.path} githubUrl={githubUrl} />
-          </>
         )}
+        <div className="flex flex-row gap-2 shrink-0">
+          {page.path && (
+            <>
+              <LLMCopyButton pagePath={page.path} />
+              <ViewOptions pagePath={page.path} githubUrl={githubUrl} />
+            </>
+          )}
+        </div>
       </div>
       <DocsBody>
         <MDX
