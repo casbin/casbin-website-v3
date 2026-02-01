@@ -169,3 +169,6 @@ AGENTS.md
 
 # Generated files (auto-generated during build, should not be committed)
 public/last-updated.json
+
+.idea/
+*.iml
