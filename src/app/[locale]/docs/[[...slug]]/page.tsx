@@ -1,4 +1,4 @@
-import { getPageImage, source } from "@/lib/source";
+import { getPageImage, getLocalizedSource } from "@/lib/source";
 import { LLMCopyButton, ViewOptions } from "@/components/ai/page-actions";
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
 import { notFound } from "next/navigation";
@@ -43,7 +43,8 @@ function normalizeDocPath(path: string): string {
 
 export default async function Page(props: PageProps<"/[locale]/docs/[[...slug]]">) {
   const params = await props.params;
-  const page = source.getPage(params.slug, params.locale);
+  const source = getLocalizedSource(params.locale);
+  const page = source.getPage(params.slug);
   if (!page) notFound();
 
   const data = page.data as DocsPageData;
@@ -103,12 +104,23 @@ export default async function Page(props: PageProps<"/[locale]/docs/[[...slug]]"
 }
 
 export async function generateStaticParams() {
-  return source.generateParams();
+  // Generate params for all locales
+  const locales = ["en", "zh", "ja", "ko", "fr", "de", "es", "ru", "ar", "pt", "it", "tr", "id", "th", "ms", "uk", "vi"];
+  const params = [];
+  
+  for (const locale of locales) {
+    const source = getLocalizedSource(locale);
+    const localeParams = source.generateParams();
+    params.push(...localeParams.map((p) => ({ ...p, locale })));
+  }
+  
+  return params;
 }
 
 export async function generateMetadata(props: PageProps<"/[locale]/docs/[[...slug]]">): Promise<Metadata> {
   const params = await props.params;
-  const page = source.getPage(params.slug, params.locale);
+  const source = getLocalizedSource(params.locale);
+  const page = source.getPage(params.slug);
   if (!page) notFound();
 
   return {

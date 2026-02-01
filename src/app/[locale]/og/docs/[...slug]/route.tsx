@@ -1,12 +1,13 @@
-import { getPageImage, source } from "@/lib/source";
+import { getPageImage, getLocalizedSource } from "@/lib/source";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { generate as DefaultImage } from "fumadocs-ui/og";
 
 export const revalidate = false;
 
-export async function GET(_req: Request, { params }: RouteContext<"/og/docs/[...slug]">) {
-  const { slug } = await params;
+export async function GET(_req: Request, { params }: RouteContext<"/[locale]/og/docs/[...slug]">) {
+  const { slug, locale } = await params;
+  const source = getLocalizedSource(locale);
   const page = source.getPage(slug.slice(0, -1));
   if (!page) notFound();
 
@@ -20,8 +21,17 @@ export async function GET(_req: Request, { params }: RouteContext<"/og/docs/[...
 }
 
 export function generateStaticParams() {
-  return source.getPages().map((page) => ({
-    lang: page.locale,
-    slug: getPageImage(page).segments,
-  }));
+  const locales = ["en", "zh", "ja", "ko", "fr", "de", "es", "ru", "ar", "pt", "it", "tr", "id", "th", "ms", "uk", "vi"];
+  const params = [];
+  
+  for (const locale of locales) {
+    const source = getLocalizedSource(locale);
+    const localeParams = source.getPages().map((page) => ({
+      locale,
+      slug: getPageImage(page).segments,
+    }));
+    params.push(...localeParams);
+  }
+  
+  return params;
 }

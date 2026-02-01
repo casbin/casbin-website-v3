@@ -1,5 +1,5 @@
 import { createMDX } from "fumadocs-mdx/next";
-import { docs, blog } from "./source.config.ts";
+import { docs, blog } from "./.source/source.config.mjs";
 
 const withMDX = createMDX({
   collections: { docs, blog },

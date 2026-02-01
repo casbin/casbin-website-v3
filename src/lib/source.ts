@@ -1,8 +1,6 @@
 import { docs, blog } from "fumadocs-mdx:collections/server";
 import { type InferPageType, loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
-import { i18nLoader } from "fumadocs-core/source/i18n-loader";
-import { i18n } from "./i18n";
 
 // Define proper types for page data
 type PageData = {
@@ -24,33 +22,67 @@ type FumadocsPageData = PageData & {
 };
 
 // Keep doc URLs flat so folder names stay out of the final pathname.
+// Also filter out the locale folder from the URL
 function flattenDocSlugs({ path }: { path: string }): string[] {
   const segments = path.replace(/\\/g, "/").split("/").filter(Boolean);
-  const fileName = segments.pop() ?? "";
+  
+  // Remove the 'docs' and locale folder (first two segments for content/docs/en/...)
+  // Skip "docs" and locale (en, zh, etc.) from URL generation
+  const filteredSegments = segments.slice(2); // Skip locale folder
+  
+  const fileName = filteredSegments.pop() ?? "";
   const baseName = fileName.replace(/\.[^/.]+$/, "");
 
   if (baseName === "index") {
-    return segments.filter((segment) => segment !== "docs").map((segment) => encodeURI(segment));
+    return filteredSegments.map((segment) => encodeURI(segment));
   }
 
   return [encodeURI(baseName)];
 }
 
-// See https://fumadocs.dev/docs/headless/source-api for more info
-export const source = i18nLoader({
-  baseUrl: "/docs",
-  i18n,
-  source: docs.toFumadocsSource(),
-  slugs: flattenDocSlugs,
-  plugins: [lucideIconsPlugin()],
-});
+// Create a source filtered by locale
+function createLocalizedSource(locale: string) {
+  return loader({
+    baseUrl: `/${locale}/docs`,
+    source: {
+      ...docs.toFumadocsSource(),
+      // Filter to only include files from this locale
+      files: docs.toFumadocsSource().files.filter((file) => 
+        file.path.includes(`docs/${locale}/`)
+      ),
+    },
+    slugs: flattenDocSlugs,
+    plugins: [lucideIconsPlugin()],
+  });
+}
 
-export const blogSource = i18nLoader({
-  baseUrl: "/blog",
-  i18n,
-  source: blog.toFumadocsSource(),
-  plugins: [lucideIconsPlugin()],
-});
+function createLocalizedBlogSource(locale: string) {
+  return loader({
+    baseUrl: `/${locale}/blog`,
+    source: {
+      ...blog.toFumadocsSource(),
+      // Filter to only include files from this locale
+      files: blog.toFumadocsSource().files.filter((file) => 
+        file.path.includes(`blog/${locale}/`)
+      ),
+    },
+    plugins: [lucideIconsPlugin()],
+  });
+}
+
+// For now, default to English
+// In the actual implementation, this would be determined by the locale parameter
+export const source = createLocalizedSource("en");
+export const blogSource = createLocalizedBlogSource("en");
+
+// Export function to get source for specific locale
+export function getLocalizedSource(locale: string) {
+  return createLocalizedSource(locale);
+}
+
+export function getLocalizedBlogSource(locale: string) {
+  return createLocalizedBlogSource(locale);
+}
 
 export function getPageImage(page: InferPageType<typeof source>) {
   const segments = [...page.slugs, "image.png"];
