@@ -57,44 +57,54 @@ export function AuthorCard({
       <div
         className={cn("flex flex-wrap items-center gap-2 text-sm text-muted-foreground", className)}
       >
-        {authors.map((authorName, index) => {
+        {authors.flatMap((authorName, index) => {
           const githubUrl = `https://github.com/${encodeURIComponent(authorName)}`;
           const avatarUrl = !authorName.includes(" ")
             ? `https://github.com/${encodeURIComponent(authorName)}.png`
             : null;
 
-          return (
-            <div key={`${authorName}-${index}`} className="flex items-center gap-2">
-              {avatarUrl && (
-                <div className="relative shrink-0">
-                  <Link
-                    href={githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block leading-none"
-                  >
-                    <Avatar className="h-6 w-6 border border-border/50">
-                      <AvatarImage src={avatarUrl} alt={authorName} className="object-cover" />
-                      <AvatarFallback>{authorName.charAt(0).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                  </Link>
-                </div>
-              )}
+          const elements = [];
 
-              <div className="font-semibold text-foreground">
+          if (avatarUrl) {
+            elements.push(
+              <div className="relative shrink-0" key={`${authorName}-${index}-avatar`}>
                 <Link
                   href={githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:underline"
+                  className="block leading-none"
                 >
-                  {authorName}
+                  <Avatar className="h-6 w-6 border border-border/50">
+                    <AvatarImage src={avatarUrl} alt={authorName} className="object-cover" />
+                    <AvatarFallback>{authorName.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
                 </Link>
-              </div>
+              </div>,
+            );
+          }
 
-              {index < authors.length - 1 && <span aria-hidden="true">,</span>}
-            </div>
+          elements.push(
+            <div className="font-semibold text-foreground" key={`${authorName}-${index}-name`}>
+              <Link
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {authorName}
+              </Link>
+            </div>,
           );
+
+          if (index < authors.length - 1) {
+            elements.push(
+              <span aria-hidden="true" key={`${authorName}-${index}-comma`}>
+                ,
+              </span>,
+            );
+          }
+
+          return elements;
         })}
 
         {readTime && (
