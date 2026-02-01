@@ -58,9 +58,9 @@ export function AuthorCard({
         className={cn("flex flex-wrap items-center gap-2 text-sm text-muted-foreground", className)}
       >
         {authors.map((authorName, index) => {
-          const githubUrl = `https://github.com/${authorName}`;
+          const githubUrl = `https://github.com/${encodeURIComponent(authorName)}`;
           const avatarUrl = !authorName.includes(" ")
-            ? `https://github.com/${authorName}.png`
+            ? `https://github.com/${encodeURIComponent(authorName)}.png`
             : null;
 
           return (
