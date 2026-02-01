@@ -1,5 +1,5 @@
-'use client';
-import { useState, useEffect } from 'react';
+"use client";
+import { useState, useEffect } from "react";
 
 interface LastUpdatedData {
   [filePath: string]: string;
@@ -15,7 +15,7 @@ export function LastUpdated({ filePath }: LastUpdatedProps) {
   useEffect(() => {
     async function loadDate() {
       try {
-        const response = await fetch('/last-updated.json');
+        const response = await fetch("/last-updated.json");
         if (!response.ok) {
           return;
         }
@@ -28,7 +28,7 @@ export function LastUpdated({ filePath }: LastUpdatedProps) {
           setLastModified(new Date(dateString));
         }
       } catch (error) {
-        console.debug('Could not read last-updated.json for', filePath);
+        console.debug("Could not read last-updated.json for", filePath);
       }
     }
 
@@ -39,10 +39,10 @@ export function LastUpdated({ filePath }: LastUpdatedProps) {
     return null;
   }
 
-  const formattedDate = lastModified.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const formattedDate = lastModified.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   return (

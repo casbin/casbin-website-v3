@@ -1,15 +1,15 @@
-import { App, Octokit } from 'octokit';
+import { App, Octokit } from "octokit";
 import {
   blockFeedback,
   BlockFeedback,
   pageFeedback,
   type ActionResponse,
   type PageFeedback,
-} from '@/components/feedback/schema';
+} from "@/components/feedback/schema";
 
-export const repo = 'casbin-website-v3';
-export const owner = 'casbin';
-export const DocsCategory = 'Docs Feedback';
+export const repo = "casbin-website-v3";
+export const owner = "casbin";
+export const DocsCategory = "Docs Feedback";
 
 let instance: Octokit | undefined;
 
@@ -19,7 +19,7 @@ async function getOctokit(): Promise<Octokit | null> {
   const privateKey = process.env.GITHUB_APP_PRIVATE_KEY;
 
   if (!appId || !privateKey) {
-    console.warn('GitHub App credentials not configured - feedback will not be posted to GitHub');
+    console.warn("GitHub App credentials not configured - feedback will not be posted to GitHub");
     return null;
   }
 
@@ -28,11 +28,11 @@ async function getOctokit(): Promise<Octokit | null> {
     privateKey,
   });
 
-  const { data } = await app.octokit.request('GET /repos/{owner}/{repo}/installation', {
+  const { data } = await app.octokit.request("GET /repos/{owner}/{repo}/installation", {
     owner,
     repo,
     headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
+      "X-GitHub-Api-Version": "2022-11-28",
     },
   });
 
@@ -70,13 +70,13 @@ async function getFeedbackDestination(): Promise<RepositoryInfo | null> {
 
     return (cachedDestination = result.repository);
   } catch (e) {
-    console.warn('Failed to fetch GitHub Discussion categories:', e);
+    console.warn("Failed to fetch GitHub Discussion categories:", e);
     return null;
   }
 }
 
 export async function onPageFeedbackAction(feedback: PageFeedback): Promise<ActionResponse> {
-  'use server';
+  "use server";
   feedback = pageFeedback.parse(feedback);
   return createDiscussionThread(
     feedback.url,
@@ -85,7 +85,7 @@ export async function onPageFeedbackAction(feedback: PageFeedback): Promise<Acti
 }
 
 export async function onBlockFeedbackAction(feedback: BlockFeedback): Promise<ActionResponse> {
-  'use server';
+  "use server";
   feedback = blockFeedback.parse(feedback);
   return createDiscussionThread(
     feedback.url,

@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Badge, badgeVariants } from './badge';
-import { cn } from '@/lib/utils';
-import type { VariantProps } from 'class-variance-authority';
+import * as React from "react";
+import { Badge, badgeVariants } from "./badge";
+import { cn } from "@/lib/utils";
+import type { VariantProps } from "class-variance-authority";
 
 interface ColorBadgeProps
-  extends Omit<React.ComponentProps<typeof Badge>, 'variant'>, VariantProps<typeof badgeVariants> {
+  extends Omit<React.ComponentProps<typeof Badge>, "variant">, VariantProps<typeof badgeVariants> {
   color?: string;
   isSelected?: boolean;
 }
@@ -20,14 +20,14 @@ interface ColorBadgeProps
 function ColorBadge({
   color,
   isSelected = false,
-  variant = isSelected ? 'default' : 'outline',
+  variant = isSelected ? "default" : "outline",
   className,
   style,
   ...props
 }: ColorBadgeProps) {
   const customStyle: React.CSSProperties = {
     ...(color
-      ? ({ '--badge-color': color } as React.CSSProperties & { '--badge-color': string })
+      ? ({ "--badge-color": color } as React.CSSProperties & { "--badge-color": string })
       : {}),
     ...style,
   };
@@ -35,10 +35,10 @@ function ColorBadge({
   const badgeClassName = cn(
     color &&
       isSelected &&
-      '[--badge-color:var(--badge-color)] bg-[var(--badge-color)] border-[var(--badge-color)]',
+      "[--badge-color:var(--badge-color)] bg-[var(--badge-color)] border-[var(--badge-color)]",
     color &&
       !isSelected &&
-      '[--badge-color:var(--badge-color)] border-[color-mix(in_srgb,var(--badge-color)_32%,transparent)]',
+      "[--badge-color:var(--badge-color)] border-[color-mix(in_srgb,var(--badge-color)_32%,transparent)]",
     className
   );
 

@@ -1,9 +1,9 @@
-import { source } from '@/lib/source';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { baseOptions } from '@/lib/layout.shared';
-import Image from 'next/image';
+import { source } from "@/lib/source";
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { baseOptions } from "@/lib/layout.shared";
+import Image from "next/image";
 
-export default function Layout({ children }: LayoutProps<'/docs'>) {
+export default function Layout({ children }: LayoutProps<"/docs">) {
   const base = baseOptions();
 
   // Override nav for docs only: move logo into `nav.title` so it sits left

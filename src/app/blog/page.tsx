@@ -1,11 +1,11 @@
-import { blogSource } from '@/lib/source';
-import type { Metadata } from 'next';
-import type { InferPageType } from 'fumadocs-core/source';
-import Link from 'next/link';
+import { blogSource } from "@/lib/source";
+import type { Metadata } from "next";
+import type { InferPageType } from "fumadocs-core/source";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Latest updates and news from Casbin',
+  title: "Blog",
+  description: "Latest updates and news from Casbin",
 };
 
 type BlogPage = InferPageType<typeof blogSource>;
@@ -32,10 +32,10 @@ export default function Page() {
           <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-4">
             {pages.map((page) => (
               <Link
-                key={page.slugs.join('/')}
-                href={`/blog/${page.slugs.join('/')}`}
+                key={page.slugs.join("/")}
+                href={`/blog/${page.slugs.join("/")}`}
                 className="flex flex-col bg-white/80 backdrop-blur-sm rounded-2xl border shadow-sm p-4 transition-colors hover:bg-accent hover:text-accent-foreground hover:shadow-lg"
-                aria-label={`Read ${page.data.title}${page.data.date ? ` - Published ${new Date(page.data.date).toDateString()}` : ''}`}
+                aria-label={`Read ${page.data.title}${page.data.date ? ` - Published ${new Date(page.data.date).toDateString()}` : ""}`}
               >
                 <p className="font-medium">{page.data.title}</p>
                 {page.data.description && (

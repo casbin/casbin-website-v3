@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import Comments from '@/components/Comments';
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import Comments from "@/components/Comments";
 
 export default function EditorPage() {
   const { theme } = useTheme();

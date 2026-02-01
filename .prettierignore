@@ -23,3 +23,7 @@ next-env.d.ts
 # IDE
 .vscode
 .idea
+
+# Markdown files (formatted manually for compact tables)
+*.md
+*.mdx

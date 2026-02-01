@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { StatCard } from '@/components/ui/stat-card';
-import { allPlugins } from '@/data/plugins';
-import { Package, Zap, Eye, Users, Share2, GitBranch } from 'lucide-react';
+import { useMemo } from "react";
+import { StatCard } from "@/components/ui/stat-card";
+import { allPlugins } from "@/data/plugins";
+import { Package, Zap, Eye, Users, Share2, GitBranch } from "lucide-react";
 
 export function PluginStats() {
   const stats = useMemo(() => {
@@ -14,7 +14,7 @@ export function PluginStats() {
     // Count by plugin type (Adapter, Middleware, etc.)
     for (const plugin of allPlugins) {
       plugin.tags.forEach((tag) => {
-        if (['Adapter', 'Middleware', 'Watcher', 'RoleManager', 'Dispatcher'].includes(tag)) {
+        if (["Adapter", "Middleware", "Watcher", "RoleManager", "Dispatcher"].includes(tag)) {
           stats[tag] = (stats[tag] || 0) + 1;
         }
       });
@@ -24,11 +24,11 @@ export function PluginStats() {
   }, []);
 
   const categories = [
-    { label: 'Adapter', color: '#EF4444', icon: Package },
-    { label: 'Middleware', color: '#F59E0B', icon: Zap },
-    { label: 'Watcher', color: '#10B981', icon: Eye },
-    { label: 'RoleManager', color: '#3B82F6', icon: Users },
-    { label: 'Dispatcher', color: '#8B5CF6', icon: Share2 },
+    { label: "Adapter", color: "#EF4444", icon: Package },
+    { label: "Middleware", color: "#F59E0B", icon: Zap },
+    { label: "Watcher", color: "#10B981", icon: Eye },
+    { label: "RoleManager", color: "#3B82F6", icon: Users },
+    { label: "Dispatcher", color: "#8B5CF6", icon: Share2 },
   ];
 
   return (

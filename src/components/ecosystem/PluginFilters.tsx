@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { ColorBadge } from '@/components/ui/color-badge';
-import { Tags, type TagType, LanguageTags, PluginTypeTags } from '@/data/plugins/tags';
-import { usePluginFilter } from './PluginFilterContext';
-import { Filter, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { allPlugins } from '@/data/plugins';
+import { useMemo } from "react";
+import { ColorBadge } from "@/components/ui/color-badge";
+import { Tags, type TagType, LanguageTags, PluginTypeTags } from "@/data/plugins/tags";
+import { usePluginFilter } from "./PluginFilterContext";
+import { Filter, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { allPlugins } from "@/data/plugins";
 
 export function PluginFilters() {
   const { selectedTags, toggleTag, filteredPlugins } = usePluginFilter();
@@ -51,7 +51,7 @@ export function PluginFilters() {
           <div>
             <h3 className="font-semibold text-lg">Filters</h3>
             <p className="text-sm text-muted-foreground">
-              {filteredPlugins.length} {filteredPlugins.length === 1 ? 'result' : 'results'}
+              {filteredPlugins.length} {filteredPlugins.length === 1 ? "result" : "results"}
             </p>
           </div>
         </div>
@@ -83,7 +83,7 @@ export function PluginFilters() {
               (k) => Tags[k as TagType].label === lang
             ) as TagType;
             const tagInfo = tagKey ? Tags[tagKey] : null;
-            const color = tagInfo?.color || '#6B7280';
+            const color = tagInfo?.color || "#6B7280";
             const isSelected = Array.from(selectedTags).some((t) => Tags[t].label === lang);
             const count = tagCounts[lang] || 0;
 

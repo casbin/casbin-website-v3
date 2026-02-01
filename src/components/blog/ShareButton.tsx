@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { Share2, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import * as React from "react";
+import { Share2, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ShareButtonProps {
   url: string;
@@ -17,8 +17,8 @@ export function ShareButton({ url }: ShareButtonProps) {
       setIsChecked(true);
       setTimeout(() => setIsChecked(false), 2000);
     } catch (error) {
-      console.error('Failed to copy URL to clipboard:', error);
-      window.alert('Failed to copy the URL to your clipboard. Please copy it manually.');
+      console.error("Failed to copy URL to clipboard:", error);
+      window.alert("Failed to copy the URL to your clipboard. Please copy it manually.");
     }
   }, [url]);
 
@@ -28,10 +28,10 @@ export function ShareButton({ url }: ShareButtonProps) {
       size="default"
       onClick={onCopy}
       className="gap-2 border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-primary)]/90 hover:shadow-md"
-      aria-label={isChecked ? 'Copied URL' : 'Share Post'}
+      aria-label={isChecked ? "Copied URL" : "Share Post"}
     >
       {isChecked ? <Check className="size-4" /> : <Share2 className="size-4" />}
-      {isChecked ? 'Copied URL' : 'Share Post'}
+      {isChecked ? "Copied URL" : "Share Post"}
     </Button>
   );
 }

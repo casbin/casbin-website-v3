@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface AuthorCardProps {
   author?: string;
@@ -14,7 +14,7 @@ interface AuthorCardProps {
 function sanitizeAuthorUrl(authorURL?: string): string | null {
   if (!authorURL) return null;
 
-  const trimmed = authorURL.trim().replace(/^"|"$/g, '');
+  const trimmed = authorURL.trim().replace(/^"|"$/g, "");
   if (!trimmed) return null;
 
   // If there is no scheme, treat as a relative/path URL and return as-is.
@@ -24,8 +24,8 @@ function sanitizeAuthorUrl(authorURL?: string): string | null {
 
   try {
     const url = new URL(trimmed);
-    if (url.protocol === 'http:') {
-      url.protocol = 'https:';
+    if (url.protocol === "http:") {
+      url.protocol = "https:";
     }
     return url.toString();
   } catch {
@@ -45,20 +45,20 @@ export function AuthorCard({
 
   const githubUrl = sanitizeAuthorUrl(authorURL);
   const avatarUrl =
-    authorImageURL?.trim().replace(/^"|"$/g, '') ||
-    (author && !author.includes(' ') ? `https://github.com/${author}.png` : null);
+    authorImageURL?.trim().replace(/^"|"$/g, "") ||
+    (author && !author.includes(" ") ? `https://github.com/${author}.png` : null);
 
   const formattedDate = date
-    ? new Date(date).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
+    ? new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
       })
     : null;
 
   return (
     <div
-      className={cn('flex flex-wrap items-center gap-2 text-sm text-muted-foreground', className)}
+      className={cn("flex flex-wrap items-center gap-2 text-sm text-muted-foreground", className)}
     >
       {avatarUrl && (
         <div className="relative shrink-0">
@@ -70,14 +70,14 @@ export function AuthorCard({
               className="block leading-none"
             >
               <Avatar className="h-6 w-6 border border-border/50">
-                <AvatarImage src={avatarUrl} alt={author || 'Author'} className="object-cover" />
-                <AvatarFallback>{author ? author.charAt(0).toUpperCase() : 'A'}</AvatarFallback>
+                <AvatarImage src={avatarUrl} alt={author || "Author"} className="object-cover" />
+                <AvatarFallback>{author ? author.charAt(0).toUpperCase() : "A"}</AvatarFallback>
               </Avatar>
             </Link>
           ) : (
             <Avatar className="h-6 w-6 border border-border/50">
-              <AvatarImage src={avatarUrl} alt={author || 'Author'} className="object-cover" />
-              <AvatarFallback>{author ? author.charAt(0).toUpperCase() : 'A'}</AvatarFallback>
+              <AvatarImage src={avatarUrl} alt={author || "Author"} className="object-cover" />
+              <AvatarFallback>{author ? author.charAt(0).toUpperCase() : "A"}</AvatarFallback>
             </Avatar>
           )}
         </div>

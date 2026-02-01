@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
-import { usePluginFilter } from './PluginFilterContext';
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { usePluginFilter } from "./PluginFilterContext";
 
 export function PluginSearch() {
   const { searchQuery, setSearchQuery } = usePluginFilter();

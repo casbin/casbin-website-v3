@@ -1,13 +1,13 @@
-import { blogSource } from '@/lib/source';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import { getMDXComponents } from '@/mdx-components';
-import { AuthorCard } from '@/components/blog/AuthorCard';
-import { BlogPostActions } from '@/components/blog/BlogPostActions';
-import { InlineTOC } from '@/components/inline-toc';
-import type { TOCItemType } from 'fumadocs-core/toc';
-import Comments from '@/components/Comments';
-import { calculateReadingTime } from '@/lib/utils';
+import { blogSource } from "@/lib/source";
+import { DocsPage, DocsBody } from "fumadocs-ui/page";
+import { notFound } from "next/navigation";
+import { getMDXComponents } from "@/mdx-components";
+import { AuthorCard } from "@/components/blog/AuthorCard";
+import { BlogPostActions } from "@/components/blog/BlogPostActions";
+import { InlineTOC } from "@/components/inline-toc";
+import type { TOCItemType } from "fumadocs-core/toc";
+import Comments from "@/components/Comments";
+import { calculateReadingTime } from "@/lib/utils";
 
 interface BlogPageData {
   body: any;
@@ -18,7 +18,7 @@ interface BlogPageData {
   authorImageURL?: string;
   date?: string;
   title: string;
-  getText: (type: 'raw' | 'processed') => Promise<string>;
+  getText: (type: "raw" | "processed") => Promise<string>;
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
@@ -30,9 +30,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string[
   const pageData = page.data as BlogPageData;
   const MDX = pageData.body;
   const toc = pageData.toc;
-  const url = `/blog/${page.slugs.join('/')}`;
+  const url = `/blog/${page.slugs.join("/")}`;
 
-  const rawContent = await pageData.getText('raw');
+  const rawContent = await pageData.getText("raw");
   const readTime = calculateReadingTime(rawContent);
 
   return (

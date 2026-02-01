@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useMemo } from 'react';
-import type { Plugin } from '@/data/plugins';
-import type { TagType } from '@/data/plugins/tags';
-import { sortedPlugins } from '@/data/plugins';
-import { LanguageTags, PluginTypeTags } from '@/data/plugins/tags';
+import { createContext, useContext, useState, useMemo } from "react";
+import type { Plugin } from "@/data/plugins";
+import type { TagType } from "@/data/plugins/tags";
+import { sortedPlugins } from "@/data/plugins";
+import { LanguageTags, PluginTypeTags } from "@/data/plugins/tags";
 
 interface PluginFilterContextType {
   selectedTags: Set<TagType>;
@@ -18,7 +18,7 @@ const PluginFilterContext = createContext<PluginFilterContextType | undefined>(u
 
 export function PluginFilterProvider({ children }: { children: React.ReactNode }) {
   const [selectedTags, setSelectedTags] = useState<Set<TagType>>(new Set());
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleTag = (tag: TagType) => {
     setSelectedTags((prev) => {
@@ -89,7 +89,7 @@ export function PluginFilterProvider({ children }: { children: React.ReactNode }
 export function usePluginFilter() {
   const context = useContext(PluginFilterContext);
   if (!context) {
-    throw new Error('usePluginFilter must be used within PluginFilterProvider');
+    throw new Error("usePluginFilter must be used within PluginFilterProvider");
   }
   return context;
 }

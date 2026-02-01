@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { source, getLLMText } from './source';
+import { source, getLLMText } from "./source";
 
 export async function getMarkdownContent(pagePath: string): Promise<string> {
   try {
@@ -8,13 +8,13 @@ export async function getMarkdownContent(pagePath: string): Promise<string> {
     const pages = source.getPages();
 
     // Normalize the path - remove leading/trailing slashes and 'content/' prefix if present
-    let normalizedPath = pagePath.replace(/^\/|\/$/g, '').replace(/^content\//, '');
+    let normalizedPath = pagePath.replace(/^\/|\/$/g, "").replace(/^content\//, "");
 
     // Try to find a matching page
     // page.path from Fumadocs is typically in the format 'docs/...' or similar
     const candidates = [
       normalizedPath,
-      normalizedPath.startsWith('docs/') ? normalizedPath : `docs/${normalizedPath}`,
+      normalizedPath.startsWith("docs/") ? normalizedPath : `docs/${normalizedPath}`,
     ];
 
     let page;
@@ -32,6 +32,6 @@ export async function getMarkdownContent(pagePath: string): Promise<string> {
     return content;
   } catch (error) {
     const err = error as { message?: string };
-    throw new Error(`Failed to get markdown content: ${err.message || 'unknown error'}`);
+    throw new Error(`Failed to get markdown content: ${err.message || "unknown error"}`);
   }
 }

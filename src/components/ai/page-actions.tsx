@@ -1,21 +1,21 @@
-'use client';
-import Image from 'next/image';
-import { useMemo, useState } from 'react';
-import { Check, ChevronDown, Copy, ExternalLinkIcon, MessageCircleIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
-import { buttonVariants } from '../ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { cva } from 'class-variance-authority';
-import { getMarkdownContent } from '@/lib/get-markdown-content';
+"use client";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import { Check, ChevronDown, Copy, ExternalLinkIcon, MessageCircleIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
+import { buttonVariants } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cva } from "class-variance-authority";
+import { getMarkdownContent } from "@/lib/get-markdown-content";
 
 const cache = new Map<string, string>();
 
 // Helper function to normalize doc file paths to GitHub URL format
 function normalizeDocPathForGithub(path: string): string {
-  let normalized = path.startsWith('content/') ? path : `content/${path}`;
-  if (!normalized.startsWith('content/docs/')) {
-    normalized = normalized.replace(/^content\//, 'content/docs/');
+  let normalized = path.startsWith("content/") ? path : `content/${path}`;
+  if (!normalized.startsWith("content/docs/")) {
+    normalized = normalized.replace(/^content\//, "content/docs/");
   }
   return normalized;
 }
@@ -41,8 +41,8 @@ export function LLMCopyButton({
 
       await navigator.clipboard.writeText(content);
     } catch (error) {
-      console.error('Failed to copy markdown to clipboard:', error);
-      window.alert('Failed to copy the markdown to your clipboard. Please copy it manually.');
+      console.error("Failed to copy markdown to clipboard:", error);
+      window.alert("Failed to copy the markdown to your clipboard. Please copy it manually.");
       throw error;
     } finally {
       setLoading(false);
@@ -54,9 +54,9 @@ export function LLMCopyButton({
       disabled={isLoading}
       className={cn(
         buttonVariants({
-          variant: 'secondary',
-          size: 'sm',
-          className: 'gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground',
+          variant: "secondary",
+          size: "sm",
+          className: "gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground",
         })
       )}
       onClick={onClick}
@@ -68,7 +68,7 @@ export function LLMCopyButton({
 }
 
 const optionVariants = cva(
-  'text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4'
+  "text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4"
 );
 
 export function ViewOptions({
@@ -90,7 +90,7 @@ export function ViewOptions({
 
     return [
       {
-        title: 'Open in GitHub',
+        title: "Open in GitHub",
         href: githubUrl,
         icon: (
           <Image
@@ -103,7 +103,7 @@ export function ViewOptions({
         ),
       },
       {
-        title: 'Open in Scira AI',
+        title: "Open in Scira AI",
         href: `https://scira.ai/?${new URLSearchParams({
           q,
         })}`,
@@ -118,9 +118,9 @@ export function ViewOptions({
         ),
       },
       {
-        title: 'Open in ChatGPT',
+        title: "Open in ChatGPT",
         href: `https://chatgpt.com/?${new URLSearchParams({
-          hints: 'search',
+          hints: "search",
           q,
         })}`,
         icon: (
@@ -134,7 +134,7 @@ export function ViewOptions({
         ),
       },
       {
-        title: 'Open in Claude',
+        title: "Open in Claude",
         href: `https://claude.ai/new?${new URLSearchParams({
           q,
         })}`,
@@ -149,7 +149,7 @@ export function ViewOptions({
         ),
       },
       {
-        title: 'Open in T3 Chat',
+        title: "Open in T3 Chat",
         href: `https://t3.chat/new?${new URLSearchParams({
           q,
         })}`,
@@ -163,9 +163,9 @@ export function ViewOptions({
       <PopoverTrigger
         className={cn(
           buttonVariants({
-            variant: 'secondary',
-            size: 'sm',
-            className: 'gap-2',
+            variant: "secondary",
+            size: "sm",
+            className: "gap-2",
           })
         )}
       >

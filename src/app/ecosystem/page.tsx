@@ -1,18 +1,18 @@
-import type { Metadata } from 'next';
-import { PluginFilterProvider } from '@/components/ecosystem/PluginFilterContext';
-import { PluginSearch } from '@/components/ecosystem/PluginSearch';
-import { PluginFilters } from '@/components/ecosystem/PluginFilters';
-import { PluginGrid } from '@/components/ecosystem/PluginGrid';
-import { PluginStats } from '@/components/ecosystem/PluginStats';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Github, Sparkles } from 'lucide-react';
-import Link from 'next/link';
+import type { Metadata } from "next";
+import { PluginFilterProvider } from "@/components/ecosystem/PluginFilterContext";
+import { PluginSearch } from "@/components/ecosystem/PluginSearch";
+import { PluginFilters } from "@/components/ecosystem/PluginFilters";
+import { PluginGrid } from "@/components/ecosystem/PluginGrid";
+import { PluginStats } from "@/components/ecosystem/PluginStats";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Github, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: 'Casbin Ecosystem - 243+ Plugins',
+  title: "Casbin Ecosystem - 243+ Plugins",
   description:
-    'Discover adapters, watchers, role managers, middlewares, and dispatchers for Casbin across 11 programming languages',
+    "Discover adapters, watchers, role managers, middlewares, and dispatchers for Casbin across 11 programming languages",
 };
 
 export default function EcosystemPage() {
@@ -38,8 +38,8 @@ export default function EcosystemPage() {
               </h1>
 
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                A comprehensive collection of <strong>adapters</strong>,{' '}
-                <strong>middlewares</strong>, <strong>watchers</strong>, and more — supporting{' '}
+                A comprehensive collection of <strong>adapters</strong>,{" "}
+                <strong>middlewares</strong>, <strong>watchers</strong>, and more — supporting{" "}
                 <strong>11 programming languages</strong>
               </p>
 

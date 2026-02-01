@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { PluginCard } from './PluginCard';
-import { usePluginFilter } from './PluginFilterContext';
+import { PluginCard } from "./PluginCard";
+import { usePluginFilter } from "./PluginFilterContext";
 
 export function PluginGrid() {
   const { filteredPlugins } = usePluginFilter();
@@ -19,7 +19,7 @@ export function PluginGrid() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">
-          {filteredPlugins.length} {filteredPlugins.length === 1 ? 'Plugin' : 'Plugins'}
+          {filteredPlugins.length} {filteredPlugins.length === 1 ? "Plugin" : "Plugins"}
         </h2>
       </div>
 

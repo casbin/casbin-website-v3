@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { Plus, Github } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Plus, Github } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Showcase() {
   const [users, setUsers] = useState<Array<any>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/data/users.json')
+    fetch("/data/users.json")
       .then((res) => res.json())
       .then((data) => {
         setUsers(Array.isArray(data) ? data.filter(Boolean) : []);
@@ -40,7 +40,7 @@ export default function Showcase() {
             >
               <CardContent className="p-2">
                 <a
-                  href={user.infolink || user.link || '#'}
+                  href={user.infolink || user.link || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={user.caption}
