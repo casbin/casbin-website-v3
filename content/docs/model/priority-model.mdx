@@ -52,6 +52,7 @@ if err != nil {
 }
 ok, err := e.Enforce("bob", "data2", "read") // the result will be `false, nil`
 ```
+
 </Callout>
 
 Explicit priority currently supports only `AddPolicy` and `AddPolicies`. Avoid changing the priority attribute when calling `UpdatePolicy`.

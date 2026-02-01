@@ -19,11 +19,11 @@ export function LastUpdated({ filePath }: LastUpdatedProps) {
         if (!response.ok) {
           return;
         }
-        
-        const jsonData = await response.json() as LastUpdatedData;
-        
+
+        const jsonData = (await response.json()) as LastUpdatedData;
+
         const dateString = jsonData[filePath];
-        
+
         if (dateString) {
           setLastModified(new Date(dateString));
         }
@@ -46,8 +46,6 @@ export function LastUpdated({ filePath }: LastUpdatedProps) {
   });
 
   return (
-    <div className="text-sm text-fd-muted-foreground mt-3">
-      Last modified on {formattedDate}
-    </div>
+    <div className="text-sm text-fd-muted-foreground mt-3">Last modified on {formattedDate}</div>
   );
 }

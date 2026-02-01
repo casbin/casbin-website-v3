@@ -1,9 +1,9 @@
 ---
 title: Understanding How Casbin Matching Works in Detail
 author: Aravinda Kumar
-authorURL: "http://github.com/aravindarc"
-authorImageURL: "https://avatars.githubusercontent.com/aravindarc"
-date: "2023-12-08"
+authorURL: 'http://github.com/aravindarc'
+authorImageURL: 'https://avatars.githubusercontent.com/aravindarc'
+date: '2023-12-08'
 ---
 
 In this post, I will explain the design and implementation of RBAC using the [Casbin](https://casbin.org/) library. For a SaaS platform dealing with multiple resource hierarchies and roles that inherit permissions from higher levels, Casbin provides a performant alternative to consider.
@@ -55,10 +55,10 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
 ```
 
 1. The **request_definition** is the query template of the system. For example, a request `alice, write, data1` can be
-interpreted as "Can subject Alice perform the action 'write' on object 'data1'?".
+   interpreted as "Can subject Alice perform the action 'write' on object 'data1'?".
 
 2. The **policy_definition** is the assignment template of the system. For example, by creating a policy `alice, write, data1`, you are
-assigning permission to subject Alice to perform the action 'write' on object 'data1'.
+   assigning permission to subject Alice to perform the action 'write' on object 'data1'.
 
 3. The **policy_effect** defines the effect of the policy.
 

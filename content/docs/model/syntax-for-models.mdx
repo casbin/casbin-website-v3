@@ -49,19 +49,21 @@ Policy rules are organized as lines in the policy file. Each rule begins with a 
 (bob, write-all-objects) -> (p2.sub, p2.act)
 ```
 
-<Callout type="info" title="Policy rule elements are always interpreted as `strings`. For questions about this behavior, consult the discussion at: [https://github.com/casbin/casbin/issues/113](https://github.com/casbin/casbin/issues/113)">
-</Callout>
+<Callout
+  type="info"
+  title="Policy rule elements are always interpreted as `strings`. For questions about this behavior, consult the discussion at: [https://github.com/casbin/casbin/issues/113](https://github.com/casbin/casbin/issues/113)"
+></Callout>
 
 ## Policy Effect
 
-The ``[policy_effect]`` section determines request approval when multiple matching policies exist—for instance, when one permits and another denies.
+The `[policy_effect]` section determines request approval when multiple matching policies exist—for instance, when one permits and another denies.
 
 ```ini
 [policy_effect]
 e = some(where (p.eft == allow))
 ```
 
-This policy effect implements "allow-override": when any matched policy grants ``allow``, the final decision is ``allow``. The ``p.eft`` field contains a policy's effect, taking values of either ``allow`` or ``deny``. This field is optional and defaults to ``allow``—since we omitted it above, the default applies.
+This policy effect implements "allow-override": when any matched policy grants `allow`, the final decision is `allow`. The `p.eft` field contains a policy's effect, taking values of either `allow` or `deny`. This field is optional and defaults to `allow`—since we omitted it above, the default applies.
 
 Here's an alternative policy effect:
 
@@ -70,28 +72,30 @@ Here's an alternative policy effect:
 e = !some(where (p.eft == deny))
 ```
 
-This implements "deny-override": the final effect is ``allow`` when no ``deny`` policies match. Here, ``some`` indicates at least one matching policy exists, while ``any`` means all policies match (though not used in this example). Policy effects can combine using logical expressions:
+This implements "deny-override": the final effect is `allow` when no `deny` policies match. Here, `some` indicates at least one matching policy exists, while `any` means all policies match (though not used in this example). Policy effects can combine using logical expressions:
 
 ```ini
 [policy_effect]
 e = some(where (p.eft == allow)) && !some(where (p.eft == deny))
 ```
 
-This requires at least one ``allow`` policy and zero ``deny`` policies. Both allow and deny authorizations are supported, with deny taking priority over allow.
+This requires at least one `allow` policy and zero `deny` policies. Both allow and deny authorizations are supported, with deny taking priority over allow.
 
 <Callout>
-While we designed the policy effect syntax shown above, current implementations use hard-coded policy effects. We discovered limited need for this level of customization. Consequently, you must select from the built-in policy effects rather than defining custom ones.
+  While we designed the policy effect syntax shown above, current implementations use hard-coded
+  policy effects. We discovered limited need for this level of customization. Consequently, you must
+  select from the built-in policy effects rather than defining custom ones.
 </Callout>
 
 Available built-in policy effects:
 
-| Policy Effect                                                | Meaning               | Example                                             |
-|--------------------------------------------------------------|-----------------------|-----------------------------------------------------|
-| some(where (p.eft == allow))                                 | allow-override        | [ACL, RBAC, etc.](/docs/supported-models#examples)  |
-| !some(where (p.eft == deny))                                 | deny-override         | [Deny-override](/docs/supported-models#examples)    |
-| some(where (p.eft == allow)) && !some(where (p.eft == deny)) | allow-and-deny        | [Allow-and-deny](/docs/supported-models#examples)   |
-| priority(p.eft) &#124;&#124; deny                            | priority              | [Priority](/docs/supported-models#examples)         |
-| subjectPriority(p.eft)                                       | priority based on role| [Subject-Priority](/docs/supported-models#examples) |
+| Policy Effect                                                | Meaning                | Example                                             |
+| ------------------------------------------------------------ | ---------------------- | --------------------------------------------------- |
+| some(where (p.eft == allow))                                 | allow-override         | [ACL, RBAC, etc.](/docs/supported-models#examples)  |
+| !some(where (p.eft == deny))                                 | deny-override          | [Deny-override](/docs/supported-models#examples)    |
+| some(where (p.eft == allow)) && !some(where (p.eft == deny)) | allow-and-deny         | [Allow-and-deny](/docs/supported-models#examples)   |
+| priority(p.eft) &#124;&#124; deny                            | priority               | [Priority](/docs/supported-models#examples)         |
+| subjectPriority(p.eft)                                       | priority based on role | [Subject-Priority](/docs/supported-models#examples) |
 
 ## Constraint Definition
 
@@ -139,7 +143,7 @@ At model initialization, the system verifies all existing constraints against cu
 
 ## Matchers
 
-The ``[matchers]`` section specifies how policy rules evaluate against requests.
+The `[matchers]` section specifies how policy rules evaluate against requests.
 
 ```ini
 [matchers]
@@ -148,7 +152,7 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
 
 This represents the most basic matcher, requiring that request subject, object, and action match corresponding policy rule fields.
 
-Matchers support arithmetic operators (``+, -, *, /``) and logical operators (``&&, ||, !``).
+Matchers support arithmetic operators (`+, -, *, /`) and logical operators (`&&, ||, !`).
 
 ### Order of expressions in matchers
 
@@ -243,7 +247,7 @@ Reordering matcher expressions by placing expensive operations (like functions) 
 
 Modifying the matcher expression order in the previous example:
 
-```ini
+````ini
 [matchers]
 m = r.obj == p.obj && g(r.sub, p.sub) && r.act == p.act
 ```bash
@@ -257,7 +261,7 @@ go test -run ^TestManyRoles$ github.com/casbin/casbin/v3 -v
 --- PASS: TestManyRoles (0.05s)
 PASS
 ok      github.com/casbin/casbin/v3     0.053s
-```
+````
 
 ## Multiple Section Types
 
@@ -340,15 +344,14 @@ e.Enforce(enforceContext, struct{ Age int }{Age: 30}, "/data1", "read")        /
 const enforceContext = new NewEnforceContext('2');
 
 // You can also specify a certain type individually
-enforceContext.eType = "e"
+enforceContext.eType = 'e';
 
 // Don't pass in EnforceContext; the default is r, p, e, m
-e.Enforce("alice", "data2", "read")        // true
+e.Enforce('alice', 'data2', 'read'); // true
 
 // Pass in EnforceContext
-e.Enforce(enforceContext, {Age: 70}, "/data1", "read")        //false
-e.Enforce(enforceContext, {Age: 30}, "/data1", "read")        //true
-
+e.Enforce(enforceContext, { Age: 70 }, '/data1', 'read'); //false
+e.Enforce(enforceContext, { Age: 30 }, '/data1', 'read'); //true
 ```
 
 </Tab>
@@ -379,7 +382,7 @@ Reference examples: [rbac_model_matcher_using_in_op](https://github.com/casbin/c
 
 Example:
 
-```ini
+````ini
 [request_definition]
 r = sub, obj
 ...
@@ -387,7 +390,7 @@ r = sub, obj
 m = r.sub.Name in (r.obj.Admins)
 ```go
 e.Enforce(Sub{Name: "alice"}, Obj{Name: "a book", Admins: []interface{}{"alice", "bob"}})
-```
+````
 
 ## Expression Evaluator
 
@@ -396,7 +399,7 @@ Casbin's matcher evaluation employs language-specific expression evaluators. Cas
 Expression evaluators by implementation:
 
 | Implementation | Language | Expression Evaluator                                                                                                                                                                                     |
-|----------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Casbin         | Golang   | [https://github.com/casbin/govaluate](https://github.com/casbin/govaluate)                                                                                                                               |
 | jCasbin        | Java     | [https://github.com/killme2008/aviatorscript](https://github.com/killme2008/aviatorscript)                                                                                                               |
 | Node-Casbin    | Node.js  | [https://github.com/donmccurdy/expression-eval](https://github.com/donmccurdy/expression-eval)                                                                                                           |
@@ -408,5 +411,7 @@ Expression evaluators by implementation:
 | casbin-cpp     | C++      | [https://github.com/ArashPartow/exprtk](https://github.com/ArashPartow/exprtk)                                                                                                                           |
 
 <Callout>
-Performance issues with Casbin likely stem from expression evaluator inefficiency. Report problems to either Casbin or the expression evaluator for optimization guidance. Consult the [Benchmarks](/docs/benchmark) section for additional details.
+  Performance issues with Casbin likely stem from expression evaluator inefficiency. Report problems
+  to either Casbin or the expression evaluator for optimization guidance. Consult the
+  [Benchmarks](/docs/benchmark) section for additional details.
 </Callout>

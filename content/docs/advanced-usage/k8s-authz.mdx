@@ -24,15 +24,15 @@ Follow these steps to configure K8s-authz:
 
 1. Generate certificates and keys for each user using OpenSSL. Run:
 
-    ```bash
-    ./gen_cert.sh
-    ```
+   ```bash
+   ./gen_cert.sh
+   ```
 
 2. Build the Docker image from the [Dockerfile](https://github.com/casbin/k8s-authz/blob/master/Dockerfile) manually. Update the version number in both the command and the deployment [file](https://github.com/casbin/k8s-authz/blob/718f58c46e3dbf79063b5b1c18348c2fee5de9e9/manifests/deployment.yaml#L18):
 
-    ```bash
-    docker build -t casbin/k8s_authz:0.1 .
-    ```
+   ```bash
+   docker build -t casbin/k8s_authz:0.1 .
+   ```
 
 3. Define Casbin policies in [model.conf](https://github.com/casbin/k8s-authz/blob/master/config/model.conf) and [policy.csv](https://github.com/casbin/k8s-authz/blob/master/config/policy.csv) files. For policy configuration details, see the [documentation](/docs/how-it-works).
 
@@ -40,17 +40,17 @@ Follow these steps to configure K8s-authz:
 
 5. Deploy the validation controller and webhook to the Kubernetes cluster:
 
-    ```bash
-    kubectl apply -f deployment.yaml
-    ```
+   ```bash
+   kubectl apply -f deployment.yaml
+   ```
 
 6. For production environments, create a Kubernetes `secret` to secure certificates:
 
-    ```bash
-    kubectl create secret generic casbin -n default \
-      --from-file=key.pem=certs/casbin-key.pem \
-      --from-file=cert.pem=certs/casbin-crt.pem
-    ```
+   ```bash
+   kubectl create secret generic casbin -n default \
+     --from-file=key.pem=certs/casbin-key.pem \
+     --from-file=cert.pem=certs/casbin-crt.pem
+   ```
 
 7. Update the certificate directory paths in [main.go](https://github.com/casbin/k8s-authz/blob/3560551427c0431a9d4594ad1206f084ede37c49/main.go#L26) and the [manifests](https://github.com/casbin/k8s-authz/blob/3560551427c0431a9d4594ad1206f084ede37c49/manifests/deployment.yaml#L22) to reference the created `secret`.
 

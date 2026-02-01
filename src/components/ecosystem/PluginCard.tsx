@@ -30,7 +30,8 @@ export function PluginCard({ plugin }: PluginCardProps) {
   };
 
   const gradient = getGradientColor(title);
-  const hasImage = !!plugin.image && typeof plugin.image === 'string' && plugin.image.startsWith('/');
+  const hasImage =
+    !!plugin.image && typeof plugin.image === 'string' && plugin.image.startsWith('/');
 
   return (
     <Card className="h-full transition-all duration-300 hover:shadow-xl hover:shadow-[#443D80]/10 hover:-translate-y-1 group border-2 hover:border-[#443D80]/30 overflow-hidden flex flex-col">
@@ -85,10 +86,12 @@ export function PluginCard({ plugin }: PluginCardProps) {
         <div className="flex flex-wrap gap-1.5">
           {plugin.tags.map((tag) => {
             // Find tag info in Tags object
-            const tagKey = Object.keys(Tags).find(k => Tags[k as TagType].label === tag) as TagType | undefined;
+            const tagKey = Object.keys(Tags).find((k) => Tags[k as TagType].label === tag) as
+              | TagType
+              | undefined;
             if (!tagKey) return null;
             const tagInfo = Tags[tagKey];
-            
+
             return (
               <ColorBadge
                 key={tag}
@@ -110,10 +113,14 @@ export function PluginCard({ plugin }: PluginCardProps) {
           <div className="flex items-center gap-1.5">
             <span className="text-muted-foreground">Category:</span>
             <span className="font-medium">
-              {plugin.type || plugin.tags.find(t => ['Middleware', 'Watcher', 'RoleManager', 'Dispatcher'].includes(t)) || 'Other'}
+              {plugin.type ||
+                plugin.tags.find((t) =>
+                  ['Middleware', 'Watcher', 'RoleManager', 'Dispatcher'].includes(t)
+                ) ||
+                'Other'}
             </span>
           </div>
-          
+
           {/* Show AutoSave only for Adapters */}
           {plugin.autoSave && (
             <div className="flex items-center gap-1.5 ml-auto">

@@ -21,7 +21,8 @@ export default function HelpPage() {
     {
       icon: Github,
       title: 'GitHub',
-      description: 'Browse our GitHub repo and submit issues or pull requests for bugs or feature requests.',
+      description:
+        'Browse our GitHub repo and submit issues or pull requests for bugs or feature requests.',
       link: 'https://github.com/casbin/casbin',
       color: 'text-gray-900 dark:text-white',
       bgColor: 'bg-gray-900/10 dark:bg-white/10',
@@ -29,7 +30,8 @@ export default function HelpPage() {
     {
       icon: Users2,
       title: 'Google Groups',
-      description: 'Discuss with maintainers or share your experience with Casbin on Google Groups.',
+      description:
+        'Discuss with maintainers or share your experience with Casbin on Google Groups.',
       link: 'https://groups.google.com/g/casbin',
       color: 'text-[#4285F4]',
       bgColor: 'bg-[#4285F4]/10',

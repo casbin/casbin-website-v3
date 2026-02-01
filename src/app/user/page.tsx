@@ -33,8 +33,9 @@ export default function Page() {
               </span>
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              From Fortune 500 enterprises to high-growth startups, Casbin is the trusted choice for modern access control. 
-              Join the global community of organizations securing their applications with our powerful PERM metamodel.
+              From Fortune 500 enterprises to high-growth startups, Casbin is the trusted choice for
+              modern access control. Join the global community of organizations securing their
+              applications with our powerful PERM metamodel.
             </p>
           </div>
         </div>

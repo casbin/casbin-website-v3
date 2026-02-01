@@ -17,7 +17,8 @@ When a single Casbin instance receives excessive requests (for example, 10,000 r
 2. Deploy Casbin instances across a cluster (multiple machines) and use Watchers to synchronize policy changes. See [Watchers](/docs/watchers) for details.
 
 <Callout>
-Combine both approaches: deploy Casbin across a 10-machine cluster where each machine runs 5 threads handling enforcement requests simultaneously.
+  Combine both approaches: deploy Casbin across a 10-machine cluster where each machine runs 5
+  threads handling enforcement requests simultaneously.
 </Callout>
 
 #### High Number of Policy Rules
@@ -30,6 +31,4 @@ Multi-tenant or cloud environments may require millions of policy rules, causing
 
 3. Assign permissions to RBAC roles rather than directly to users. Casbin implements RBAC using a role inheritance tree (cached in memory), enabling O(1) lookup time for user-role relationships. When role assignments remain relatively stable, the RBAC tree requires infrequent updates. See this [discussion](https://github.com/casbin/casbin/issues/681#issuecomment-763801583) for more details.
 
-<Callout>
-Apply all these methods simultaneously for optimal performance.
-</Callout>
+<Callout>Apply all these methods simultaneously for optimal performance.</Callout>

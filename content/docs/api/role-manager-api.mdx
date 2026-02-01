@@ -27,9 +27,9 @@ The RoleManager provides an interface for managing role operations. Adding a mat
 <Tab value="Node.js">
 
 ```typescript
-    await e.addNamedMatchingFunc('g', Util.keyMatchFunc);
-    await e.addGroupingPolicies([['*', 'admin', 'domain1']]);
-    await e.getRoleManager().hasLink('bob', 'admin', 'domain1');
+await e.addNamedMatchingFunc('g', Util.keyMatchFunc);
+await e.addGroupingPolicies([['*', 'admin', 'domain1']]);
+await e.getRoleManager().hasLink('bob', 'admin', 'domain1');
 ```
 
 </Tab>
@@ -49,8 +49,8 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    const e = await newEnforcer('path/to/model', 'path/to/policy');
-    await e.addNamedMatchingFunc('g', Util.keyMatchFunc);
+const e = await newEnforcer('path/to/model', 'path/to/policy');
+await e.addNamedMatchingFunc('g', Util.keyMatchFunc);
 
 </Tab>
 </Tabs>
@@ -73,8 +73,8 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    const e = await newEnforcer('path/to/model', 'path/to/policy');
-    await e.addNamedDomainMatchingFunc('g', Util.keyMatchFunc);
+const e = await newEnforcer('path/to/model', 'path/to/policy');
+await e.addNamedDomainMatchingFunc('g', Util.keyMatchFunc);
 
 </Tab>
 </Tabs>
@@ -96,7 +96,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    const rm = await e.getRoleManager();
+const rm = await e.getRoleManager();
 
 </Tab>
 <Tab value="Python">
@@ -125,7 +125,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    const rm = await e.getNamedRoleManager("g2");
+const rm = await e.getNamedRoleManager("g2");
 
 </Tab>
 <Tab value="Python">
@@ -154,7 +154,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    e.setRoleManager(rm);
+e.setRoleManager(rm);
 
 </Tab>
 <Tab value="Python">
@@ -206,7 +206,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.clear();
+await rm.clear();
 
 </Tab>
 <Tab value="Python">
@@ -235,7 +235,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.addLink('u1', 'g1', 'domain1');
+await rm.addLink('u1', 'g1', 'domain1');
 
 </Tab>
 <Tab value="Python">
@@ -264,7 +264,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.deleteLink('u1', 'g1', 'domain1');
+await rm.deleteLink('u1', 'g1', 'domain1');
 
 </Tab>
 <Tab value="Python">
@@ -293,7 +293,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.hasLink('u1', 'g1', 'domain1');
+await rm.hasLink('u1', 'g1', 'domain1');
 
 </Tab>
 <Tab value="Python">
@@ -322,7 +322,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.getRoles('u1', 'domain1');
+await rm.getRoles('u1', 'domain1');
 
 </Tab>
 <Tab value="Python">
@@ -351,7 +351,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.getUsers('g1');
+await rm.getUsers('g1');
 
 </Tab>
 <Tab value="Python">
@@ -380,7 +380,7 @@ Example usage:
 <Tab value="Node.js">
 
 typescript
-    await rm.printRoles();
+await rm.printRoles();
 
 </Tab>
 <Tab value="Python">

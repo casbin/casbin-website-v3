@@ -17,11 +17,21 @@ By default, Casbin uses the built-in `log` package to print messages to the cons
 Logging is disabled by default. Enable it using `Enforcer.EnableLog()` or the last parameter of `NewEnforcer()`.
 
 <Callout>
-**For Golang:** Casbin supports logging models, enforcement requests, roles, and policies. You can implement custom loggers for Casbin.
+  **For Golang:** Casbin supports logging models, enforcement requests, roles, and policies. You can
+  implement custom loggers for Casbin.
 </Callout>
 
 <Callout>
-**For Python:** PyCasbin uses Python's standard logging mechanism. PyCasbin calls `logging.getLogger()` to configure its logger. No special configuration is needed beyond initializing logging in your application. If you don't initialize logging, PyCasbin will produce no log output. When enabling logs in PyCasbin, you can specify configuration through the `logging_config` parameter. Without explicit configuration, PyCasbin uses the [default log configuration](https://github.com/casbin/pycasbin/blob/c33cabfa0ac65cd09cf812a65e71794d64cb5132/casbin/util/log.py#L6C1-L6C1). Django users should consult the [Django logging documentation](https://docs.djangoproject.com/en/4.2/topics/logging/). Other Python users should refer to the [Python logging documentation](https://docs.python.org/3/library/logging.config.html).
+  **For Python:** PyCasbin uses Python's standard logging mechanism. PyCasbin calls
+  `logging.getLogger()` to configure its logger. No special configuration is needed beyond
+  initializing logging in your application. If you don't initialize logging, PyCasbin will produce
+  no log output. When enabling logs in PyCasbin, you can specify configuration through the
+  `logging_config` parameter. Without explicit configuration, PyCasbin uses the [default log
+  configuration](https://github.com/casbin/pycasbin/blob/c33cabfa0ac65cd09cf812a65e71794d64cb5132/casbin/util/log.py#L6C1-L6C1).
+  Django users should consult the [Django logging
+  documentation](https://docs.djangoproject.com/en/4.2/topics/logging/). Other Python users should
+  refer to the [Python logging
+  documentation](https://docs.python.org/3/library/logging.config.html).
 </Callout>
 
 ### Configure Separate Loggers for Different Enforcers
@@ -49,17 +59,17 @@ Casbin provides several logger implementations:
 <Tabs groupId="langs" items={['Go', 'PHP']} persist>
 <Tab value="Go">
 
-| Logger                                                                                              | Author | Description                                                                                                                    |
-|-----------------------------------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| [Default logger (built-in)](https://github.com/casbin/casbin/blob/master/log/default_logger.go)    | Casbin | The default logger using Go's standard log package.                                                                            |
-| [Zap logger](https://github.com/casbin/zap-logger)                                                    | Casbin | Uses [zap](https://github.com/uber-go/zap) for JSON-encoded logs with additional customization options via zap-logger.        |
+| Logger                                                                                          | Author | Description                                                                                                            |
+| ----------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| [Default logger (built-in)](https://github.com/casbin/casbin/blob/master/log/default_logger.go) | Casbin | The default logger using Go's standard log package.                                                                    |
+| [Zap logger](https://github.com/casbin/zap-logger)                                              | Casbin | Uses [zap](https://github.com/uber-go/zap) for JSON-encoded logs with additional customization options via zap-logger. |
 
 </Tab>
 <Tab value="PHP">
 
 | Logger                                                          | Author | Description                                                              |
-|-----------------------------------------------------------------|--------|--------------------------------------------------------------------------|
-| [psr3-bridge logger](https://github.com/php-casbin/psr3-bridge) | Casbin | Provides a [PSR-3](https://www.php-fig.org/psr/psr-3/) compliant bridge.|
+| --------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ |
+| [psr3-bridge logger](https://github.com/php-casbin/psr3-bridge) | Casbin | Provides a [PSR-3](https://www.php-fig.org/psr/psr-3/) compliant bridge. |
 
 </Tab>
 </Tabs>
@@ -68,14 +78,14 @@ Casbin provides several logger implementations:
 
 Custom loggers must implement the [Logger](https://github.com/casbin/casbin/blob/master/log/logger.go#L20) interface.
 
-| Method       | Type      | Description                                      |
-|--------------|-----------|--------------------------------------------------|
-| EnableLog()  | mandatory | Controls whether messages are printed.           |
-| IsEnabled()  | mandatory | Returns the current logger's enabled status.    |
-| LogModel()   | mandatory | Logs model-related information.                  |
-| LogEnforce() | mandatory | Logs enforcement-related information.            |
-| LogRole()    | mandatory | Logs role-related information.                   |
-| LogPolicy()  | mandatory | Logs policy-related information.                 |
+| Method       | Type      | Description                                  |
+| ------------ | --------- | -------------------------------------------- |
+| EnableLog()  | mandatory | Controls whether messages are printed.       |
+| IsEnabled()  | mandatory | Returns the current logger's enabled status. |
+| LogModel()   | mandatory | Logs model-related information.              |
+| LogEnforce() | mandatory | Logs enforcement-related information.        |
+| LogRole()    | mandatory | Logs role-related information.               |
+| LogPolicy()  | mandatory | Logs policy-related information.             |
 
 Pass your custom logger to `Enforcer.SetLogger()`.
 
@@ -177,7 +187,7 @@ Errors or panics can occur in Casbin for several reasons:
 Five primary functions may produce errors or panics:
 
 | Function                                                                       | Behavior on Error |
-|--------------------------------------------------------------------------------|-------------------|
+| ------------------------------------------------------------------------------ | ----------------- |
 | [NewEnforcer()](https://godoc.org/github.com/casbin/casbin#NewEnforcer)        | Returns an error  |
 | [LoadModel()](https://godoc.org/github.com/casbin/casbin#Enforcer.LoadModel)   | Returns an error  |
 | [LoadPolicy()](https://godoc.org/github.com/casbin/casbin#Enforcer.LoadPolicy) | Returns an error  |
@@ -185,7 +195,8 @@ Five primary functions may produce errors or panics:
 | [Enforce()](https://godoc.org/github.com/casbin/casbin#Enforcer.Enforce)       | Returns an error  |
 
 <Callout>
-`NewEnforcer()` calls both `LoadModel()` and `LoadPolicy()` internally, so you don't need to call them separately when using `NewEnforcer()`.
+  `NewEnforcer()` calls both `LoadModel()` and `LoadPolicy()` internally, so you don't need to call
+  them separately when using `NewEnforcer()`.
 </Callout>
 
 ## Enabling and Disabling Enforcement

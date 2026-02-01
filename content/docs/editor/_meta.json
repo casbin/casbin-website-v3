@@ -1,7 +1,4 @@
 {
-  "pages": [
-    "online-editor",
-    "ide-plugins"
-  ],
+  "pages": ["online-editor", "ide-plugins"],
   "title": "Editor"
 }

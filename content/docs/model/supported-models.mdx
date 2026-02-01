@@ -20,7 +20,7 @@ authors: [nodece]
 12. **[LBAC (Lattice-Based Access Control)](./lbac)**: A formal model merging confidentiality and integrity controls within a unified framework, using lattice structures for detailed access control decisions.
 13. **[OrBAC (Organisation-Based Access Control)](./orbac)**: Extends RBAC through abstraction layers separating concrete entities from abstract security policies, facilitating flexible multi-organizational access control.
 14. **[UCON (Usage Control)](./ucon)**: A modern access control model emphasizing ongoing authorization, mutable attributes, and a comprehensive framework encompassing authorizations, obligations, and conditions.
-15. **[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)**: Handles path patterns such as "/res/*" and "/res/:id", along with HTTP methods including "GET", "POST", "PUT", and "DELETE".
+15. **[RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer)**: Handles path patterns such as "/res/\*" and "/res/:id", along with HTTP methods including "GET", "POST", "PUT", and "DELETE".
 16. **IP Match**: Enables IP address-based matching for network-level access control.
 17. **Deny-override**: Accommodates both allow and deny authorizations, with deny taking precedence over allow.
 18. **Priority**: Permits prioritization of policy rules similar to firewall rule ordering.
@@ -28,7 +28,7 @@ authors: [nodece]
 ## Examples
 
 | Model                     | Model file                                                                                                                       | Policy file                                                                                                                      |
-|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | ACL                       | [basic_model.conf](https://github.com/casbin/casbin/blob/master/examples/basic_model.conf)                                       | [basic_policy.csv](https://github.com/casbin/casbin/blob/master/examples/basic_policy.csv)                                       |
 | ACL with superuser        | [basic_with_root_model.conf](https://github.com/casbin/casbin/blob/master/examples/basic_with_root_model.conf)                   | [basic_policy.csv](https://github.com/casbin/casbin/blob/master/examples/basic_policy.csv)                                       |
 | ACL without users         | [basic_without_users_model.conf](https://github.com/casbin/casbin/blob/master/examples/basic_without_users_model.conf)           | [basic_without_users_policy.csv](https://github.com/casbin/casbin/blob/master/examples/basic_without_users_policy.csv)           |

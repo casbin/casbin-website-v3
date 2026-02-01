@@ -184,7 +184,7 @@ AddPoliciesEx(rules [][]string) (bool, error)
 AddNamedPoliciesEx(ptype string, rules [][]string) (bool, error)
 AddGroupingPoliciesEx(rules [][]string) (bool, error)
 AddNamedGroupingPoliciesEx(ptype string, rules [][]string) (bool, error)
-SelfAddPoliciesEx(sec string, ptype string, rules [][]string) (bool, error) 
+SelfAddPoliciesEx(sec string, ptype string, rules [][]string) (bool, error)
 ```
 
 These methods differ from their non-Ex counterparts by continuing to process remaining rules when encountering existing ones, rather than returning false immediately.

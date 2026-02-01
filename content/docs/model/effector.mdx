@@ -53,5 +53,6 @@ Effect, explainIndex, err = e.MergeEffects(expr, effects, matches, policyIndex, 
 The core concept of `MergeEffects()`: when `expr` matches results indicating `p_eft` is `allow`, effects merge together. Absent deny rule matches result in an allow decision.
 
 <Callout>
-When `expr` doesn't match `"priority(p_eft) || deny"` and `policyIndex` is less than `policyLength-1`, **short-circuiting** occurs, skipping intermediate effects.
+  When `expr` doesn't match `"priority(p_eft) || deny"` and `policyIndex` is less than
+  `policyLength-1`, **short-circuiting** occurs, skipping intermediate effects.
 </Callout>

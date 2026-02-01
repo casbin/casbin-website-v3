@@ -1,9 +1,4 @@
 {
-  "pages": [
-    "mac-overview",
-    "blp",
-    "biba",
-    "lbac"
-  ],
+  "pages": ["mac-overview", "blp", "biba", "lbac"],
   "title": "MAC"
 }

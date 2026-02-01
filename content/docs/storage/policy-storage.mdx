@@ -44,7 +44,7 @@ Related issue: [casbin#886](https://github.com/casbin/casbin/issues/886)
 ## Adapter API
 
 | Method                 | Type     | Description                                                |
-|------------------------|----------|------------------------------------------------------------|
+| ---------------------- | -------- | ---------------------------------------------------------- |
 | LoadPolicy()           | basic    | Load all policy rules from the storage                     |
 | SavePolicy()           | basic    | Save all policy rules to the storage                       |
 | AddPolicy()            | optional | Add a policy rule to the storage                           |
@@ -63,18 +63,18 @@ g, alice, admin
 
 **Corresponding database structure (such as MySQL)**
 
-| id   | ptype | v0          | v1    | v2    | v3   | v4   | v5   |
-| ---- | ----- | ----------- | ----- | ----- | ---- | ---- | ---- |
-| 1    | p     | data2_admin | data2 | read  |      |      |      |
-| 2    | p     | data2_admin | data2 | write |      |      |      |
-| 3    | g     | alice       | admin |       |      |      |      |
+| id  | ptype | v0          | v1    | v2    | v3  | v4  | v5  |
+| --- | ----- | ----------- | ----- | ----- | --- | --- | --- |
+| 1   | p     | data2_admin | data2 | read  |     |     |     |
+| 2   | p     | data2_admin | data2 | write |     |     |     |
+| 3   | g     | alice       | admin |       |     |     |     |
 
 **Meaning of each column**
 
-- ``id``: Database primary key, not part of the Casbin policy. Generation method depends on the adapter implementation.
+- `id`: Database primary key, not part of the Casbin policy. Generation method depends on the adapter implementation.
 
-- ``ptype``: Corresponds to ``p``, ``g``, ``g2``, etc.
-- ``v0-v5``: Generic column names that map to policy CSV values from left to right. The number of columns depends on your policy definition. Most adapters implement 6 columns, though theoretically unlimited columns are possible. Submit an issue to the adapter repository if you need more columns.
+- `ptype`: Corresponds to `p`, `g`, `g2`, etc.
+- `v0-v5`: Generic column names that map to policy CSV values from left to right. The number of columns depends on your policy definition. Most adapters implement 6 columns, though theoretically unlimited columns are possible. Submit an issue to the adapter repository if you need more columns.
 
 ## Adapter Details
 

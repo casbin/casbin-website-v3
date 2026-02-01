@@ -16,7 +16,7 @@ export function InlineTOC({ items, ...props }: InlineTocProps) {
       {...props}
       className={cn(
         'not-prose rounded-lg border bg-fd-card text-fd-card-foreground',
-        props.className,
+        props.className
       )}
     >
       <CollapsibleTrigger className="group inline-flex w-full items-center justify-between px-4 py-2.5 font-medium">

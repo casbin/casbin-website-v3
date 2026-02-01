@@ -2,8 +2,7 @@
 id: ucon
 title: Usage Control (UCON)
 description: Usage Control Model in Casbin
-keywords:
-  [ucon, usage control, access control, authorization, obligations, conditions]
+keywords: [ucon, usage control, access control, authorization, obligations, conditions]
 authors: [nodece]
 ---
 
@@ -70,7 +69,7 @@ The UCON model is particularly valuable in:
 
 To implement UCON in your Casbin-based application, use the [casbin-ucon](https://github.com/casbin/casbin-ucon) extension library:
 
-```bash
+````bash
 go get github.com/casbin/casbin-ucon
 ```go
 // Import the required packages
@@ -144,7 +143,7 @@ func main() {
     // Stop the session when done
     _ = uconE.StopMonitoring(sessionID)
 }
-```
+````
 
 ## Implementation Notes
 

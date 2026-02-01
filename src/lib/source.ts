@@ -28,9 +28,7 @@ function flattenDocSlugs({ path }: { path: string }): string[] {
   const baseName = fileName.replace(/\.[^/.]+$/, '');
 
   if (baseName === 'index') {
-    return segments
-      .filter((segment) => segment !== 'docs')
-      .map((segment) => encodeURI(segment));
+    return segments.filter((segment) => segment !== 'docs').map((segment) => encodeURI(segment));
   }
 
   return [encodeURI(baseName)];
@@ -82,7 +80,7 @@ export async function getLLMText(page: InferPageType<typeof source>) {
   // Clean up raw MDX content: remove MDX component tags and excessive blank lines
   // Only remove tags that are clearly MDX components (contain capital letters or hyphenated names)
   const cleanedContent = raw
-    .replace(/<[A-Z][^>]*\/?>/g, "") // Remove MDX components starting with capital letter (e.g., <Feedback />, <Card>)
+    .replace(/<[A-Z][^>]*\/?>/g, '') // Remove MDX components starting with capital letter (e.g., <Feedback />, <Card>)
     .trim()
     .replace(/\n\s*\n\s*\n+/g, '\n\n');
 

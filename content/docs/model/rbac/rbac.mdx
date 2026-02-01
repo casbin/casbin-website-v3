@@ -39,10 +39,12 @@ m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
 This matcher verifies that the request's `sub` has the policy's `sub` role.
 
 <Callout>
-1. Casbin stores only user-role mappings.
-2. Casbin doesn't validate users or roles. Authentication handles this responsibility.
-3. Avoid using the same name for both a user and a role within an RBAC system. Casbin treats users and roles as strings, making it impossible to distinguish between user `alice` and role `alice`. Use prefixes like `role_alice` to avoid conflicts.
-4. Role inheritance is transitive: if `A` has role `B`, and `B` has role `C`, then `A` has role `C`. This transitivity is unlimited.
+  1. Casbin stores only user-role mappings. 2. Casbin doesn't validate users or roles.
+  Authentication handles this responsibility. 3. Avoid using the same name for both a user and a
+  role within an RBAC system. Casbin treats users and roles as strings, making it impossible to
+  distinguish between user `alice` and role `alice`. Use prefixes like `role_alice` to avoid
+  conflicts. 4. Role inheritance is transitive: if `A` has role `B`, and `B` has role `C`, then `A`
+  has role `C`. This transitivity is unlimited.
 </Callout>
 
 <Callout>
@@ -60,6 +62,7 @@ p =  obj, act, subject
 e.SetFieldIndex("p", constant.SubjectIndex, 2) // index starts from 0
 ok, err := e.DeleteUser("alice") // without SetFieldIndex, it will raise an error
 ```
+
 </Callout>
 
 ## Role Hierarchy

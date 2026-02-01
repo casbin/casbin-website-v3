@@ -12,12 +12,12 @@ This document compares Casbin RBAC with [RBAC96](https://profsandhu.com/cs6393_s
 
 Casbin RBAC implements nearly all RBAC96 features while adding enhancements.
 
-| RBAC Version | Support Level | Description |
-|--------------|---------------|-------------|
-| RBAC0        | Fully Supported | RBAC0 provides basic RBAC96 functionality, defining relationships between Users, Roles, and Permissions. |
-| RBAC1        | Fully Supported | RBAC1 extends RBAC0 with role hierarchies. When `alice` has `role1` and `role1` has `role2`, then `alice` inherits `role2` and its permissions. |
-| RBAC2        | Mutually Exclusive Handling Supported ([like this](/docs/syntax-for-models#policy-effect)) | RBAC2 adds constraints to RBAC0, enabling mutually exclusive policy handling. Quantitative limits are unsupported. |
-| RBAC3        | Mutually Exclusive Handling Supported ([like this](/docs/syntax-for-models#policy-effect)) | RBAC3 combines RBAC1 and RBAC2, supporting both role hierarchies and constraints. Quantitative limits are unsupported. |
+| RBAC Version | Support Level                                                                              | Description                                                                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| RBAC0        | Fully Supported                                                                            | RBAC0 provides basic RBAC96 functionality, defining relationships between Users, Roles, and Permissions.                                        |
+| RBAC1        | Fully Supported                                                                            | RBAC1 extends RBAC0 with role hierarchies. When `alice` has `role1` and `role1` has `role2`, then `alice` inherits `role2` and its permissions. |
+| RBAC2        | Mutually Exclusive Handling Supported ([like this](/docs/syntax-for-models#policy-effect)) | RBAC2 adds constraints to RBAC0, enabling mutually exclusive policy handling. Quantitative limits are unsupported.                              |
+| RBAC3        | Mutually Exclusive Handling Supported ([like this](/docs/syntax-for-models#policy-effect)) | RBAC3 combines RBAC1 and RBAC2, supporting both role hierarchies and constraints. Quantitative limits are unsupported.                          |
 
 ## The Difference Between Casbin RBAC and RBAC96
 

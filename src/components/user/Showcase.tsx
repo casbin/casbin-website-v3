@@ -34,8 +34,8 @@ export default function Showcase() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
           {users.map((user) => (
-            <Card 
-              key={user.caption} 
+            <Card
+              key={user.caption}
               className="group border-none shadow-none bg-muted/30 hover:bg-muted/50 transition-all duration-300"
             >
               <CardContent className="p-2">
@@ -66,7 +66,8 @@ export default function Showcase() {
         <CardContent className="relative p-12 text-center space-y-6">
           <h2 className="text-3xl font-bold">Is your organization using Casbin?</h2>
           <p className="max-w-xl mx-auto text-white/80 text-lg">
-            We&apos;d love to showcase your project here. Join the list of companies relying on Casbin for robust access control.
+            We&apos;d love to showcase your project here. Join the list of companies relying on
+            Casbin for robust access control.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary" className="gap-2">
@@ -79,12 +80,13 @@ export default function Showcase() {
                 Add Your Organization
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="gap-2 bg-transparent text-white border-white/30 hover:bg-white/10">
-              <a
-                href="https://github.com/casbin/casbin"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="gap-2 bg-transparent text-white border-white/30 hover:bg-white/10"
+            >
+              <a href="https://github.com/casbin/casbin" target="_blank" rel="noopener noreferrer">
                 <Github className="h-5 w-5" />
                 View on GitHub
               </a>

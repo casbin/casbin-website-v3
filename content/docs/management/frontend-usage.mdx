@@ -23,40 +23,40 @@ yarn add casbin.js
 
 ## Frontend Frameworks
 
-| Framework                                                   | Type    | Author                                 | Description                                                                   |
-|-------------------------------------------------------------|---------|----------------------------------------|-------------------------------------------------------------------------------|
-| [react-authz](https://github.com/casbin-js/react-authz)     | React   | Casbin                                 | React wrapper for Casbin.js                                                   |
+| Framework                                                   | Type    | Author                                 | Description                                                                           |
+| ----------------------------------------------------------- | ------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
+| [react-authz](https://github.com/casbin-js/react-authz)     | React   | Casbin                                 | React wrapper for Casbin.js                                                           |
 | [rbac-react](https://github.com/daobeng/rbac-react)         | React   | [@daobeng](https://github.com/daobeng) | Role-Based Access Control in React using Higher-Order Components, CASL, and Casbin.js |
-| [vue-authz](https://github.com/casbin-js/vue-authz)         | Vue     | Casbin                                 | Vue wrapper for Casbin.js                                                     |
-| [angular-authz](https://github.com/casbin-js/angular-authz) | Angular | Casbin                                 | Angular wrapper for Casbin.js                                                 |
+| [vue-authz](https://github.com/casbin-js/vue-authz)         | Vue     | Casbin                                 | Vue wrapper for Casbin.js                                                             |
+| [angular-authz](https://github.com/casbin-js/angular-authz) | Angular | Casbin                                 | Angular wrapper for Casbin.js                                                         |
 
 ## Quick Start
 
 Configure Casbin.js in `manual` mode to set permissions explicitly in your frontend application:
 
 ```javascript
-const casbinjs = require("casbin.js");
+const casbinjs = require('casbin.js');
 // Set the user's permission:
 // He/She can read `data1` and `data2` objects and can write `data1` object
 const permission = {
-    "read": ["data1", "data2"],
-    "write": ["data1"]
-}
+  read: ['data1', 'data2'],
+  write: ['data1'],
+};
 
 // Run casbin.js in manual mode, which requires you to set the permission manually.
-const authorizer = new casbinjs.Authorizer("manual");
+const authorizer = new casbinjs.Authorizer('manual');
 ```
 
 With an authorizer instance, you can check permissions using `authorizer.can()` and `authorizer.cannot()`. Both methods return JavaScript Promises ([see MDN documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)), so use the `then()` method to handle results:
 
 ```javascript
-result = authorizer.can("write", "data1");
+result = authorizer.can('write', 'data1');
 result.then((success, failed) => {
-    if (success) {
-        console.log("you can write data1");
-    } else {
-        console.log("you cannot write data1");
-    }
+  if (success) {
+    console.log('you can write data1');
+  } else {
+    console.log('you cannot write data1');
+  }
 });
 // output: you can write data1
 ```
@@ -64,13 +64,13 @@ result.then((success, failed) => {
 The `cannot()` method works identically:
 
 ```javascript
-result = authorizer.cannot("read", "data2");
+result = authorizer.cannot('read', 'data2');
 result.then((success, failed) => {
-    if (success) {
-        console.log("you cannot read data2");
-    } else {
-        console.log("you can read data2");
-    }
+  if (success) {
+    console.log('you cannot read data2');
+  } else {
+    console.log('you can read data2');
+  }
 });
 // output: you can read data2
 ```
@@ -85,8 +85,8 @@ Casbin.js uses a JSON object to represent visitor permissions. For example:
 
 ```json
 {
-    "read": ["data1", "data2"],
-    "write": ["data1"]
+  "read": ["data1", "data2"],
+  "write": ["data1"]
 }
 ```
 
@@ -103,20 +103,20 @@ const casbinjs = require('casbin.js');
 
 // Set your backend Casbin service URL
 const authorizer = new casbinjs.Authorizer(
-    'auto', // mode
-    {endpoint: 'http://your_endpoint/api/casbin'}
+  'auto', // mode
+  { endpoint: 'http://your_endpoint/api/casbin' }
 );
 
 // Set your visitor.
 // Casbin.js will automatically sync the permission with your backend Casbin service.
-authorizer.setUser("Tom");
+authorizer.setUser('Tom');
 
 // Evaluate the permission
-result = authorizer.can("read", "data1");
+result = authorizer.can('read', 'data1');
 result.then((success, failed) => {
-    if (success) {
-        // Some frontend procedure ...
-    }
+  if (success) {
+    // Some frontend procedure ...
+  }
 });
 ```
 
@@ -127,10 +127,11 @@ Your endpoint should return a response like:
 
 ```json
 {
-    "other":"other",
-    "data": "What you get from `CasbinJsGetPermissionForUser`"
+  "other": "other",
+  "data": "What you get from `CasbinJsGetPermissionForUser`"
 }
 ```
+
 </Callout>
 
 ```go
@@ -149,7 +150,9 @@ func (c *APIController) GetFrontendPermission() {
 ```
 
 <Callout>
-Currently, `CasbinJsGetPermissionForUser` is available only in Go Casbin and Node-Casbin. To request support in other languages, please [open an issue](https://github.com/casbin/casbin.js/issues) or leave a comment below.
+  Currently, `CasbinJsGetPermissionForUser` is available only in Go Casbin and Node-Casbin. To
+  request support in other languages, please [open an
+  issue](https://github.com/casbin/casbin.js/issues) or leave a comment below.
 </Callout>
 
 ## API Reference

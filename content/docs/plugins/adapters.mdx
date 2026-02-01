@@ -6,8 +6,6 @@ keywords: [adapters, MySQL adapter, storage adapter]
 authors: [hsluoyz]
 ---
 
-
-
 Casbin handles policy storage through adapters that function as middleware. Adapters enable loading policies from storage via `LoadPolicy()` and persisting them with `SavePolicy()`. To maintain a lightweight core library, adapter implementations are maintained separately.
 
 ## Supported adapters
@@ -17,50 +15,41 @@ Below is a comprehensive list of available Casbin adapters. Third-party contribu
 <Tabs groupId="langs" items={['Go', 'Java', 'Node.js', 'PHP', 'Python', '.NET', 'Rust', 'Ruby', 'Swift', 'Lua']} persist>
 <Tab value="Go">
 
-
 </Tab>
 <Tab value="Java">
-
 
 </Tab>
 <Tab value="Node.js">
 
-
 </Tab>
 <Tab value="PHP">
-
 
 </Tab>
 <Tab value="Python">
 
-
 </Tab>
 <Tab value=".NET">
-
 
 </Tab>
 <Tab value="Rust">
 
-
 </Tab>
 <Tab value="Ruby">
-
 
 </Tab>
 <Tab value="Swift">
 
-
 </Tab>
 <Tab value="Lua">
-
 
 </Tab>
 </Tabs>
 
 <Callout>
-1. When you call `casbin.NewEnforcer()` with an adapter (explicit or implicit), policies load automatically.
-2. Call `e.LoadPolicy()` to refresh policies from storage.
-3. Without Auto-Save support, adapters cannot persist policy changes automatically when you modify policies. Call `SavePolicy()` manually to persist all rules.
+  1. When you call `casbin.NewEnforcer()` with an adapter (explicit or implicit), policies load
+  automatically. 2. Call `e.LoadPolicy()` to refresh policies from storage. 3. Without Auto-Save
+  support, adapters cannot persist policy changes automatically when you modify policies. Call
+  `SavePolicy()` manually to persist all rules.
 </Callout>
 
 ## Examples
@@ -274,9 +263,9 @@ Adapters with Auto-Save capability can persist individual policy changes directl
 When an adapter supports Auto-Save, control this behavior via `Enforcer.EnableAutoSave()`. This option defaults to enabled for compatible adapters.
 
 <Callout>
-1. Auto-Save is an optional feature. Adapters may implement it or not.
-2. Auto-Save only functions when the enforcer's adapter supports it.
-3. Check the AutoSave column in the adapter list above to determine support.
+  1. Auto-Save is an optional feature. Adapters may implement it or not. 2. Auto-Save only functions
+  when the enforcer's adapter supports it. 3. Check the AutoSave column in the adapter list above to
+  determine support.
 </Callout>
 
 Auto-Save usage example:
@@ -318,7 +307,7 @@ Implement the [Adapter](https://github.com/casbin/casbin/blob/master/persist/ada
 Three optional methods enable Auto-Save support.
 
 | Method                 | Type      | Description                                                |
-|------------------------|-----------|------------------------------------------------------------|
+| ---------------------- | --------- | ---------------------------------------------------------- |
 | LoadPolicy()           | mandatory | Load all policy rules from the storage                     |
 | SavePolicy()           | mandatory | Save all policy rules to the storage                       |
 | AddPolicy()            | optional  | Add a policy rule to the storage                           |
@@ -326,7 +315,8 @@ Three optional methods enable Auto-Save support.
 | RemoveFilteredPolicy() | optional  | Remove policy rules that match the filter from the storage |
 
 <Callout>
-When an adapter lacks Auto-Save support, provide empty implementations for the three optional methods. Golang example:
+  When an adapter lacks Auto-Save support, provide empty implementations for the three optional
+  methods. Golang example:
 </Callout>
 
 ```go
@@ -350,18 +340,18 @@ Casbin enforcers ignore the "not implemented" error when calling these optional 
 
 Adapter implementation requirements:
 
-* Data Structure. Support reading at minimum six columns.
-* Database Name. Default to `casbin`.
-* Table Name. Default to `casbin_rule`.
-* Ptype Column. Name as `ptype` (not `p_type` or `Ptype`).
-* Table definition: `(id int primary key, ptype varchar, v0 varchar, v1 varchar, v2 varchar, v3 varchar, v4 varchar, v5 varchar)`.
-* Unique key index: Build on columns `ptype,v0,v1,v2,v3,v4,v5`.
-* `LoadFilteredPolicy` accepts a filter parameter structured like this:
+- Data Structure. Support reading at minimum six columns.
+- Database Name. Default to `casbin`.
+- Table Name. Default to `casbin_rule`.
+- Ptype Column. Name as `ptype` (not `p_type` or `Ptype`).
+- Table definition: `(id int primary key, ptype varchar, v0 varchar, v1 varchar, v2 varchar, v3 varchar, v4 varchar, v5 varchar)`.
+- Unique key index: Build on columns `ptype,v0,v1,v2,v3,v4,v5`.
+- `LoadFilteredPolicy` accepts a filter parameter structured like this:
 
 ```json
 {
-    "p": ["", "domain1"],
-    "g": ["", "", "domain1"]
+  "p": ["", "domain1"],
+  "g": ["", "", "domain1"]
 }
 ```
 
@@ -375,11 +365,11 @@ The `UpdateAdapter` interface extends the basic `Adapter` interface to enable di
 
 Adapters implementing `UpdateAdapter` provide these methods:
 
-| Method                   | Type     | Description                                                      |
-|--------------------------|----------|------------------------------------------------------------------|
-| UpdatePolicy()           | optional | Update a single policy rule in the storage                       |
-| UpdatePolicies()         | optional | Update multiple policy rules in the storage                      |
-| UpdateFilteredPolicies() | optional | Update policy rules that match the filter in the storage         |
+| Method                   | Type     | Description                                              |
+| ------------------------ | -------- | -------------------------------------------------------- |
+| UpdatePolicy()           | optional | Update a single policy rule in the storage               |
+| UpdatePolicies()         | optional | Update multiple policy rules in the storage              |
+| UpdateFilteredPolicies() | optional | Update policy rules that match the filter in the storage |
 
 ### Example
 
@@ -445,7 +435,8 @@ func (a *Adapter) UpdateFilteredPolicies(sec string, ptype string, newRules [][]
 ```
 
 <Callout>
-Without `UpdateAdapter` support, Casbin automatically falls back to combining `RemovePolicy()` and `AddPolicy()` operations.
+  Without `UpdateAdapter` support, Casbin automatically falls back to combining `RemovePolicy()` and
+  `AddPolicy()` operations.
 </Callout>
 
 ## Context Adapter

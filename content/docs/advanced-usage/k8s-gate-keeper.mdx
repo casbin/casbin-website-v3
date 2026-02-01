@@ -77,10 +77,10 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.14.1
-        ports:
-        - containerPort: 80
+        - name: nginx
+          image: nginx:1.14.1
+          ports:
+            - containerPort: 80
 ```
 
 This request passes through middleware layers, including K8s-Gatekeeper. K8s-Gatekeeper detects all Casbin enforcers stored in Kubernetes etcd (created and maintained by users via `kubectl` or the provided Go client). Each enforcer contains a Casbin model and policy. The admission request is evaluated by each enforcer sequentially, and must pass all enforcers to be accepted.
@@ -121,7 +121,9 @@ Creating an enforcer with this model and policy will reject the admission reques
 Three installation methods are available: External webhook, Internal webhook, and Helm.
 
 <Callout>
-These installation methods are for evaluation purposes only. For production deployments, review [Chapter 5. Advanced settings](#5-advanced-settings) and apply necessary security modifications before installation.
+  These installation methods are for evaluation purposes only. For production deployments, review
+  [Chapter 5. Advanced settings](#5-advanced-settings) and apply necessary security modifications
+  before installation.
 </Callout>
 
 ### 2.1 Internal Webhook
@@ -137,7 +139,7 @@ docker build --target webhook -t k8s-gatekeeper .
 This creates a local image named 'k8s-gatekeeper:latest'.
 
 <Callout>
-For minikube users, run `eval $(minikube -p minikube docker-env)` before 'docker build'.
+  For minikube users, run `eval $(minikube -p minikube docker-env)` before 'docker build'.
 </Callout>
 
 #### 2.1.2 Step 2: Deploy Services and Resources
@@ -146,8 +148,8 @@ Run these commands:
 
 ```shell
 kubectl apply -f config/rbac.yaml
-kubectl apply -f config/webhook_deployment.yaml 
-kubectl apply -f config/webhook_internal.yaml 
+kubectl apply -f config/webhook_deployment.yaml
+kubectl apply -f config/webhook_internal.yaml
 ```
 
 Verify deployment with `kubectl get pods`.
@@ -157,7 +159,7 @@ Verify deployment with `kubectl get pods`.
 Install custom resource definitions:
 
 ```shell
-kubectl apply -f config/auth.casbin.org_casbinmodels.yaml 
+kubectl apply -f config/auth.casbin.org_casbinmodels.yaml
 kubectl apply -f config/auth.casbin.org_casbinpolicies.yaml
 ```
 
@@ -173,9 +175,9 @@ Execute:
 go mod tidy
 go mod vendor
 go run cmd/webhook/main.go
-kubectl apply -f config/auth.casbin.org_casbinmodels.yaml 
+kubectl apply -f config/auth.casbin.org_casbinmodels.yaml
 kubectl apply -f config/auth.casbin.org_casbinpolicies.yaml
-kubectl apply -f config/webhook_external.yaml 
+kubectl apply -f config/webhook_external.yaml
 ```
 
 ### 2.3 Installing via Helm
@@ -228,7 +230,7 @@ The Go client library is in `pkg/client`.
 In `client.go`, use this function to create a client:
 
 ```go
-func NewK8sGateKeeperClient(externalClient bool) (*K8sGateKeeperClient, error) 
+func NewK8sGateKeeperClient(externalClient bool) (*K8sGateKeeperClient, error)
 ```
 
 The `externalClient` parameter indicates whether K8s-gatekeeper runs inside or outside the Kubernetes cluster.
@@ -356,7 +358,6 @@ CA information is passed to Kubernetes via webhook configuration files. Both `co
 To change the certificate/domain (e.g., moving the webhook to another namespace or changing domains):
 
 1. Generate a new CA:
-
    - Generate the CA private key:
 
      ```shell
@@ -377,7 +378,6 @@ To change the certificate/domain (e.g., moving the webhook to another namespace 
    ```
 
 3. Sign the webhook certificate with the CA:
-
    - Copy your system's OpenSSL config file (find it with `openssl version -a`, typically `openssl.cnf`).
 
    - Modify the config file:

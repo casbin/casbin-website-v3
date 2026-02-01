@@ -24,8 +24,7 @@ e, err := NewEnforcer("examples/rbac_model.conf", "examples/rbac_policy.csv")
 <Tab value="Node.js">
 
 ```typescript
-const e = await newEnforcer('examples/rbac_model.conf', 'examples/rbac_policy.csv')
-
+const e = await newEnforcer('examples/rbac_model.conf', 'examples/rbac_policy.csv');
 ```
 
 </Tab>
@@ -89,8 +88,7 @@ res := e.GetRolesForUser("alice")
 <Tab value="Node.js">
 
 ```typescript
-const res = await e.getRolesForUser('alice')
-
+const res = await e.getRolesForUser('alice');
 ```
 
 </Tab>
@@ -154,8 +152,7 @@ res := e.GetUsersForRole("data1_admin")
 <Tab value="Node.js">
 
 ```typescript
-const res = await e.getUsersForRole('data1_admin')
-
+const res = await e.getUsersForRole('data1_admin');
 ```
 
 </Tab>
@@ -219,8 +216,7 @@ res := e.HasRoleForUser("alice", "data1_admin")
 <Tab value="Node.js">
 
 ```typescript
-const res = await e.hasRoleForUser('alice', 'data1_admin')
-
+const res = await e.hasRoleForUser('alice', 'data1_admin');
 ```
 
 </Tab>
@@ -285,8 +281,7 @@ e.AddRoleForUser("alice", "data2_admin")
 <Tab value="Node.js">
 
 ```typescript
-await e.addRoleForUser('alice', 'data2_admin')
-
+await e.addRoleForUser('alice', 'data2_admin');
 ```
 
 </Tab>
@@ -351,9 +346,8 @@ e.AddRolesForUser("alice", roles)
 <Tab value="Node.js">
 
 ```typescript
-const roles = ["data1_admin", "data2_admin"];
-roles.map((role) => e.addRoleForUser("alice", role));
-
+const roles = ['data1_admin', 'data2_admin'];
+roles.map((role) => e.addRoleForUser('alice', role));
 ```
 
 </Tab>
@@ -398,8 +392,7 @@ e.DeleteRoleForUser("alice", "data1_admin")
 <Tab value="Node.js">
 
 ```typescript
-await e.deleteRoleForUser('alice', 'data1_admin')
-
+await e.deleteRoleForUser('alice', 'data1_admin');
 ```
 
 </Tab>
@@ -466,8 +459,7 @@ e.DeleteRolesForUser("alice")
 <Tab value="Node.js">
 
 ```typescript
-await e.deleteRolesForUser('alice')
-
+await e.deleteRolesForUser('alice');
 ```
 
 </Tab>
@@ -534,8 +526,7 @@ e.DeleteUser("alice")
 <Tab value="Node.js">
 
 ```typescript
-await e.deleteUser('alice')
-
+await e.deleteUser('alice');
 ```
 
 </Tab>
@@ -601,8 +592,7 @@ e.DeleteRole("data2_admin")
 <Tab value="Node.js">
 
 ```typescript
-await e.deleteRole("data2_admin")
-
+await e.deleteRole('data2_admin');
 ```
 
 </Tab>
@@ -669,8 +659,7 @@ e.DeletePermission("read")
 <Tab value="Node.js">
 
 ```typescript
-await e.deletePermission('read')
-
+await e.deletePermission('read');
 ```
 
 </Tab>
@@ -737,8 +726,7 @@ e.AddPermissionForUser("bob", "read")
 <Tab value="Node.js">
 
 ```typescript
-await e.addPermissionForUser('bob', 'read')
-
+await e.addPermissionForUser('bob', 'read');
 ```
 
 </Tab>
@@ -807,12 +795,13 @@ for i := 0; i < len(permissions); i++ {
 <Tab value="Node.js">
 
 const permissions = [
-    ["data1", "read"],
-    ["data2", "write"],
+["data1", "read"],
+["data2", "write"],
 ];
 
 permissions.map((permission) => e.addPermissionForUser("bob", ...permission));
-```
+
+````
 
 </Tab>
 <Tab value=".NET">
@@ -841,7 +830,7 @@ let permissions = vec![
 
 let all_added = e.add_permissions_for_user("bob", permissions).await?;
 
-```
+````
 
 </Tab>
 </Tabs>
@@ -865,8 +854,7 @@ e.DeletePermissionForUser("bob", "read")
 <Tab value="Node.js">
 
 ```typescript
-await e.deletePermissionForUser("bob", "read")
-
+await e.deletePermissionForUser('bob', 'read');
 ```
 
 </Tab>
@@ -933,8 +921,7 @@ e.DeletePermissionsForUser("bob")
 <Tab value="Node.js">
 
 ```typescript
-await e.deletePermissionsForUser('bob')
-
+await e.deletePermissionsForUser('bob');
 ```
 
 </Tab>
@@ -1000,8 +987,7 @@ e.GetPermissionsForUser("bob")
 <Tab value="Node.js">
 
 ```typescript
-await e.getPermissionsForUser('bob')
-
+await e.getPermissionsForUser('bob');
 ```
 
 </Tab>
@@ -1100,8 +1086,7 @@ e.HasPermissionForUser("alice", []string{"read"})
 <Tab value="Node.js">
 
 ```typescript
-await e.hasPermissionForUser('alice', 'read')
-
+await e.hasPermissionForUser('alice', 'read');
 ```
 
 </Tab>
@@ -1155,8 +1140,8 @@ Compared to GetRolesForUser(), this function retrieves indirect roles besides di
 For example:
 
 ```csv
-g, alice, role:admin  
-g, role:admin, role:user  
+g, alice, role:admin
+g, role:admin, role:user
 ```
 
 GetRolesForUser("alice") can only get: ["role:admin"].  
@@ -1176,8 +1161,7 @@ e.GetImplicitRolesForUser("alice")
 <Tab value="Node.js">
 
 ```typescript
-await e.getImplicitRolesForUser("alice")
-
+await e.getImplicitRolesForUser('alice');
 ```
 
 </Tab>
@@ -1271,11 +1255,11 @@ roles = e.get_named_implicit_roles_for_user("g", "alice")
 GetImplicitUsersForRole gets all users inheriting the role.
 Compared to GetUsersForRole(), this function retrieves indirect users.
 
-For example:  
+For example:
 
 ```csv
-g, alice, role:admin  
-g, role:admin, role:user  
+g, alice, role:admin
+g, role:admin, role:user
 ```
 
 GetUsersForRole("role:user") can only get: ["role:admin"].  
@@ -1295,8 +1279,7 @@ users := e.GetImplicitUsersForRole("role:user")
 <Tab value="Node.js">
 
 ```typescript
-const users = e.getImplicitUsersForRole("role:user");
-
+const users = e.getImplicitUsersForRole('role:user');
 ```
 
 </Tab>
@@ -1313,14 +1296,14 @@ List<String> users = e.getImplicitUsersForRole("role:user");
 ### `GetImplicitPermissionsForUser()`
 
 GetImplicitPermissionsForUser gets implicit permissions for a user or role.  
-Compared to GetPermissionsForUser(), this function retrieves permissions for inherited roles.  
+Compared to GetPermissionsForUser(), this function retrieves permissions for inherited roles.
 
-For example:  
+For example:
 
 ```csv
-p, admin, data1, read  
-p, alice, data2, read  
-g, alice, admin 
+p, admin, data1, read
+p, alice, data2, read
+g, alice, admin
 ```
 
 GetPermissionsForUser("alice") can only get: [["alice", "data2", "read"]].  
@@ -1567,8 +1550,7 @@ patterns, err := e.GetImplicitObjectPatternsForUser("alice", "chronicle/123", "r
 <Tab value="Node.js">
 
 ```typescript
-const patterns = await e.getImplicitObjectPatternsForUser("alice", "chronicle/123", "read")
-
+const patterns = await e.getImplicitObjectPatternsForUser('alice', 'chronicle/123', 'read');
 ```
 
 </Tab>
@@ -1633,13 +1615,13 @@ e.GetAllowedObjectConditions("alice", "read", "r.obj.") will return `["price < 2
 Note:
 
 0. prefix: You can customize the prefix of the object conditions, and "r.obj." is commonly used as a prefix.
-After removing the prefix, the remaining part is the condition of the object.
-If there is an obj policy that does not meet the prefix requirement, an `errors.ERR_OBJ_CONDITION` will be returned.
+   After removing the prefix, the remaining part is the condition of the object.
+   If there is an obj policy that does not meet the prefix requirement, an `errors.ERR_OBJ_CONDITION` will be returned.
 
 1. If the 'objectConditions' array is empty, return `errors.ERR_EMPTY_CONDITION`
-This error is returned because some data adapters' ORM return full table data by default
-when they receive an empty condition, which tends to behave contrary to expectations.(e.g. GORM)
-If you are using an adapter that does not behave like this, you can choose to ignore this error.
+   This error is returned because some data adapters' ORM return full table data by default
+   when they receive an empty condition, which tends to behave contrary to expectations.(e.g. GORM)
+   If you are using an adapter that does not behave like this, you can choose to ignore this error.
 
 <Tabs groupId="langs" items={['Go', '.NET']} persist>
 <Tab value="Go">
@@ -1697,9 +1679,7 @@ var implicitUsers = e.GetImplicitUsersForResource("data2");
 </Tab>
 </Tabs>
 
-<Callout>
-Only users will be returned, roles (2nd arg in "g") will be excluded.
-</Callout>
+<Callout>Only users will be returned, roles (2nd arg in "g") will be excluded.</Callout>
 
 ### `GetNamedImplicitUsersForResource()`
 

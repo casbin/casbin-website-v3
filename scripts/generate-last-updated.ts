@@ -1,6 +1,6 @@
 /**
  * Script to update last-updated dates for v3 documentation files.
- * 
+ *
  * Logic:
  * 1. Loads baseline.json (created by get-v2-dates.ts as baseline).
  * 2. Scans v3 documentation files (all mdx files).
@@ -9,7 +9,7 @@
  *    - If v3 date > cutoff: Use v3 date (file was updated after cutoff)
  *    - If v3 date <= cutoff: Keep baseline date from baseline.json
  * 5. Writes updated dates to public/last-updated.json
- * 
+ *
  * Runs automatically during: npm run build (via prebuild script)
  * Usage: npx tsx scripts/generate-last-updated.ts
  */
@@ -64,7 +64,7 @@ function getLocalGitDate(filePath: string): Date | null {
     const stdout = execSync(`git log -1 --format=%cd --date=iso-strict -- "${normalizedPath}"`, {
       encoding: 'utf8',
       timeout: 5000,
-      stdio: ['ignore', 'pipe', 'ignore']
+      stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();
     return stdout ? new Date(stdout) : null;
   } catch (e) {
@@ -103,7 +103,7 @@ async function main() {
       v3Date = new Date(statSync(v3AbsPath).mtime);
     }
 
-    const outKey = v3FilePath.replace(/\\/g, "/");
+    const outKey = v3FilePath.replace(/\\/g, '/');
 
     // Convert v3 path to v2 path for matching baseline
     const v2Path = outKey.replace(/^content\//, '');

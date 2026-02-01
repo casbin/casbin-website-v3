@@ -25,8 +25,8 @@ const config = {
       {
         protocol: 'https',
         hostname: 'learn.microsoft.com',
-        pathname: '/**'
-      }
+        pathname: '/**',
+      },
     ],
   },
 };

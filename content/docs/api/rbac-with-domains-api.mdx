@@ -285,7 +285,9 @@ res, _ := e.GetAllDomains()
 </Tabs>
 
 <Callout>
-When handling domain names that contain `::`, unexpected behavior may occur. In Casbin, `::` is a reserved keyword, similar to `for` or `if` in programming languages. Never use `::` within a domain name.
+  When handling domain names that contain `::`, unexpected behavior may occur. In Casbin, `::` is a
+  reserved keyword, similar to `for` or `if` in programming languages. Never use `::` within a
+  domain name.
 </Callout>
 
 ### `GetAllRolesByDomain()`
@@ -305,7 +307,8 @@ res := e.GetAllRolesByDomain("domain1")
 </Tabs>
 
 <Callout>
-This method does not apply to domains that have an inheritance relationship, also known as implicit roles.
+  This method does not apply to domains that have an inheritance relationship, also known as
+  implicit roles.
 </Callout>
 
 ### `GetImplicitUsersForResourceByDomain()`
@@ -335,6 +338,4 @@ ImplicitUsers, err := e.GetImplicitUsersForResourceByDomain("data1", "domain1")
 </Tab>
 </Tabs>
 
-<Callout>
-Only users will be returned, roles (2nd arg in "g") will be excluded.
-</Callout>
+<Callout>Only users will be returned, roles (2nd arg in "g") will be excluded.</Callout>

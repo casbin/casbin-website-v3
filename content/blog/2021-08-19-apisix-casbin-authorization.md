@@ -2,16 +2,16 @@
 title: Authorization in APISIX using Casbin
 author: Rushikesh Tote
 authorTitle: Member of Casbin
-authorURL: "http://github.com/rushitote"
-authorImageURL: "https://avatars.githubusercontent.com/rushitote"
-date: "2021-08-19"
+authorURL: 'http://github.com/rushitote'
+authorImageURL: 'https://avatars.githubusercontent.com/rushitote'
+date: '2021-08-19'
 ---
 
 ## Introduction
 
 [APISIX](https://apisix.apache.org/) is a high performance and scalable cloud native API gateway based on Nginx and etcd. It is an open source project by the Apache Software Foundation. Besides that, what makes APISIX so good is the support of many great built in plugins that could be used to implement features like authentication, monitoring, routing, etc. And the fact that plugins in APISIX are hot-reloaded (without restarts) makes it very dynamic.
 
-But while using APISIX, there may be scenarios where you might want to add complex authorization logic in your application. This is where authz-casbin might help you, authz-casbin is an APISIX plugin based on [Lua Casbin](https://github.com/casbin/lua-casbin/) that enables powerful authorization based on various access control models. [Casbin](/) is an authorization library which supports access control models like ACL, RBAC, ABAC. Originally written in Go, it has been ported to many languages and Lua Casbin is the Lua implementation of Casbin. The development of authz-casbin started when we proposed a new plugin for authorization in the APISIX repository ([#4674](https://github.com/apache/apisix/issues/4674)) to which the core members agreed. And after the helpful reviews which led to some major changes and improvements, the PR ([#4710](https://github.com/apache/apisix/pull/4710)) was finally merged. 
+But while using APISIX, there may be scenarios where you might want to add complex authorization logic in your application. This is where authz-casbin might help you, authz-casbin is an APISIX plugin based on [Lua Casbin](https://github.com/casbin/lua-casbin/) that enables powerful authorization based on various access control models. [Casbin](/) is an authorization library which supports access control models like ACL, RBAC, ABAC. Originally written in Go, it has been ported to many languages and Lua Casbin is the Lua implementation of Casbin. The development of authz-casbin started when we proposed a new plugin for authorization in the APISIX repository ([#4674](https://github.com/apache/apisix/issues/4674)) to which the core members agreed. And after the helpful reviews which led to some major changes and improvements, the PR ([#4710](https://github.com/apache/apisix/pull/4710)) was finally merged.
 
 In this blog, we will use the authz-casbin plugin to show how you can implement an authorization model based on Role Based Access Control (RBAC) in APISIX.
 
@@ -19,7 +19,7 @@ In this blog, we will use the authz-casbin plugin to show how you can implement 
 
 ## Creating a model
 
-The plugin uses three parameters for authorizing any request - subject, object and action. Here, subject is the value of  the username header, which could be something like `[username: alice]`. Then, the object is the URL path that is being accessed and the action is request method being used.
+The plugin uses three parameters for authorizing any request - subject, object and action. Here, subject is the value of the username header, which could be something like `[username: alice]`. Then, the object is the URL path that is being accessed and the action is request method being used.
 
 Let's say we want to create a model with three resources at the paths - `/`, `/res1` and `/res2`. And we want to have a model like this:
 
@@ -176,10 +176,10 @@ curl http://127.0.0.1:9080/apisix/admin/routes/1 -H 'X-API-KEY: edd1c9f034335f13
 }'
 ```
 
-This will add the plugin metadata configuration to the route. You can also easily update the plugin metadata configuration by resending the request to plugin's metadata with updated model and policy configuration, the plugin will automatically update all the routes using the plugin metadata. 
+This will add the plugin metadata configuration to the route. You can also easily update the plugin metadata configuration by resending the request to plugin's metadata with updated model and policy configuration, the plugin will automatically update all the routes using the plugin metadata.
 
 ## Use Cases
 
-- The primary use case of this plugin would be in implementing authorization in your APIs. You can easily add this plugin on any API route that you are using with your authorization model and policy configuration. 
+- The primary use case of this plugin would be in implementing authorization in your APIs. You can easily add this plugin on any API route that you are using with your authorization model and policy configuration.
 - If you want to have a single authorization model for all your APIs, you can use global model/policy method. This makes updating the policy easy for all routes, since you only need to update the metadata in etcd.
 - While if you would like to use a different model for every different route, you can use the route method. This is helpful when different API routes have different sets of user permissions. You can also use this when you are dealing with larger policies, since it will make the authorization faster when filtered into multiple routes.

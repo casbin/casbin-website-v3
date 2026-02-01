@@ -14,17 +14,10 @@ export default function GalleryPage() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
-      
       {/* Content */}
       <div className="w-full px-6 py-8">
         <div className="w-full h-[90vh] overflow-hidden bg-card rounded-lg">
-          {src && (
-            <iframe
-              src={src}
-              className="w-full h-full"
-              title="Casbin Gallery"
-            />
-          )}
+          {src && <iframe src={src} className="w-full h-full" title="Casbin Gallery" />}
         </div>
       </div>
 

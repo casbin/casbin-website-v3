@@ -21,5 +21,23 @@ export const Tags = {
 
 export type TagType = keyof typeof Tags;
 export const TagList = Object.keys(Tags) as TagType[];
-export const LanguageTags: TagType[] = ['Go', 'Java', 'NodeJS', 'PHP', 'Python', 'dotNET', 'Rust', 'Lua', 'Swift', 'Ruby', 'Cpp'];
-export const PluginTypeTags: TagType[] = ['Adapter', 'Middleware', 'Watcher', 'RoleManager', 'Dispatcher'];
+export const LanguageTags: TagType[] = [
+  'Go',
+  'Java',
+  'NodeJS',
+  'PHP',
+  'Python',
+  'dotNET',
+  'Rust',
+  'Lua',
+  'Swift',
+  'Ruby',
+  'Cpp',
+];
+export const PluginTypeTags: TagType[] = [
+  'Adapter',
+  'Middleware',
+  'Watcher',
+  'RoleManager',
+  'Dispatcher',
+];

@@ -33,7 +33,7 @@ export function LLMCopyButton({
     try {
       setLoading(true);
       const cached = cache.get(pagePath);
-      const content = cached || await getMarkdownContent(pagePath);
+      const content = cached || (await getMarkdownContent(pagePath));
 
       if (!cached) {
         cache.set(pagePath, content);
@@ -41,8 +41,8 @@ export function LLMCopyButton({
 
       await navigator.clipboard.writeText(content);
     } catch (error) {
-      console.error("Failed to copy markdown to clipboard:", error);
-      window.alert("Failed to copy the markdown to your clipboard. Please copy it manually.");
+      console.error('Failed to copy markdown to clipboard:', error);
+      window.alert('Failed to copy the markdown to your clipboard. Please copy it manually.');
       throw error;
     } finally {
       setLoading(false);
@@ -57,7 +57,7 @@ export function LLMCopyButton({
           variant: 'secondary',
           size: 'sm',
           className: 'gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground',
-        }),
+        })
       )}
       onClick={onClick}
     >
@@ -68,7 +68,7 @@ export function LLMCopyButton({
 }
 
 const optionVariants = cva(
-  'text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4',
+  'text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4'
 );
 
 export function ViewOptions({
@@ -93,7 +93,13 @@ export function ViewOptions({
         title: 'Open in GitHub',
         href: githubUrl,
         icon: (
-          <Image src="/ai-icons/github.svg" alt="GitHub" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/github.svg"
+            alt="GitHub"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
@@ -102,7 +108,13 @@ export function ViewOptions({
           q,
         })}`,
         icon: (
-          <Image src="/ai-icons/scira-ai.svg" alt="Scira AI" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/scira-ai.svg"
+            alt="Scira AI"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
@@ -112,7 +124,13 @@ export function ViewOptions({
           q,
         })}`,
         icon: (
-          <Image src="/ai-icons/openai.svg" alt="OpenAI" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/openai.svg"
+            alt="OpenAI"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
@@ -121,7 +139,13 @@ export function ViewOptions({
           q,
         })}`,
         icon: (
-          <Image src="/ai-icons/anthropic.svg" alt="Anthropic" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/anthropic.svg"
+            alt="Anthropic"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
@@ -142,7 +166,7 @@ export function ViewOptions({
             variant: 'secondary',
             size: 'sm',
             className: 'gap-2',
-          }),
+          })
         )}
       >
         Open

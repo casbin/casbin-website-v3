@@ -1,10 +1,10 @@
 /**
  * Script to fetch v2 repository file update dates using GitHub CLI
  * Generates a base last-updated.json file with v2 documentation file dates
- * 
+ *
  * This script runs once to create the initial time baseline.
  * Then npm run build will fetch v3 file dates and update accordingly.
- * 
+ *
  * Usage: npx tsx scripts/get-v2-dates.ts
  */
 
@@ -52,7 +52,7 @@ function isGhCliAvailable(): boolean {
  */
 function runGh(args: string[]): any {
   try {
-    const formattedArgs = args.map(arg => {
+    const formattedArgs = args.map((arg) => {
       if (arg.includes('&') || arg.includes('?') || arg.includes('=')) {
         return `"${arg}"`;
       }
@@ -62,7 +62,7 @@ function runGh(args: string[]): any {
     const output = execSync(cmd, {
       encoding: 'utf8',
       maxBuffer: 10 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'ignore']
+      stdio: ['ignore', 'pipe', 'ignore'],
     }).trim();
     return JSON.parse(output);
   } catch (error) {
@@ -76,7 +76,10 @@ function runGh(args: string[]): any {
 async function getV2FileList(): Promise<Map<string, V2FileInfo>> {
   console.log(`📡 Fetching v2 file list from ${V2_REPO_OWNER}/${V2_REPO_NAME}...`);
 
-  const data = runGh(['api', `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/git/trees/${V2_BRANCH}?recursive=1`]);
+  const data = runGh([
+    'api',
+    `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/git/trees/${V2_BRANCH}?recursive=1`,
+  ]);
 
   if (!data?.tree) {
     throw new Error('Failed to fetch v2 tree');
@@ -91,7 +94,7 @@ async function getV2FileList(): Promise<Map<string, V2FileInfo>> {
       fileMap.set(normalized, {
         path: item.path,
         normalizedName: normalized,
-        lastUpdated: ''
+        lastUpdated: '',
       });
     }
   }
@@ -105,7 +108,10 @@ async function getV2FileList(): Promise<Map<string, V2FileInfo>> {
  */
 async function getV2FileDate(filePath: string): Promise<Date | null> {
   try {
-    const data = runGh(['api', `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/commits?path=${encodeURIComponent(filePath)}&per_page=1`]);
+    const data = runGh([
+      'api',
+      `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/commits?path=${encodeURIComponent(filePath)}&per_page=1`,
+    ]);
     if (data?.[0]?.commit?.committer?.date) {
       return new Date(data[0].commit.committer.date);
     }

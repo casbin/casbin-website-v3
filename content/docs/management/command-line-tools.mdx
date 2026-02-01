@@ -14,16 +14,16 @@ authors: [liulifox233]
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/casbin/casbin-go-cli.git
-    ```
+   ```bash
+   git clone https://github.com/casbin/casbin-go-cli.git
+   ```
 
 2. Build the CLI:
 
-    ```bash
-    cd casbin-go-cli
-    go build -o casbin
-    ```
+   ```bash
+   cd casbin-go-cli
+   go build -o casbin
+   ```
 
 ### Rust (casbin-rust-cli)
 
@@ -37,118 +37,118 @@ cargo install casbin-rust-cli
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/casbin-rs/casbin-rust-cli.git
-    ```
+   ```bash
+   git clone https://github.com/casbin-rs/casbin-rust-cli.git
+   ```
 
 2. Build with release optimizations:
 
-    ```bash
-    cd casbin-rust-cli
-    cargo build --release
-    ```
+   ```bash
+   cd casbin-rust-cli
+   cargo build --release
+   ```
 
 ### Java (casbin-java-cli)
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/jcasbin/casbin-java-cli.git
-    ```
+   ```bash
+   git clone https://github.com/jcasbin/casbin-java-cli.git
+   ```
 
 2. Build using Maven (the JAR file will be created in the `target` directory):
 
-    ```bash
-    cd casbin-java-cli
-    mvn clean install
-    ```
+   ```bash
+   cd casbin-java-cli
+   mvn clean install
+   ```
 
 ### Python (casbin-python-cli)
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/casbin/casbin-python-cli.git
-    ```
+   ```bash
+   git clone https://github.com/casbin/casbin-python-cli.git
+   ```
 
 2. Install required dependencies:
 
-    ```bash
-    cd casbin-python-cli
-    pip install -r requirements.txt
-    ```
+   ```bash
+   cd casbin-python-cli
+   pip install -r requirements.txt
+   ```
 
 3. Run the CLI:
 
-    ```bash
-    python -m casbin_cli.client [command] [options] [args]
-    ```
+   ```bash
+   python -m casbin_cli.client [command] [options] [args]
+   ```
 
 ### .NET (casbin-dotnet-cli)
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/casbin-net/casbin-dotnet-cli.git
-    ```
+   ```bash
+   git clone https://github.com/casbin-net/casbin-dotnet-cli.git
+   ```
 
 2. Build the project:
 
-    ```bash
-    cd casbin-dotnet-cli
-    dotnet build
-    ```
+   ```bash
+   cd casbin-dotnet-cli
+   dotnet build
+   ```
 
 ## Usage
 
 ## Options
 
-| Option                | Description                                                            | Required | Notes                                                        |
-|-----------------------|------------------------------------------------------------------------|----------|--------------------------------------------------------------|
-| `-m, --model`         | Model file path or model definition text                               | Yes      | Wrap in quotes and use `\|` as line separator                |
-| `-p, --policy`        | Policy file path or policy definition text                             | Yes      | Wrap in quotes and use `\|` as line separator                |
-| `-e, --enforce`       | Evaluate access permissions                                            | No       | Wrap arguments in quotes                                     |
-| `-ex, --enforceEx`    | Evaluate permissions and display the matched policy                    | No       | Wrap arguments in quotes                                     |
-| `-AF, --addFuntion`   | Register a custom function (casbin-java-cli only)                      | No       | Wrap in quotes and use `\|` as line separator                |
-| `-ap, --addPolicy`    | Append a policy rule to the policy file (casbin-java-cli only)         | No       | Wrap arguments in quotes                                     |
-| `-rp, --removePolicy` | Delete a policy rule from the policy file (casbin-java-cli only)       | No       | Wrap arguments in quotes                                     |
+| Option                | Description                                                      | Required | Notes                                         |
+| --------------------- | ---------------------------------------------------------------- | -------- | --------------------------------------------- |
+| `-m, --model`         | Model file path or model definition text                         | Yes      | Wrap in quotes and use `\|` as line separator |
+| `-p, --policy`        | Policy file path or policy definition text                       | Yes      | Wrap in quotes and use `\|` as line separator |
+| `-e, --enforce`       | Evaluate access permissions                                      | No       | Wrap arguments in quotes                      |
+| `-ex, --enforceEx`    | Evaluate permissions and display the matched policy              | No       | Wrap arguments in quotes                      |
+| `-AF, --addFuntion`   | Register a custom function (casbin-java-cli only)                | No       | Wrap in quotes and use `\|` as line separator |
+| `-ap, --addPolicy`    | Append a policy rule to the policy file (casbin-java-cli only)   | No       | Wrap arguments in quotes                      |
+| `-rp, --removePolicy` | Delete a policy rule from the policy file (casbin-java-cli only) | No       | Wrap arguments in quotes                      |
 
 ## Getting Started
 
 - Verify if Alice can read data1:
 
-    ```shell
-    ./casbin enforce -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data1" "read"
-    ```
+  ```shell
+  ./casbin enforce -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data1" "read"
+  ```
 
-    > `{"allow":true,"explain":null}`
+  > `{"allow":true,"explain":null}`
 
-    ```shell
-    ./casbin enforce -m "[request_definition]\nr = sub, obj, act\n[policy_definition]\np = sub, obj, act\n[role_definition]\ng = _, _\n[policy_effect]\ne = some(where (p.eft == allow))\n[matchers]\nm = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act" -p "p, alice, data1, read\np, bob, data2, write\np, data2_admin, data2, read\np, data2_admin, data2, write\ng, alice, data2_admin" "alice" "data1" "read"
-    ```
+  ```shell
+  ./casbin enforce -m "[request_definition]\nr = sub, obj, act\n[policy_definition]\np = sub, obj, act\n[role_definition]\ng = _, _\n[policy_effect]\ne = some(where (p.eft == allow))\n[matchers]\nm = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act" -p "p, alice, data1, read\np, bob, data2, write\np, data2_admin, data2, read\np, data2_admin, data2, write\ng, alice, data2_admin" "alice" "data1" "read"
+  ```
 
-    > `{"allow":true,"explain":null}`
+  > `{"allow":true,"explain":null}`
 
 - Verify if Alice can write to data2 and show which policy grants the permission:
 
-    ```shell
-    ./casbin enforceEx -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data2" "write"
-    ```
+  ```shell
+  ./casbin enforceEx -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data2" "write"
+  ```
 
-    > `{"allow":true,"explain":["data2_admin","data2","write"]}`
+  > `{"allow":true,"explain":["data2_admin","data2","write"]}`
 
 - Add a new policy rule to the policy file (casbin-java-cli only):
 
-    ```shell
-    ./casbin addPolicy -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data2" "write"
-    ```
+  ```shell
+  ./casbin addPolicy -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data2" "write"
+  ```
 
-    > `{"allow":true,"explain":null}`
+  > `{"allow":true,"explain":null}`
 
 - Remove a policy rule from the policy file (casbin-java-cli only):
 
-    ```shell
-    ./casbin removePolicy -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data2" "write"
-    ```
+  ```shell
+  ./casbin removePolicy -m "examples/rbac_model.conf" -p "examples/rbac_policy.csv" "alice" "data2" "write"
+  ```
 
-    > `{"allow":true,"explain":null}`
+  > `{"allow":true,"explain":null}`

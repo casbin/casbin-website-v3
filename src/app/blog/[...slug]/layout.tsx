@@ -11,5 +11,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     ...options.nav,
     children: undefined,
   };
-  return <DocsLayout tree={blogSource.pageTree} {...options} nav={blogNav}>{children}</DocsLayout>;
+  return (
+    <DocsLayout tree={blogSource.pageTree} {...options} nav={blogNav}>
+      {children}
+    </DocsLayout>
+  );
 }

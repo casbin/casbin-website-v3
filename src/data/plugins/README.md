@@ -15,7 +15,7 @@ This directory contains all the plugin data for the Casbin ecosystem page.
 Create a file for each category, for example:
 
 - `adapter-*.ts` for adapters
-- `middleware-*.ts` for middlewares  
+- `middleware-*.ts` for middlewares
 - `watcher-*.ts` for watchers
 - etc.
 
@@ -50,7 +50,7 @@ import { AdapterGoData } from './adapter-go';
 
 export const allPlugins: Plugin[] = [
   ...MiddlewareGoData,
-  ...AdapterGoData,  // Add here
+  ...AdapterGoData, // Add here
   // Add more...
 ];
 ```
@@ -84,7 +84,7 @@ Each plugin object should have:
 Place plugin logos in `/public/images/ecosystem/` and reference them as:
 
 ```typescript
-image: '/images/ecosystem/gin.jpeg'
+image: '/images/ecosystem/gin.jpeg';
 ```
 
 ## Tips

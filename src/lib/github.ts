@@ -57,7 +57,7 @@ async function getFeedbackDestination(): Promise<RepositoryInfo | null> {
   if (!octokit) return null;
 
   try {
-    const result = await octokit.graphql(`
+    const result = (await octokit.graphql(`
     query {
       repository(owner: "${owner}", name: "${repo}") {
         id
@@ -66,8 +66,8 @@ async function getFeedbackDestination(): Promise<RepositoryInfo | null> {
         }
       }
     }
-  `) as { repository: RepositoryInfo };
-  
+  `)) as { repository: RepositoryInfo };
+
     return (cachedDestination = result.repository);
   } catch (e) {
     console.warn('Failed to fetch GitHub Discussion categories:', e);
@@ -80,7 +80,7 @@ export async function onPageFeedbackAction(feedback: PageFeedback): Promise<Acti
   feedback = pageFeedback.parse(feedback);
   return createDiscussionThread(
     feedback.url,
-    `[${feedback.opinion}] ${feedback.message}\n\n> Forwarded from user feedback.`,
+    `[${feedback.opinion}] ${feedback.message}\n\n> Forwarded from user feedback.`
   );
 }
 
@@ -89,7 +89,7 @@ export async function onBlockFeedbackAction(feedback: BlockFeedback): Promise<Ac
   feedback = blockFeedback.parse(feedback);
   return createDiscussionThread(
     feedback.url,
-    `> ${feedback.blockBody ?? feedback.blockId}\n\n${feedback.message}\n\n> Forwarded from user feedback.`,
+    `> ${feedback.blockBody ?? feedback.blockId}\n\n${feedback.message}\n\n> Forwarded from user feedback.`
   );
 }
 
@@ -98,28 +98,30 @@ async function createDiscussionThread(pageId: string, body: string): Promise<Act
   if (!octokit) {
     return { githubUrl: undefined };
   }
-  
+
   const destination = await getFeedbackDestination();
   if (!destination) {
     return { githubUrl: undefined };
   }
   const category = destination.discussionCategories.nodes.find(
-    (category) => category.name === DocsCategory,
+    (category) => category.name === DocsCategory
   );
 
   if (!category) {
-    console.warn(`GitHub Discussion category "${DocsCategory}" not found - feedback will not be posted`);
+    console.warn(
+      `GitHub Discussion category "${DocsCategory}" not found - feedback will not be posted`
+    );
     return { githubUrl: undefined };
   }
 
   const title = `Feedback for ${pageId}`;
-  
+
   // TODO: Add error handling for GitHub API responses
   // - Handle rate limiting (HTTP 403/429)
   // - Handle network timeouts
   // - Handle unexpected response formats
   // - Handle missing fields in response
-  
+
   const {
     search: {
       nodes: [discussion],
@@ -142,7 +144,7 @@ async function createDiscussionThread(pageId: string, body: string): Promise<Act
     // - Handle API rate limiting
     // - Handle authentication failures
     // - Log errors for debugging
-    
+
     const result: {
       addDiscussionComment: {
         comment: { id: string; url: string };

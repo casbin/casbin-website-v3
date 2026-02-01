@@ -1,9 +1,4 @@
 {
   "title": "The Basics",
-  "pages": [
-    "overview",
-    "get-started",
-    "how-it-works",
-    "tutorial"
-  ]
+  "pages": ["overview", "get-started", "how-it-works", "tutorial"]
 }

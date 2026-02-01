@@ -15,13 +15,13 @@ export function PluginFilters() {
   // Calculate tag counts - based on all plugins to show total counts
   const tagCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    
+
     for (const plugin of allPlugins) {
       for (const tag of plugin.tags) {
         counts[tag] = (counts[tag] || 0) + 1;
       }
     }
-    
+
     return counts;
   }, []);
 
@@ -34,7 +34,7 @@ export function PluginFilters() {
     const langs = new Set<string>();
     for (const plugin of allPlugins) {
       for (const tag of plugin.tags) {
-        const tagKey = Object.keys(Tags).find(k => Tags[k as TagType].label === tag);
+        const tagKey = Object.keys(Tags).find((k) => Tags[k as TagType].label === tag);
         if (tagKey && LanguageTags.includes(tagKey as TagType)) {
           langs.add(tag);
         }
@@ -61,7 +61,7 @@ export function PluginFilters() {
             size="sm"
             onClick={() => {
               const tagsToToggle = Array.from(selectedTags);
-              tagsToToggle.forEach(tag => toggleTag(tag));
+              tagsToToggle.forEach((tag) => toggleTag(tag));
             }}
             className="gap-1 text-xs"
           >
@@ -79,12 +79,14 @@ export function PluginFilters() {
         <div className="flex flex-wrap gap-2">
           {languages.map((lang) => {
             // Find the TagType key for this language
-            const tagKey = Object.keys(Tags).find(k => Tags[k as TagType].label === lang) as TagType;
+            const tagKey = Object.keys(Tags).find(
+              (k) => Tags[k as TagType].label === lang
+            ) as TagType;
             const tagInfo = tagKey ? Tags[tagKey] : null;
             const color = tagInfo?.color || '#6B7280';
-            const isSelected = Array.from(selectedTags).some(t => Tags[t].label === lang);
+            const isSelected = Array.from(selectedTags).some((t) => Tags[t].label === lang);
             const count = tagCounts[lang] || 0;
-            
+
             return (
               <ColorBadge
                 key={lang}
@@ -112,7 +114,7 @@ export function PluginFilters() {
             const tagInfo = Tags[cat];
             const isSelected = selectedTags.has(cat);
             const count = tagCounts[tagInfo.label] || 0;
-            
+
             return (
               <ColorBadge
                 key={cat}

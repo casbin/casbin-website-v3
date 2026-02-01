@@ -10,16 +10,16 @@ export function PluginStats() {
     const stats: Record<string, number> = {
       total: allPlugins.length,
     };
-    
+
     // Count by plugin type (Adapter, Middleware, etc.)
     for (const plugin of allPlugins) {
-      plugin.tags.forEach(tag => {
+      plugin.tags.forEach((tag) => {
         if (['Adapter', 'Middleware', 'Watcher', 'RoleManager', 'Dispatcher'].includes(tag)) {
           stats[tag] = (stats[tag] || 0) + 1;
         }
       });
     }
-    
+
     return stats;
   }, []);
 
@@ -34,12 +34,7 @@ export function PluginStats() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {/* Total */}
-      <StatCard
-        icon={GitBranch}
-        iconColor="#443D80"
-        value={stats.total}
-        label="Total Plugins"
-      />
+      <StatCard icon={GitBranch} iconColor="#443D80" value={stats.total} label="Total Plugins" />
 
       {/* Individual Categories */}
       {categories.map((category) => {

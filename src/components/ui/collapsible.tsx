@@ -27,7 +27,7 @@ const CollapsibleContent = forwardRef<
         'overflow-hidden',
         mounted &&
           'data-[state=closed]:animate-fd-collapsible-up data-[state=open]:animate-fd-collapsible-down',
-        props.className,
+        props.className
       )}
     >
       {children}

@@ -18,7 +18,7 @@ Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz, 2601 Mhz, 4 Core(s), 8 Logical Proces
 Results from `go test -bench=. -benchmem` (op = one `Enforce()` call, ms = millisecond, KB = kilobytes):
 
 | Test case                 | Rule size                                | Time overhead (ms/op) | Memory overhead (KB) |
-|---------------------------|------------------------------------------|-----------------------|----------------------|
+| ------------------------- | ---------------------------------------- | --------------------- | -------------------- |
 | ACL                       | 2 rules (2 users)                        | 0.015493              | 5.649                |
 | RBAC                      | 5 rules (2 users, 1 role)                | 0.021738              | 7.522                |
 | RBAC (small)              | 1100 rules (1000 users, 100 roles)       | 0.164309              | 80.620               |
@@ -44,7 +44,7 @@ platform linux -- Python 3.11.4, pytest-7.0.1, pluggy-1.2.0
 Results from executing `casbin_benchmark` (op = one `enforce()` call, ms = millisecond):
 
 | Test case                 | Rule size                                | Time overhead (ms/op) |
-|---------------------------|------------------------------------------|-----------------------|
+| ------------------------- | ---------------------------------------- | --------------------- |
 | ACL                       | 2 rules (2 users)                        | 0.067691              |
 | RBAC                      | 5 rules (2 users, 1 role)                | 0.080045              |
 | RBAC (small)              | 1100 rules (1000 users, 100 roles)       | 0.853590              |
@@ -69,7 +69,7 @@ Intel(R) Core(TM) i5-6300HQ CPU @ 2.30GHz, 4 cores, 4 threads
 Results from executing the `casbin_benchmark` target built in `Release` configuration (op = one `enforce()` call, ms = millisecond):
 
 | Test case                 | Rule size                                | Time overhead (ms/op) |
-|---------------------------|------------------------------------------|-----------------------|
+| ------------------------- | ---------------------------------------- | --------------------- |
 | ACL                       | 2 rules (2 users)                        | 0.0195                |
 | RBAC                      | 5 rules (2 users, 1 role)                | 0.0288                |
 | RBAC (small)              | 1100 rules (1000 users, 100 roles)       | 0.300                 |
@@ -94,7 +94,7 @@ AMD Ryzen(TM) 5 4600H CPU @ 3.0GHz, 6 Cores, 12 Threads
 Results from running `luajit bench.lua` (op = one `enforce()` call, ms = millisecond):
 
 | Test case                 | Rule size                                | Time overhead (ms/op) |
-|---------------------------|------------------------------------------|-----------------------|
+| ------------------------- | ---------------------------------------- | --------------------- |
 | ACL                       | 2 rules (2 users)                        | 0.0533                |
 | RBAC                      | 5 rules (2 users, 1 role)                | 0.0972                |
 | RBAC (small)              | 1100 rules (1000 users, 100 roles)       | 0.8598                |
@@ -117,9 +117,16 @@ The embedded page below displays Casbin's performance across commits.
 Direct access: [https://v1.casbin.org/casbin/benchmark-monitoring](https://v1.casbin.org/casbin/benchmark-monitoring)
 
 <div
-  style={{margin:"(0 auto)", transform:"scale(0.85)", width:"1000px", boxShadow:"0 0 50px grey", borderRadius:"20px"}}>
+  style={{
+    margin: '(0 auto)',
+    transform: 'scale(0.85)',
+    width: '1000px',
+    boxShadow: '0 0 50px grey',
+    borderRadius: '20px',
+  }}
+>
   <iframe
     src="https://v1.casbin.org/casbin/benchmark-monitoring"
-    style={{width: "1000px", height: "700px", borderRadius: "20px"}}>
-  </iframe>
+    style={{ width: '1000px', height: '700px', borderRadius: '20px' }}
+  ></iframe>
 </div>
