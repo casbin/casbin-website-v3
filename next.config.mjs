@@ -1,7 +1,7 @@
 import { createMDX } from "fumadocs-mdx/next";
 import { createJiti } from "jiti";
 
-const jiti = createJiti(import.meta.url);
+const jiti = createJiti(import.meta.url, { interopDefault: true, moduleCache: false });
 const { docs, blog } = jiti("./source.config.ts");
 
 const withMDX = createMDX({
