@@ -42,7 +42,8 @@ export function LLMCopyButton({
       await navigator.clipboard.writeText(content);
     } catch (error) {
       console.error("Failed to copy markdown to clipboard:", error);
-      window.alert("Failed to copy the markdown to your clipboard. Please copy it manually.");
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      window.alert(`Failed to copy the markdown to your clipboard.\nError: ${errorMessage}\n\nPlease copy it manually.`);
       throw error;
     } finally {
       setLoading(false);
