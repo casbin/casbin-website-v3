@@ -182,7 +182,7 @@ function HeroHeader() {
       />
 
       {/* Content */}
-      <div className="relative z-30 mx-auto max-w-8xl px-4">
+      <div className="relative z-30 mx-auto max-w-7xl">
         {/* News pill */}
         <div className="mb-8 flex justify-center">
           <a
@@ -215,14 +215,14 @@ function HeroHeader() {
               Casbin
             </span>
             <br />
-            <div className="mt-4 text-3xl md:text-5xl lg:text-5xl font-inter flex flex-wrap justify-center gap-x-3">
-              <span className="text-gray-200">Open-source authorization for</span>
-              <AnimatedText
-                words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
-                interval={3000}
-              />
-            </div>
           </h1>
+          <div className="mt-4 text-3xl md:text-5xl font-inter flex flex-wrap justify-center gap-x-3">
+            <span className="text-gray-200">Open-source authorization for</span>
+            <AnimatedText
+              words={["applications", "clouds", "web apps", "AI gateway", "MCP"]}
+              interval={3000}
+            />
+          </div>
 
           <p className="mt-8 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-inter leading-relaxed">
             A powerful and efficient open-source access control library that supports multiple
