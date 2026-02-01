@@ -72,7 +72,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
           )}
           {page.path && (
             <div className="flex flex-row gap-2 shrink-0">
-              <LLMCopyButton pagePath={page.path} />
+              <LLMCopyButton slugs={page.slugs} />
               <ViewOptions pagePath={page.path} githubUrl={githubUrl} />
             </div>
           )}

@@ -2,29 +2,13 @@
 
 import { source, getLLMText } from "./source";
 
-export async function getMarkdownContent(pagePath: string): Promise<string> {
+export async function getMarkdownContent(slugs: string[]): Promise<string> {
   try {
-    // Get all pages from the source
-    const pages = source.getPages();
-
-    // Normalize the path - remove leading/trailing slashes and 'content/' prefix if present
-    let normalizedPath = pagePath.replace(/^\/|\/$/g, "").replace(/^content\//, "");
-
-    // Try to find a matching page
-    // page.path from Fumadocs is typically in the format 'docs/...' or similar
-    const candidates = [
-      normalizedPath,
-      normalizedPath.startsWith("docs/") ? normalizedPath : `docs/${normalizedPath}`,
-    ];
-
-    let page;
-    for (const candidate of candidates) {
-      page = pages.find((p) => p.path === candidate);
-      if (page) break;
-    }
+    // Use slugs to get the page directly from the source
+    const page = source.getPage(slugs);
 
     if (!page) {
-      throw new Error(`Page not found: ${pagePath}`);
+      throw new Error(`Page not found for slugs: ${slugs.join("/")}`);
     }
 
     // Get the formatted markdown content with metadata (title, URL, source, description)

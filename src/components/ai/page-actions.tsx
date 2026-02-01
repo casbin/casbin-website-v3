@@ -11,32 +11,24 @@ import { getMarkdownContent } from "@/lib/get-markdown-content";
 
 const cache = new Map<string, string>();
 
-// Helper function to normalize doc file paths to GitHub URL format
-function normalizeDocPathForGithub(path: string): string {
-  let normalized = path.startsWith("content/") ? path : `content/${path}`;
-  if (!normalized.startsWith("content/docs/")) {
-    normalized = normalized.replace(/^content\//, "content/docs/");
-  }
-  return normalized;
-}
-
 export function LLMCopyButton({
   /**
-   * The page path for fetching the raw Markdown/MDX content
+   * The page slugs for fetching the raw Markdown/MDX content
    */
-  pagePath,
+  slugs,
 }: {
-  pagePath: string;
+  slugs: string[];
 }) {
   const [isLoading, setLoading] = useState(false);
   const [checked, onClick] = useCopyButton(async () => {
     try {
       setLoading(true);
-      const cached = cache.get(pagePath);
-      const content = cached || (await getMarkdownContent(pagePath));
+      const cacheKey = slugs.join("/");
+      const cached = cache.get(cacheKey);
+      const content = cached || (await getMarkdownContent(slugs));
 
       if (!cached) {
-        cache.set(pagePath, content);
+        cache.set(cacheKey, content);
       }
 
       await navigator.clipboard.writeText(content);
