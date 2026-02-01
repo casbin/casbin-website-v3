@@ -19,7 +19,7 @@ export default function Page() {
         <div className="max-w-7xl mx-auto">
           <div className="relative overflow-hidden rounded-2xl shadow-lg w-full bg-[linear-gradient(135deg,#1a1a2e_0%,#443D80_25%,#6B5B95_50%,#443D80_75%,#2d1b4e_100%)] bg-cover bg-center">
             <div className="absolute inset-0 bg-black/20 rounded-2xl" />
-            <div className="relative z-10 max-w-full px-6 py-24 md:py-32">
+            <div className="relative z-10 max-w-full px-6 py-12 md:py-16">
               <h1 className="text-4xl md:text-5xl font-medium text-white font-mono">Casbin Blog</h1>
               <p className="mt-4 text-sm text-white/85">Latest announcements of Casbin.</p>
             </div>
