@@ -67,11 +67,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
       <DocsDescription className="!mb-2 text-base">{data.description}</DocsDescription>
       {data.authors && data.authors.length > 0 && (
         <div className="mb-4">
-          <AuthorCard
-            authors={data.authors}
-            date={data.date}
-            readTime={readTime}
-          />
+          <AuthorCard authors={data.authors} date={data.date} readTime={readTime} />
         </div>
       )}
       <div className="flex flex-row gap-2 items-center border-b pt-1 pb-4">

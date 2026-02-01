@@ -59,7 +59,9 @@ export function AuthorCard({
       >
         {authors.map((authorName, index) => {
           const githubUrl = `https://github.com/${authorName}`;
-          const avatarUrl = !authorName.includes(" ") ? `https://github.com/${authorName}.png` : null;
+          const avatarUrl = !authorName.includes(" ")
+            ? `https://github.com/${authorName}.png`
+            : null;
 
           return (
             <div key={authorName} className="flex items-center gap-2">
