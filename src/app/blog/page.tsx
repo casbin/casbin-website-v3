@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 type BlogPage = InferPageType<typeof blogSource>;
 
 export default function Page() {
-  const pages: BlogPage[] = blogSource.getPages().sort((a, b) => {
+  const pages: BlogPage[] = [...blogSource.getPages()].sort((a, b) => {
     // Sort by date in descending order (newest first)
     const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
     const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
