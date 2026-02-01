@@ -192,6 +192,35 @@
   }
 }
 
+/* Button shimmer effect */
+.button-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.button-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    45deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 75%,
+    transparent 100%
+  );
+  background-size: 250% 250%, 100% 100%;
+  background-position: 200% 0, 0 0;
+  background-repeat: no-repeat;
+  transition: background-position 0s ease;
+}
+
+.button-shimmer:hover::before {
+  background-position: -100% 0, 0 0;
+  transition-duration: 1500ms;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,

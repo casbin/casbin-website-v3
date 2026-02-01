@@ -238,7 +238,7 @@ function HeroHeader() {
           <Button
             asChild
             size="lg"
-            className="gap-2 text-white text-lg py-6 px-8 relative overflow-hidden before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.5)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] hover:shadow-2xl hover:shadow-purple-500/30"
+            className="gap-2 text-white text-lg py-6 px-8 button-shimmer hover:shadow-2xl hover:shadow-purple-500/30"
             style={{ backgroundColor: "#443D80" }}
           >
             <Link href="/docs" className="relative z-10">
@@ -471,7 +471,8 @@ function FeatureCard({
 
 function StatsSection() {
   const [stars, setStars] = useState("18.5k+");
-  const [downloads, setDownloads] = useState("1M+");
+  // Note: Downloads metric is currently static, could be fetched from npm/GitHub releases in the future
+  const downloads = "1M+";
 
   useEffect(() => {
     fetch("https://api.github.com/repos/casbin/casbin")
@@ -480,7 +481,10 @@ function StatsSection() {
         const starCount = data.stargazers_count || 18500;
         setStars(starCount >= 1000 ? `${(starCount / 1000).toFixed(1)}k+` : `${starCount}+`);
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error("Failed to fetch GitHub stats:", err);
+        // Keep default values on error
+      });
   }, []);
 
   const stats = [
