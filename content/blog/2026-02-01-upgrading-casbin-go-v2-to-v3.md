@@ -139,39 +139,6 @@ import "github.com/casbin/casbin-pg-adapter" // Check for v3 support
 
 Check the adapter's repository for v3 compatibility. Most adapters work with both v2 and v3 since the adapter interface didn't change.
 
-### Production Migration Strategies
-
-For production systems, you have several options depending on your deployment model:
-
-#### Strategy 1: Blue-Green Deployment (Recommended)
-
-1. Deploy v3 to a staging environment
-2. Run your full test suite
-3. Monitor for any unexpected behavior
-4. Deploy v3 to a subset of production instances
-5. Gradually shift traffic
-6. Decommission v2 instances once v3 is stable
-
-This approach provides the safest migration with easy rollback.
-
-#### Strategy 2: In-Place Upgrade
-
-For smaller deployments or if blue-green isn't feasible:
-
-1. Schedule maintenance window
-2. Deploy v3 build
-3. Monitor closely
-4. Have v2 build ready for quick rollback if needed
-
-#### Strategy 3: Shadow Mode Testing
-
-If you have the infrastructure:
-
-1. Run v3 alongside v2
-2. Send duplicate requests to both
-3. Compare authorization decisions
-4. Once confident they're identical, cut over to v3
-
 ### Rollback Plan
 
 If you need to rollback:
@@ -182,35 +149,9 @@ If you need to rollback:
 
 The beauty of this migration is that rollback is trivial - just revert the import changes and redeploy.
 
-## Database and Adapter Considerations
-
-### Do I Need to Migrate My Policy Database?
+## Do I Need to Migrate My Policy Database?
 
 **No.** Your existing policy data remains unchanged. The policies are stored as simple strings (subject, object, action, etc.) and have no dependency on the Casbin version.
-
-### Adapter Compatibility
-
-The adapter interface between v2 and v3 is identical. This means:
-
-- **Postgres Adapter**: Works with both v2 and v3
-- **MySQL Adapter**: Works with both v2 and v3  
-- **MongoDB Adapter**: Works with both v2 and v3
-- **File Adapter**: Works with both v2 and v3
-- **Any custom adapter**: Will work without modification
-
-You can even run v2 and v3 applications against the same policy database simultaneously (though you typically wouldn't in production).
-
-### What About Transactions During Migration?
-
-Since v2 and v3 can share the same database:
-
-1. Your v2 instances continue writing policies
-2. Deploy v3 instances
-3. Both read from the same policy store
-4. No data migration or transformation needed
-5. Decommission v2 when ready
-
-This makes staged rollouts very straightforward.
 
 ## Testing Your Migration
 
@@ -262,7 +203,7 @@ Compare policy evaluation across versions:
 
 If you see any differences, it's likely a bug - please report it!
 
-## Common Pitfalls and How to Avoid Them
+## Common Pitfalls
 
 ### Pitfall 1: Mixed v2/v3 Dependencies
 
@@ -332,114 +273,5 @@ None. v3 uses the same evaluation engine as v2.
 ### Q: Can I use v3 with Go 1.16?
 
 Check the go.mod in the Casbin v3 repository for the minimum supported Go version. Generally, using the latest stable Go version is recommended.
-
-## Migration Checklist
-
-Use this checklist for your migration:
-
-- [ ] **Pre-Migration**
-  - [ ] Review current Casbin usage in your codebase
-  - [ ] Check adapter compatibility for v3
-  - [ ] Verify middleware support for v3
-  - [ ] Review custom implementations (adapters, watchers, etc.)
-  
-- [ ] **Development Environment**
-  - [ ] Update go.mod to use Casbin v3
-  - [ ] Update all import statements
-  - [ ] Update adapter imports if needed
-  - [ ] Update middleware imports if needed
-  - [ ] Run `go mod tidy`
-  - [ ] Build successfully
-  - [ ] Run all unit tests
-  - [ ] Run integration tests
-  
-- [ ] **Staging Environment**
-  - [ ] Deploy v3 build to staging
-  - [ ] Verify policy loading
-  - [ ] Run smoke tests
-  - [ ] Run full test suite
-  - [ ] Load testing
-  - [ ] Monitor for issues
-  
-- [ ] **Production Migration**
-  - [ ] Choose migration strategy (blue-green, in-place, shadow mode)
-  - [ ] Prepare rollback plan
-  - [ ] Schedule deployment (maintenance window if needed)
-  - [ ] Deploy v3
-  - [ ] Monitor error rates
-  - [ ] Monitor latency
-  - [ ] Verify authorization decisions
-  - [ ] Monitor for 24-48 hours
-  
-- [ ] **Post-Migration**
-  - [ ] Update documentation
-  - [ ] Update CI/CD pipelines
-  - [ ] Update developer guides
-  - [ ] Archive v2 deployment artifacts
-  - [ ] Celebrate! 🎉
-
-## Real-World Migration Examples
-
-### Example 1: Microservices Architecture
-
-**Scenario**: 20 microservices using Casbin v2, shared PostgreSQL policy database.
-
-**Approach**:
-1. Updated one service at a time
-2. Deployed to staging, tested, moved to production
-3. All services shared the same policy database
-4. Completed migration in 2 weeks with zero downtime
-
-**Key insight**: The shared database approach made this seamless.
-
-### Example 2: Monolith Application
-
-**Scenario**: Single large application, file-based adapter.
-
-**Approach**:
-1. Updated all imports in one PR
-2. Tested in staging for a week
-3. Blue-green deployment to production
-4. Monitored for 48 hours, cut over fully
-
-**Key insight**: The mechanical nature of the change made it low-risk.
-
-### Example 3: Multi-Tenant SaaS
-
-**Scenario**: Multi-tenant application, tenant-specific policies in MySQL.
-
-**Approach**:
-1. Shadow deployed v3 alongside v2
-2. Sent identical requests to both
-3. Compared responses for 1 week
-4. Found 100% identical results
-5. Switched traffic to v3
-
-**Key insight**: Shadow mode testing provided high confidence.
-
-## Conclusion
-
-Upgrading from Casbin v2 to v3 is one of the most straightforward major version upgrades you'll encounter. The changes are purely mechanical (import paths), the functionality is identical, and the migration can be done gradually with easy rollback.
-
-**Key Takeaways**:
-- ✅ Only import paths change, everything else is identical
-- ✅ No database migration needed
-- ✅ Can run v2 and v3 side-by-side
-- ✅ Easy rollback if needed
-- ✅ New features added in v3 (logger integration, cycle detection, Explain API)
-
-**When to Migrate**:
-- New projects: Use v3 immediately
-- Existing projects: Migrate when convenient, but plan for within 6-12 months as v2 enters maintenance mode
-
-**How Long Does It Take**:
-- Small project: 15-30 minutes
-- Medium project: 2-4 hours  
-- Large project: 1-2 days for testing and staged rollout
-
-If you have questions or run into issues during migration, the Casbin community is here to help:
-- [GitHub Issues](https://github.com/casbin/casbin/issues)
-- [Discord](https://discord.gg/S5UjpzGZjN)
-- [Discussions](https://github.com/casbin/casbin/discussions)
 
 Happy upgrading! 🚀
