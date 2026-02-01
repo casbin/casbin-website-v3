@@ -1,21 +1,21 @@
-'use client';
-import Image from 'next/image';
-import { useMemo, useState } from 'react';
-import { Check, ChevronDown, Copy, ExternalLinkIcon, MessageCircleIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
-import { buttonVariants } from '../ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { cva } from 'class-variance-authority';
-import { getMarkdownContent } from '@/lib/get-markdown-content';
+"use client";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import { Check, ChevronDown, Copy, ExternalLinkIcon, MessageCircleIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
+import { buttonVariants } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cva } from "class-variance-authority";
+import { getMarkdownContent } from "@/lib/get-markdown-content";
 
 const cache = new Map<string, string>();
 
 // Helper function to normalize doc file paths to GitHub URL format
 function normalizeDocPathForGithub(path: string): string {
-  let normalized = path.startsWith('content/') ? path : `content/${path}`;
-  if (!normalized.startsWith('content/docs/')) {
-    normalized = normalized.replace(/^content\//, 'content/docs/');
+  let normalized = path.startsWith("content/") ? path : `content/${path}`;
+  if (!normalized.startsWith("content/docs/")) {
+    normalized = normalized.replace(/^content\//, "content/docs/");
   }
   return normalized;
 }
@@ -33,7 +33,7 @@ export function LLMCopyButton({
     try {
       setLoading(true);
       const cached = cache.get(pagePath);
-      const content = cached || await getMarkdownContent(pagePath);
+      const content = cached || (await getMarkdownContent(pagePath));
 
       if (!cached) {
         cache.set(pagePath, content);
@@ -54,9 +54,9 @@ export function LLMCopyButton({
       disabled={isLoading}
       className={cn(
         buttonVariants({
-          variant: 'secondary',
-          size: 'sm',
-          className: 'gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground',
+          variant: "secondary",
+          size: "sm",
+          className: "gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground",
         }),
       )}
       onClick={onClick}
@@ -68,7 +68,7 @@ export function LLMCopyButton({
 }
 
 const optionVariants = cva(
-  'text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4',
+  "text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4",
 );
 
 export function ViewOptions({
@@ -90,42 +90,66 @@ export function ViewOptions({
 
     return [
       {
-        title: 'Open in GitHub',
+        title: "Open in GitHub",
         href: githubUrl,
         icon: (
-          <Image src="/ai-icons/github.svg" alt="GitHub" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/github.svg"
+            alt="GitHub"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
-        title: 'Open in Scira AI',
+        title: "Open in Scira AI",
         href: `https://scira.ai/?${new URLSearchParams({
           q,
         })}`,
         icon: (
-          <Image src="/ai-icons/scira-ai.svg" alt="Scira AI" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/scira-ai.svg"
+            alt="Scira AI"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
-        title: 'Open in ChatGPT',
+        title: "Open in ChatGPT",
         href: `https://chatgpt.com/?${new URLSearchParams({
-          hints: 'search',
+          hints: "search",
           q,
         })}`,
         icon: (
-          <Image src="/ai-icons/openai.svg" alt="OpenAI" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/openai.svg"
+            alt="OpenAI"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
-        title: 'Open in Claude',
+        title: "Open in Claude",
         href: `https://claude.ai/new?${new URLSearchParams({
           q,
         })}`,
         icon: (
-          <Image src="/ai-icons/anthropic.svg" alt="Anthropic" width={16} height={16} className="size-4" />
+          <Image
+            src="/ai-icons/anthropic.svg"
+            alt="Anthropic"
+            width={16}
+            height={16}
+            className="size-4"
+          />
         ),
       },
       {
-        title: 'Open in T3 Chat',
+        title: "Open in T3 Chat",
         href: `https://t3.chat/new?${new URLSearchParams({
           q,
         })}`,
@@ -139,9 +163,9 @@ export function ViewOptions({
       <PopoverTrigger
         className={cn(
           buttonVariants({
-            variant: 'secondary',
-            size: 'sm',
-            className: 'gap-2',
+            variant: "secondary",
+            size: "sm",
+            className: "gap-2",
           }),
         )}
       >

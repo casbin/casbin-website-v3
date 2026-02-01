@@ -1,5 +1,5 @@
-import { createMDX } from 'fumadocs-mdx/next';
-import { docs, blog } from './source.config.ts';
+import { createMDX } from "fumadocs-mdx/next";
+import { docs, blog } from "./source.config.ts";
 
 const withMDX = createMDX({
   collections: { docs, blog },
@@ -15,18 +15,18 @@ const config = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.casbin.org',
+        protocol: "https",
+        hostname: "cdn.casbin.org",
       },
       {
-        protocol: 'https',
-        hostname: 'hsluoyz.github.io',
+        protocol: "https",
+        hostname: "hsluoyz.github.io",
       },
       {
-        protocol: 'https',
-        hostname: 'learn.microsoft.com',
-        pathname: '/**'
-      }
+        protocol: "https",
+        hostname: "learn.microsoft.com",
+        pathname: "/**",
+      },
     ],
   },
 };

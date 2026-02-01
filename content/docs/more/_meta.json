@@ -1,9 +1,4 @@
 {
-  "pages": [
-    "adopters",
-    "contributing",
-    "privacy-policy",
-    "terms-of-service"
-  ],
+  "pages": ["adopters", "contributing", "privacy-policy", "terms-of-service"],
   "title": "More"
 }

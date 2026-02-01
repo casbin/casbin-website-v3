@@ -1,13 +1,13 @@
-import * as React from "react"
-import { Card } from "./card"
-import { cn } from "@/lib/utils"
-import type { LucideIcon } from "lucide-react"
+import * as React from "react";
+import { Card } from "./card";
+import { cn } from "@/lib/utils";
+import type { LucideIcon } from "lucide-react";
 
 interface StatCardProps extends React.ComponentProps<typeof Card> {
-  icon: LucideIcon
-  iconColor?: string
-  value: string | number
-  label: string
+  icon: LucideIcon;
+  iconColor?: string;
+  value: string | number;
+  label: string;
 }
 
 /**
@@ -29,9 +29,11 @@ function StatCard({
   ...props
 }: StatCardProps) {
   const customStyle: React.CSSProperties = {
-    ...(iconColor ? { "--stat-color": iconColor } as React.CSSProperties & { "--stat-color": string } : {}),
+    ...(iconColor
+      ? ({ "--stat-color": iconColor } as React.CSSProperties & { "--stat-color": string })
+      : {}),
     ...style,
-  }
+  };
 
   return (
     <Card
@@ -40,24 +42,19 @@ function StatCard({
       {...props}
     >
       <div className="flex justify-center mb-2">
-        <div 
+        <div
           className={cn(
             "p-3 rounded-lg",
-            iconColor && "bg-[color-mix(in_srgb,var(--stat-color)_8%,transparent)]"
+            iconColor && "bg-[color-mix(in_srgb,var(--stat-color)_8%,transparent)]",
           )}
         >
-          <Icon 
-            className={cn(
-              "h-6 w-6",
-              iconColor && "text-[var(--stat-color)]"
-            )}
-          />
+          <Icon className={cn("h-6 w-6", iconColor && "text-[var(--stat-color)]")} />
         </div>
       </div>
       <div className="text-3xl font-bold">{value}</div>
       <div className="text-sm text-muted-foreground mt-1">{label}</div>
     </Card>
-  )
+  );
 }
 
-export { StatCard }
+export { StatCard };

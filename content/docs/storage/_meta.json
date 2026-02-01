@@ -1,8 +1,4 @@
 {
-  "pages": [
-    "model-storage",
-    "policy-storage",
-    "policy-subset-loading"
-  ],
+  "pages": ["model-storage", "policy-storage", "policy-subset-loading"],
   "title": "Storage"
 }

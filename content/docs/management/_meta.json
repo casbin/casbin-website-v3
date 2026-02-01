@@ -1,10 +1,4 @@
 {
-  "pages": [
-    "admin-portal",
-    "service",
-    "command-line-tools",
-    "log-error",
-    "frontend-usage"
-  ],
+  "pages": ["admin-portal", "service", "command-line-tools", "log-error", "frontend-usage"],
   "title": "Management"
 }

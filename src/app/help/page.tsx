@@ -1,46 +1,48 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { MessageSquare, Github, Users2, HelpCircle } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { MessageSquare, Github, Users2, HelpCircle } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: 'Help',
-  description: 'Get help with Casbin',
+  title: "Help",
+  description: "Get help with Casbin",
 };
 
 export default function HelpPage() {
   const helpOptions = [
     {
       icon: MessageSquare,
-      title: 'Discord',
-      description: 'Join the conversation on Discord to get help from contributors.',
-      link: 'https://discord.gg/S5UjpzGZjN',
-      color: 'text-[#5865F2]',
-      bgColor: 'bg-[#5865F2]/10',
+      title: "Discord",
+      description: "Join the conversation on Discord to get help from contributors.",
+      link: "https://discord.gg/S5UjpzGZjN",
+      color: "text-[#5865F2]",
+      bgColor: "bg-[#5865F2]/10",
     },
     {
       icon: Github,
-      title: 'GitHub',
-      description: 'Browse our GitHub repo and submit issues or pull requests for bugs or feature requests.',
-      link: 'https://github.com/casbin/casbin',
-      color: 'text-gray-900 dark:text-white',
-      bgColor: 'bg-gray-900/10 dark:bg-white/10',
+      title: "GitHub",
+      description:
+        "Browse our GitHub repo and submit issues or pull requests for bugs or feature requests.",
+      link: "https://github.com/casbin/casbin",
+      color: "text-gray-900 dark:text-white",
+      bgColor: "bg-gray-900/10 dark:bg-white/10",
     },
     {
       icon: Users2,
-      title: 'Google Groups',
-      description: 'Discuss with maintainers or share your experience with Casbin on Google Groups.',
-      link: 'https://groups.google.com/g/casbin',
-      color: 'text-[#4285F4]',
-      bgColor: 'bg-[#4285F4]/10',
+      title: "Google Groups",
+      description:
+        "Discuss with maintainers or share your experience with Casbin on Google Groups.",
+      link: "https://groups.google.com/g/casbin",
+      color: "text-[#4285F4]",
+      bgColor: "bg-[#4285F4]/10",
     },
     {
       icon: HelpCircle,
-      title: 'Stack Overflow',
-      description: 'Ask questions about Casbin on Stack Overflow.',
-      link: 'https://stackoverflow.com/questions/tagged/casbin',
-      color: 'text-[#F48024]',
-      bgColor: 'bg-[#F48024]/10',
+      title: "Stack Overflow",
+      description: "Ask questions about Casbin on Stack Overflow.",
+      link: "https://stackoverflow.com/questions/tagged/casbin",
+      color: "text-[#F48024]",
+      bgColor: "bg-[#F48024]/10",
     },
   ];
 
@@ -95,7 +97,7 @@ export default function HelpPage() {
         <div className="mt-16 text-center">
           <div className="inline-block bg-slate-50 dark:bg-slate-800 rounded-lg px-6 py-4 border border-slate-200 dark:border-slate-700">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Looking for documentation?{' '}
+              Looking for documentation?{" "}
               <Link href="/docs" className="text-[#443D80] hover:underline font-medium">
                 Visit our docs
               </Link>

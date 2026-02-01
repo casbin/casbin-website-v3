@@ -1,22 +1,22 @@
 /**
  * Script to fetch v2 repository file update dates using GitHub CLI
  * Generates a base last-updated.json file with v2 documentation file dates
- * 
+ *
  * This script runs once to create the initial time baseline.
  * Then npm run build will fetch v3 file dates and update accordingly.
- * 
+ *
  * Usage: npx tsx scripts/get-v2-dates.ts
  */
 
-import { execSync } from 'child_process';
-import { basename, resolve } from 'path';
-import { writeFileSync } from 'fs';
+import { execSync } from "child_process";
+import { basename, resolve } from "path";
+import { writeFileSync } from "fs";
 
 // Configuration
-const V2_REPO_OWNER = 'casbin';
-const V2_REPO_NAME = 'casbin-website-v2';
-const V2_BRANCH = 'master';
-const OUTPUT_PATH = resolve(process.cwd(), 'scripts/baseline.json');
+const V2_REPO_OWNER = "casbin";
+const V2_REPO_NAME = "casbin-website-v2";
+const V2_BRANCH = "master";
+const OUTPUT_PATH = resolve(process.cwd(), "scripts/baseline.json");
 
 // Types
 interface V2FileInfo {
@@ -30,9 +30,9 @@ interface V2FileInfo {
  */
 function normalizeName(filename: string): string {
   return filename
-    .replace(/\.mdx?$/, '')
+    .replace(/\.mdx?$/, "")
     .toLowerCase()
-    .replace(/[-_]/g, '');
+    .replace(/[-_]/g, "");
 }
 
 /**
@@ -40,7 +40,7 @@ function normalizeName(filename: string): string {
  */
 function isGhCliAvailable(): boolean {
   try {
-    execSync('gh auth status', { stdio: 'ignore' });
+    execSync("gh auth status", { stdio: "ignore" });
     return true;
   } catch (e) {
     return false;
@@ -52,17 +52,17 @@ function isGhCliAvailable(): boolean {
  */
 function runGh(args: string[]): any {
   try {
-    const formattedArgs = args.map(arg => {
-      if (arg.includes('&') || arg.includes('?') || arg.includes('=')) {
+    const formattedArgs = args.map((arg) => {
+      if (arg.includes("&") || arg.includes("?") || arg.includes("=")) {
         return `"${arg}"`;
       }
       return arg;
     });
-    const cmd = `gh ${formattedArgs.join(' ')}`;
+    const cmd = `gh ${formattedArgs.join(" ")}`;
     const output = execSync(cmd, {
-      encoding: 'utf8',
+      encoding: "utf8",
       maxBuffer: 10 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'ignore']
+      stdio: ["ignore", "pipe", "ignore"],
     }).trim();
     return JSON.parse(output);
   } catch (error) {
@@ -76,22 +76,25 @@ function runGh(args: string[]): any {
 async function getV2FileList(): Promise<Map<string, V2FileInfo>> {
   console.log(`📡 Fetching v2 file list from ${V2_REPO_OWNER}/${V2_REPO_NAME}...`);
 
-  const data = runGh(['api', `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/git/trees/${V2_BRANCH}?recursive=1`]);
+  const data = runGh([
+    "api",
+    `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/git/trees/${V2_BRANCH}?recursive=1`,
+  ]);
 
   if (!data?.tree) {
-    throw new Error('Failed to fetch v2 tree');
+    throw new Error("Failed to fetch v2 tree");
   }
 
   const fileMap = new Map<string, V2FileInfo>();
 
   for (const item of data.tree) {
-    if (item.type === 'blob' && (item.path.endsWith('.md') || item.path.endsWith('.mdx'))) {
+    if (item.type === "blob" && (item.path.endsWith(".md") || item.path.endsWith(".mdx"))) {
       const name = basename(item.path);
       const normalized = normalizeName(name);
       fileMap.set(normalized, {
         path: item.path,
         normalizedName: normalized,
-        lastUpdated: ''
+        lastUpdated: "",
       });
     }
   }
@@ -105,7 +108,10 @@ async function getV2FileList(): Promise<Map<string, V2FileInfo>> {
  */
 async function getV2FileDate(filePath: string): Promise<Date | null> {
   try {
-    const data = runGh(['api', `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/commits?path=${encodeURIComponent(filePath)}&per_page=1`]);
+    const data = runGh([
+      "api",
+      `repos/${V2_REPO_OWNER}/${V2_REPO_NAME}/commits?path=${encodeURIComponent(filePath)}&per_page=1`,
+    ]);
     if (data?.[0]?.commit?.committer?.date) {
       return new Date(data[0].commit.committer.date);
     }
@@ -120,9 +126,9 @@ async function getV2FileDate(filePath: string): Promise<Date | null> {
  */
 async function main() {
   if (!isGhCliAvailable()) {
-    console.error('❌ GitHub CLI is not installed or not authenticated.');
-    console.error('Please install GitHub CLI: https://cli.github.com/');
-    console.error('Then run: gh auth login');
+    console.error("❌ GitHub CLI is not installed or not authenticated.");
+    console.error("Please install GitHub CLI: https://cli.github.com/");
+    console.error("Then run: gh auth login");
     process.exit(1);
   }
 
@@ -140,7 +146,7 @@ async function main() {
     }
   }
 
-  process.stdout.write('\n');
+  process.stdout.write("\n");
 
   // Write to last-updated.json
   writeFileSync(OUTPUT_PATH, JSON.stringify(lastUpdatedData, null, 2));
@@ -152,6 +158,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('❌ Script failed:', error);
+  console.error("❌ Script failed:", error);
   process.exit(1);
 });

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import type { CSSProperties } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ColorBadge } from '@/components/ui/color-badge';
-import { Tags, type TagType } from '@/data/plugins/tags';
-import type { Plugin } from '@/data/plugins';
-import { ExternalLink, Check, X, Package } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ColorBadge } from "@/components/ui/color-badge";
+import { Tags, type TagType } from "@/data/plugins/tags";
+import type { Plugin } from "@/data/plugins";
+import { ExternalLink, Check, X, Package } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface PluginCardProps {
   plugin: Plugin;
@@ -21,7 +21,7 @@ export function PluginCard({ plugin }: PluginCardProps) {
 
   // Generate a consistent gradient color based on plugin name for default image
   const getGradientColor = (name: string) => {
-    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const hue = hash % 360;
     return {
       from: `hsl(${hue}, 70%, 60%)`,
@@ -30,7 +30,8 @@ export function PluginCard({ plugin }: PluginCardProps) {
   };
 
   const gradient = getGradientColor(title);
-  const hasImage = !!plugin.image && typeof plugin.image === 'string' && plugin.image.startsWith('/');
+  const hasImage =
+    !!plugin.image && typeof plugin.image === "string" && plugin.image.startsWith("/");
 
   return (
     <Card className="h-full transition-all duration-300 hover:shadow-xl hover:shadow-[#443D80]/10 hover:-translate-y-1 group border-2 hover:border-[#443D80]/30 overflow-hidden flex flex-col">
@@ -49,7 +50,7 @@ export function PluginCard({ plugin }: PluginCardProps) {
         ) : (
           <div
             className="w-full h-full flex items-center justify-center relative overflow-hidden [background:linear-gradient(135deg,var(--grad-from),var(--grad-to))]"
-            style={{ '--grad-from': gradient.from, '--grad-to': gradient.to } as CSSProperties}
+            style={{ "--grad-from": gradient.from, "--grad-to": gradient.to } as CSSProperties}
           >
             {/* Decorative tech pattern */}
             <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.3)_1px,transparent_1px)] [background-size:30px_30px]" />
@@ -85,10 +86,12 @@ export function PluginCard({ plugin }: PluginCardProps) {
         <div className="flex flex-wrap gap-1.5">
           {plugin.tags.map((tag) => {
             // Find tag info in Tags object
-            const tagKey = Object.keys(Tags).find(k => Tags[k as TagType].label === tag) as TagType | undefined;
+            const tagKey = Object.keys(Tags).find((k) => Tags[k as TagType].label === tag) as
+              | TagType
+              | undefined;
             if (!tagKey) return null;
             const tagInfo = Tags[tagKey];
-            
+
             return (
               <ColorBadge
                 key={tag}
@@ -110,15 +113,19 @@ export function PluginCard({ plugin }: PluginCardProps) {
           <div className="flex items-center gap-1.5">
             <span className="text-muted-foreground">Category:</span>
             <span className="font-medium">
-              {plugin.type || plugin.tags.find(t => ['Middleware', 'Watcher', 'RoleManager', 'Dispatcher'].includes(t)) || 'Other'}
+              {plugin.type ||
+                plugin.tags.find((t) =>
+                  ["Middleware", "Watcher", "RoleManager", "Dispatcher"].includes(t),
+                ) ||
+                "Other"}
             </span>
           </div>
-          
+
           {/* Show AutoSave only for Adapters */}
           {plugin.autoSave && (
             <div className="flex items-center gap-1.5 ml-auto">
               <span className="text-muted-foreground">Auto-save:</span>
-              {plugin.autoSave === '✅' ? (
+              {plugin.autoSave === "✅" ? (
                 <Check className="h-4 w-4 text-green-600" />
               ) : (
                 <X className="h-4 w-4 text-red-600" />
@@ -149,7 +156,7 @@ export function PluginCard({ plugin }: PluginCardProps) {
         {/* Author */}
         {plugin.author && (
           <div className="text-xs text-muted-foreground pt-2 border-t mt-auto">
-            by{' '}
+            by{" "}
             <ReactMarkdown
               components={{
                 a: ({ node, ...props }) => (

@@ -1,6 +1,6 @@
-import { docs, blog } from 'fumadocs-mdx:collections/server';
-import { type InferPageType, loader } from 'fumadocs-core/source';
-import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
+import { docs, blog } from "fumadocs-mdx:collections/server";
+import { type InferPageType, loader } from "fumadocs-core/source";
+import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 
 // Define proper types for page data
 type PageData = {
@@ -18,19 +18,17 @@ type PageData = {
 };
 
 type FumadocsPageData = PageData & {
-  getText: (type: 'raw' | 'processed') => Promise<string>;
+  getText: (type: "raw" | "processed") => Promise<string>;
 };
 
 // Keep doc URLs flat so folder names stay out of the final pathname.
 function flattenDocSlugs({ path }: { path: string }): string[] {
-  const segments = path.replace(/\\/g, '/').split('/').filter(Boolean);
-  const fileName = segments.pop() ?? '';
-  const baseName = fileName.replace(/\.[^/.]+$/, '');
+  const segments = path.replace(/\\/g, "/").split("/").filter(Boolean);
+  const fileName = segments.pop() ?? "";
+  const baseName = fileName.replace(/\.[^/.]+$/, "");
 
-  if (baseName === 'index') {
-    return segments
-      .filter((segment) => segment !== 'docs')
-      .map((segment) => encodeURI(segment));
+  if (baseName === "index") {
+    return segments.filter((segment) => segment !== "docs").map((segment) => encodeURI(segment));
   }
 
   return [encodeURI(baseName)];
@@ -38,30 +36,30 @@ function flattenDocSlugs({ path }: { path: string }): string[] {
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
-  baseUrl: '/docs',
+  baseUrl: "/docs",
   source: docs.toFumadocsSource(),
   slugs: flattenDocSlugs,
   plugins: [lucideIconsPlugin()],
 });
 
 export const blogSource = loader({
-  baseUrl: '/blog',
+  baseUrl: "/blog",
   source: blog.toFumadocsSource(),
   plugins: [lucideIconsPlugin()],
 });
 
 export function getPageImage(page: InferPageType<typeof source>) {
-  const segments = [...page.slugs, 'image.png'];
+  const segments = [...page.slugs, "image.png"];
 
   return {
     segments,
-    url: `/og/docs/${segments.join('/')}`,
+    url: `/og/docs/${segments.join("/")}`,
   };
 }
 
 export async function getLLMText(page: InferPageType<typeof source>) {
   const pageData = page.data as FumadocsPageData;
-  const raw = await pageData.getText('raw');
+  const raw = await pageData.getText("raw");
 
   // Build metadata section
   const metadata: string[] = [];
@@ -70,7 +68,7 @@ export async function getLLMText(page: InferPageType<typeof source>) {
   metadata.push(`URL: ${page.url}`);
 
   // Add source file URL on GitHub
-  const normalizedPath = page.path.startsWith('content/') ? page.path : `content/${page.path}`;
+  const normalizedPath = page.path.startsWith("content/") ? page.path : `content/${page.path}`;
   const sourceUrl = `https://github.com/casbin/casbin-website-v3/blob/master/${normalizedPath}`;
   metadata.push(`Source: ${sourceUrl}`);
 
@@ -84,11 +82,11 @@ export async function getLLMText(page: InferPageType<typeof source>) {
   const cleanedContent = raw
     .replace(/<[A-Z][^>]*\/?>/g, "") // Remove MDX components starting with capital letter (e.g., <Feedback />, <Card>)
     .trim()
-    .replace(/\n\s*\n\s*\n+/g, '\n\n');
+    .replace(/\n\s*\n\s*\n+/g, "\n\n");
 
   return `# ${pageData.title}
 
-${metadata.join('\n')}
+${metadata.join("\n")}
 
 ${cleanedContent}`;
 }
