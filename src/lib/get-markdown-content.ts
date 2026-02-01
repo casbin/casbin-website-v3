@@ -9,6 +9,9 @@ export async function getMarkdownContent(pagePath: string): Promise<string> {
 
     // Normalize the path - remove leading/trailing slashes and 'content/' prefix if present
     let normalizedPath = pagePath.replace(/^\/|\/$/g, "").replace(/^content\//, "");
+    
+    // Remove file extension (.mdx, .md) as page.path from fumadocs doesn't include it
+    normalizedPath = normalizedPath.replace(/\.(mdx?|md)$/, "");
 
     // Try to find a matching page
     // page.path from Fumadocs is typically in the format 'docs/...' or similar
