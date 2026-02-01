@@ -10,6 +10,9 @@
  *    - If v3 date <= cutoff: Keep baseline date from baseline.json
  * 5. Writes updated dates to public/last-updated.json
  * 
+ * NOTE: public/last-updated.json is in .gitignore and should NOT be committed.
+ *       It is generated at build time and should not be checked into version control.
+ * 
  * Runs automatically during: npm run build (via prebuild script)
  * Usage: npx tsx scripts/generate-last-updated.ts
  */
