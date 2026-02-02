@@ -11,7 +11,6 @@ export async function getMarkdownContent(slugs: string[]): Promise<string> {
       throw new Error(`Page not found for slugs: ${slugs.join("/")}`);
     }
 
-    // Get the formatted markdown content with metadata (title, URL, source, description)
     const content = await getLLMText(page as Parameters<typeof getLLMText>[0]);
     return content;
   } catch (error) {

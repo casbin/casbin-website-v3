@@ -32,6 +32,9 @@ const config = {
       },
     ],
   },
+  outputFileTracingIncludes: {
+    "/**/*": ["./content/**/*", "./.source/**/*"],
+  },
 };
 
 export default withMDX(config);
