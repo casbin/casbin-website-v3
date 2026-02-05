@@ -1,15 +1,25 @@
 {
   "title": "Documentation",
   "pages": [
-    "basics",
-    "model",
-    "storage",
-    "scenarios",
-    "plugins",
-    "api",
-    "advanced-usage",
-    "management",
-    "editor",
-    "more"
+    "---The basics---",
+    "...the-basics",
+    "---Model---",
+    "...model",
+    "---Storage---",
+    "...storage",
+    "---Scenarios---",
+    "...scenarios",
+    "---Plugins---",
+    "...plugins",
+    "---API---",
+    "...api",
+    "---Advanced usage---",
+    "...advanced-usage",
+    "---Management---",
+    "...management",
+    "---Editor---",
+    "...editor",
+    "---More---",
+    "...more"
   ]
 }

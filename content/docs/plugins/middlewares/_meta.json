@@ -1,4 +1,4 @@
 {
-  "pages": ["middlewares", "kong-authz", "graphql-middlewares", "cloud-native"],
+  "pages": ["index", "kong-authz", "graphql-middlewares", "cloud-native"],
   "title": "Middlewares"
 }

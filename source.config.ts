@@ -10,6 +10,8 @@ export const docs = defineDocs({
     schema: frontmatterSchema.extend({
       authors: z.array(z.string()).optional(),
       date: z.string().date().or(z.date()).optional(),
+      slug: z.string().optional(),
+      icon: z.string().optional(),
     }),
     postprocess: {
       includeProcessedMarkdown: true,

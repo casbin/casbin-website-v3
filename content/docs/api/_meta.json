@@ -1,11 +1,12 @@
 {
+  "title": "API",
   "pages": [
     "api-overview",
+    "index-api",
     "management-api",
     "rbac-api",
     "rbac-with-domains-api",
     "rbac-with-conditions-api",
     "role-manager-api"
-  ],
-  "title": "API"
+  ]
 }

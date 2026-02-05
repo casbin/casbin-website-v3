@@ -1,6 +1,6 @@
 {
   "pages": [
-    "rbac-overview",
+    "index",
     "rbac",
     "rbac-with-pattern",
     "rbac-with-domains",

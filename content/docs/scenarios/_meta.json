@@ -1,4 +1,4 @@
 {
-  "pages": ["data-permissions", "menu-permissions"],
-  "title": "Scenarios"
+  "title": "Scenarios",
+  "pages": ["data-permissions", "menu-permissions"]
 }

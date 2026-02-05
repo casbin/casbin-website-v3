@@ -1,6 +1,8 @@
 import { docs, blog } from "fumadocs-mdx:collections/server";
 import { type InferPageType, loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
+import { icons } from "lucide-react";
+import { createElement } from "react";
 
 // Define proper types for page data
 type PageData = {
@@ -21,31 +23,140 @@ type FumadocsPageData = PageData & {
   getText: (type: "raw" | "processed") => Promise<string>;
 };
 
-// Keep doc URLs flat so folder names stay out of the final pathname.
-function flattenDocSlugs({ path }: { path: string }): string[] {
-  const segments = path.replace(/\\/g, "/").split("/").filter(Boolean);
-  const fileName = segments.pop() ?? "";
-  const baseName = fileName.replace(/\.[^/.]+$/, "");
+// Define category page mappings - single source of truth for all category pages
+// This replaces the hardcoded categoryPageMappings in the category page component
+export const categoryPageConfigs: Record<string, string[]> = {
+  "the-basics": [
+    "the-basics/overview",
+    "the-basics/get-started",
+    "the-basics/how-it-works",
+    "the-basics/tutorial",
+  ],
+  model: [
+    "model/supported-models",
+    "model/syntax-for-models",
+    "model/effector",
+    "model/function",
+    "model/rebac",
+    "model/abac",
+    "model/pbac",
+    "model/orbac",
+    "model/priority-model",
+    "model/ucon",
+    "model/super-admin",
+    "model/rbac",
+    "model/rbac/rbac",
+    "model/rbac/rbac-with-pattern",
+    "model/rbac/rbac-with-domains",
+    "model/rbac/rbac-with-conditions",
+    "model/rbac/casbin-rbac-and-rbac96",
+    "model/mac",
+    "model/mac/blp",
+    "model/mac/biba",
+    "model/mac/lbac",
+  ],
+  storage: ["storage/model-storage", "storage/policy-storage", "storage/policy-subset-loading"],
+  scenarios: ["scenarios/data-permissions", "scenarios/menu-permissions"],
+  plugins: [
+    "plugins/plugins-overview",
+    "plugins/enforcers",
+    "plugins/adapters",
+    "plugins/watchers",
+    "plugins/dispatchers",
+    "plugins/role-managers",
+    "plugins/middlewares",
+    "plugins/middlewares/kong-authz",
+    "plugins/middlewares/graphql-middlewares",
+    "plugins/middlewares/cloud-native",
+  ],
+  api: [
+    "api/api-overview",
+    "api/index-api",
+    "api/management-api",
+    "api/rbac-api",
+    "api/rbac-with-domains-api",
+    "api/rbac-with-conditions-api",
+    "api/role-manager-api",
+  ],
+  "advanced-usage": [
+    "advanced-usage/multi-threading",
+    "advanced-usage/benchmark",
+    "advanced-usage/performance",
+    "advanced-usage/k8s-authz",
+    "advanced-usage/k8s-gate-keeper",
+    "advanced-usage/envoy-authz",
+  ],
+  management: [
+    "management/admin-portal",
+    "management/service",
+    "management/command-line-tools",
+    "management/log-error",
+    "management/frontend-usage",
+  ],
+  editor: ["editor/online-editor", "editor/ide-plugins"],
+  more: ["more/adopters", "more/contributing", "more/privacy-policy", "more/terms-of-service"],
+};
 
-  if (baseName === "index") {
-    return segments.filter((segment) => segment !== "docs").map((segment) => encodeURI(segment));
+// Subcategory overview pages that should show as folder cards with icons
+export const subCategoryOverviews: Record<string, { icon: string; label: string }> = {
+  "model/rbac": { icon: "📁", label: "RBAC" },
+  "model/mac": { icon: "📁", label: "MAC" },
+  "plugins/middlewares": { icon: "📁", label: "Middlewares" },
+};
+
+// Get the item count for a subcategory by dynamically counting pages under it
+export function getSubCategoryItemCount(relativePath: string): number {
+  for (const pages of Object.values(categoryPageConfigs)) {
+    if (pages.includes(relativePath)) {
+      const parentPath = relativePath;
+      return pages.filter((path) => path.startsWith(parentPath + "/") || path === parentPath)
+        .length;
+    }
   }
-
-  return [encodeURI(baseName)];
+  return 0;
 }
 
-// See https://fumadocs.dev/docs/headless/source-api for more info
+// Get pages for a specific category slug
+export function getCategoryPages(
+  categorySlug: string,
+): { url: string; data: { title: string; description?: string } }[] {
+  const pageSlugs = categoryPageConfigs[categorySlug];
+  if (!pageSlugs) return [];
+
+  const pages: { url: string; data: { title: string; description?: string } }[] = [];
+  for (const pageSlug of pageSlugs) {
+    const page = source.getPage([pageSlug]);
+    if (page) {
+      pages.push({
+        url: page.url,
+        data: {
+          title: page.data.title,
+          description: page.data.description,
+        },
+      });
+    }
+  }
+  return pages;
+}
+
 export const source = loader({
   baseUrl: "/docs",
   source: docs.toFumadocsSource(),
-  slugs: flattenDocSlugs,
   plugins: [lucideIconsPlugin()],
+  icon(icon) {
+    if (!icon) return;
+    if (icon in icons) return createElement(icons[icon as keyof typeof icons]);
+  },
 });
 
 export const blogSource = loader({
   baseUrl: "/blog",
   source: blog.toFumadocsSource(),
   plugins: [lucideIconsPlugin()],
+  icon(icon) {
+    if (!icon) return;
+    if (icon in icons) return createElement(icons[icon as keyof typeof icons]);
+  },
 });
 
 export function getPageImage(page: InferPageType<typeof source>) {

@@ -1,6 +1,7 @@
 import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { baseOptions, sharedLinks } from "@/lib/layout.shared";
+import { SidebarSeparator } from "@/components/sidebar/separator";
 
 export default function Layout({ children }: LayoutProps<"/docs">) {
   const base = baseOptions();
@@ -26,7 +27,10 @@ export default function Layout({ children }: LayoutProps<"/docs">) {
       nav={docsNav}
       sidebar={{
         collapsible: true,
-        defaultOpenLevel: 1,
+        defaultOpenLevel: 2,
+        components: {
+          Separator: SidebarSeparator,
+        },
       }}
     >
       {children}

@@ -1,4 +1,5 @@
 {
+  "title": "Advanced usage",
   "pages": [
     "multi-threading",
     "benchmark",
@@ -6,6 +7,5 @@
     "k8s-authz",
     "k8s-gate-keeper",
     "envoy-authz"
-  ],
-  "title": "Advanced Usage"
+  ]
 }
