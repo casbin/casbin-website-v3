@@ -30,7 +30,9 @@ export function middleware(request: NextRequest) {
     const firstPage = categoryFirstPages[category];
 
     if (firstPage) {
-      return NextResponse.redirect(new URL(`/docs/${firstPage}`, request.url), 307);
+      const url = request.nextUrl.clone();
+      url.pathname = `/docs/${firstPage}`;
+      return NextResponse.redirect(url, 307);
     }
   }
 
