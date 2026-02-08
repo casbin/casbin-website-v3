@@ -10,6 +10,7 @@ import type { NextRequest } from "next/server";
  */
 const categoryFirstPages: Record<string, string> = {
   "the-basics": "overview",
+  basics: "overview",
   model: "supported-models",
   storage: "model-storage",
   scenarios: "data-permissions",
