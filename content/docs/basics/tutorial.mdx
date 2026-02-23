@@ -35,12 +35,16 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 - [A Secure Vault - implementing authorization middleware with Casbin - JuniorDevSG](https://www.youtube.com/watch?v=OTT84oplR9o)
 - [Nest.js - Casbin RESTful RBAC authorization middleware](https://www.youtube.com/watch?v=mWlPNrCgVdE)
 
+
 ### PERM Meta-Model (Policy, Effect, Request, Matchers)
 
 - [Understanding Casbin with different Access Control Model Configurations](https://medium.com/wesionary-team/understanding-casbin-with-different-access-control-model-configurations-faebc60f6da5)
 - [Modeling Authorization with PERM in Casbin](https://narendraj9.github.io/posts/generalized-authz.html)
 - [Designing a Flexible Permissions System with Casbin](https://medium.com/silo-blog/designing-a-flexible-permissions-system-with-casbin-f5d97fef17b8)
 - [Authorize with Access Control Lists](https://medium.com/pragmatic-programmers/authorize-with-access-control-lists-92fbec57a920)
+- [The Power of Casbin’s PERM Model – Medium by Casbin Team](https://medium.com/casbin/the-power-of-casbins-perm-model-7c9a5b6e8f3d?spm=5176.28103460.0.0.14e67551FWN1PG)
+- [Building Dynamic Authorization Systems with Casbin and the PERM Model – LogRocket Blog]
+
 
 <Tabs groupId="langs" items={['Go', 'Java', 'Node.js', 'PHP', '.NET', 'Rust', 'Lua']} persist>
 <Tab value="Go">
@@ -48,6 +52,7 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 ### HTTP & RESTful
 
 - [Basic Role-Based HTTP Authorization in Go with Casbin](https://zupzup.org/casbin-http-role-auth)
+- [HTTP Authorization in Go using Casbin, Redis and PostgreSQL](https://dev.to/girishg4t/basic-role-based-http-authorization-in-go-with-casbin-redis-postgresql-1eh2)
 
 ### Gin
 
@@ -55,10 +60,13 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 - [Tutorial: Integrate Gin with Casbin](https://dev.to/maxwellhertz/tutorial-integrate-gin-with-cabsin-56m0)
 - [Policy enforcements on K8s with Pipeline](https://outshift.cisco.com/blog/policy-enforcement-k8s)
 - [Authentication and authorization in Gin application with JWT and Casbin](https://medium.com/@tienbm90/authentication-and-authorization-in-gin-application-with-jwt-and-casbin-a56bbbdec90b)
+- [Building RBAC in Golang](https://www.aserto.com/blog/building-rbac-in-go)
+- [Creating a Spring Security-like RBAC System for Your Gin Project Using Casbin](https://medium.com/@abhishekranjandev/creating-a-spring-security-like-rbac-system-for-your-gin-project-using-casbin-41364211ae67)
 
 ### Echo
 
 - [Web authorization with Casbin](http://klotzandrew.com/blog/authorization-with-casbin)
+- [Authorization in Go with Casbin](https://levelup.gitconnected.com/authorization-in-go-with-casbin-79c07fffce61)
 
 ### Argo CD
 
@@ -66,6 +74,10 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 
 </Tab>
 <Tab value="Java">
+
+- [Hierarchical Role Based Access Control for Enterprise SaaS using Casbin | Spring Boot | Part 1](https://aravinda-kumar.com/docs/Java/Spring%20Boot/RoleBasedAccessControlInSpringBootWithCasbin/)
+- [Things You Need To Know About jCasbin Service](https://www.oodlestechnologies.com/dev-blog/jcasbin-service/)
+
 
 </Tab>
 <Tab value="Node.js">
@@ -89,11 +101,21 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 ### Fastify
 
 - [Access Control in Node.js with Fastify and Casbin](https://www.nearform.com/blog/access-control-node-js-fastify-and-casbin/)
+- [Building RBAC in Node](https://www.aserto.com/blog/building-rbac-in-node)
+- [How to implement RBAC with Casbin and nodejs](https://kingsleyatanang.dev/blog/rbac-with-casbin-and-nodejs)
+- [Casbin with Node.js](https://adi22maurya.medium.com/casbin-with-node-js-76668c4d16aa)
+- [Using Casbin for user authorization in a system](https://2coffee.dev/en/articles/using-casbin-for-user-authorization-in-a-system)
+
 
 </Tab>
 <Tab value="PHP">
 
 - [Casbin, Powerful and Efficient ACL for Your Projects](http://phpmagazine.net/2018/11/casbin-powerful-and-efficient-acl-for-your-projects.html)
+- [php-casbin仓库](https://github.com/php-casbin/php-casbin)
+- [Using Casbin for permission control in PHP](https://medium.com/@leeqvip/using-casbin-for-permission-control-in-php-e578933de110)
+- [PHP-Casbin](https://sourceforge.net/projects/php-casbin.mirror/)
+
+
 
 </Tab>
 <Tab value=".NET">
@@ -106,6 +128,8 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 - [Basic Role-Based HTTP Authorization in Rust with Casbin](https://www.zupzup.org/rust-casbin-example/)
 - [How to use casbin authorization in your rust web-app [Part - 1]](https://dev.to/smrpn/how-to-use-casbin-authorization-in-your-rust-web-app-part-1-4f8f)
 - [How to use casbin authorization in your rust web-app [Part - 2]](https://dev.to/smrpn/how-to-use-casbin-authorization-in-your-rust-web-app-part-2-1bnm)
+- [Authorization mechanisms in Rust web applications](https://ddtkey.com/blog/authz-mechanisms-in-Rust/)
+- [Rust Axum Casbin Authorisation](https://medium.com/@omprakashsridharan/rust-axum-casbin-authorisation-dc8926365613)
 
 </Tab>
 <Tab value="Lua">
@@ -113,6 +137,36 @@ This paper provides an in-depth exploration of Casbin's design. If you reference
 ### APISIX
 
 - [Authorization in APISIX using Casbin](https://medium.com/@rushitote/authorization-in-apisix-using-casbin-59b693669d6d)
+- [Auth with Casbin in Apache APISIX](https://apisix.apache.org/blog/2021/08/18/auth-with-casbin-in-apache-apisix/)
+- [Authorization with Casbin in Apache APISIX](https://medium.com/@ApacheAPISIX/authorization-with-casbin-in-apache-apisix-ebff4f1bc9d1)
+
+</Tab>
+<Tab value="Python">
+
+### Python Integrations
+
+- [Authorization on FastAPI with Casbin](https://dev.to/teresafds/authorization-on-fastapi-with-casbin-41og)
+- [Casbin, an alternative to validate user permissions](https://ridouku.medium.com/casbin-an-alternative-to-validate-user-permissions-fd21fadc2b3a)
+- [Simplified identity with 'Sign-in with Google' and Casbin](https://hodo.dev/posts/post-33-gcp-simplified-identity/)
+- [Implement Casbin sidecar pattern](https://hrekov.com/blog/casbin-sidecar-pattern)
 
 </Tab>
 </Tabs>
+
+### API Gateway and Ecosystem
+
+- [Google Summer of Code 2021 - Final Report - Casbin](https://ashishmalik.netlify.app/post/casbin/casbin2021/)
+
+
+### Comparison and Analysis
+
+- [Casbin authorization: definition, pros and cons, and alternatives](https://authzed.com/blog/casbin)
+- [The 10 best RBAC open-source solutions in 2024](https://workos.com/blog/rbac-open-source)
+- [7 Best Role-Based Access Control (RBAC) Tools of 2025](https://permify.co/post/rbac-tools/)
+- [Top 7 Axiomatics Alternatives for 2025](https://permify.co/post/top-axiomatics-alternatives/)
+- [Top 6 Open Source Authorization Libraries](https://permify.co/post/open-source-authorization-libraries/)
+- [Casbin vs ORY Hydra | What are the differences?](https://stackshare.io/stackups/casbin-vs-ory-hydra)
+- [What are some alternatives to Casbin?](https://stackshare.io/casbin/alternatives)
+- [OPA vs Casbin](https://gist.github.com/StevenACoffman/1644ec1157a793eb7d868aa22b260e91)
+- [Policy Engines: Open Policy Agent vs AWS Cedar vs Google Zanzibar](https://www.permit.io/blog/policy-engines)
+
